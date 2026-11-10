@@ -824,11 +824,11 @@ mark{background:#FFE58A;color:inherit;border-radius:5px;padding:0 3px;box-shadow
       <div class="opt" id="abTenses">
         <button class="chip on" data-v="be">Verb to be · am/is/are</button><button class="chip on" data-v="cont">Present continuous</button><button class="chip on" data-v="sp">Simple present</button><button class="chip on" data-v="past">Simple past</button><button class="chip on" data-v="pp">Present perfect</button><button class="chip on" data-v="will">Future: will / going to</button>
       </div>
-      <div class="grid2"><div><label class="lbl">Lectura</label><select id="abTopic"><option value="random">🎲 Al azar</option></select><input id="abCount" type="hidden" value="18"></div>
+      <div class="grid2"><div><label class="lbl">Lectura</label><select id="abTopic"><option value="random">🎲 Al azar</option></select><input id="abCount" type="hidden" value="18"><label class="lbl" for="abVersion" style="margin-top:8px">N° de versión (opcional)</label><input id="abVersion" type="number" min="100" max="999" inputmode="numeric" placeholder="Vacío = versión nueva · o escribe el N° de una prueba ya impresa"></div>
         <div><label class="lbl">Opciones</label><label class="switch" style="margin-top:4px"><input type="checkbox" id="abSheet" checked> Incluir hoja de respuestas (Answer sheet) para el estudiante</label></div></div>
       <p class="note" id="abBankNote"></p>
       <div class="actions"><button class="btn" id="abGenerate">✨ Crear prueba</button><button class="btn ghost" id="abPrintStudent" disabled>🖨 Imprimir prueba del estudiante</button><button class="btn ghost" id="abPrintKey" disabled>📗 Imprimir solucionario</button><button class="btn ghost" id="abStartOnline" disabled>💻 Desarrollar prueba en línea</button></div>
-      <p class="note">💡 En la ventana de impresión deja «Márgenes: predeterminados» y activa «Gráficos de fondo». El tamaño es carta. Cada vez que presionas «Crear prueba» cambia el orden de las alternativas, de los hechos y de la columna B (número de versión distinto); la prueba y el solucionario de una misma versión coinciden.</p>
+      <p class="note">💡 En la ventana de impresión deja «Márgenes: predeterminados» y activa «Gráficos de fondo». El tamaño es carta. Con el campo «N° de versión» vacío, cada vez que presionas «Crear prueba» se crea una versión nueva (otro orden de alternativas, hechos y columna B). <b>Para recuperar el solucionario de una prueba ya impresa</b>, elige la misma lectura, escribe el N° de versión que aparece en la prueba y presiona «Crear prueba»: saldrá idéntica, con su solucionario.</p>
     </div>
     <div id="abStatus" class="note" role="status" aria-live="polite"></div>
     <div id="abPreview"></div>
@@ -6308,14 +6308,14 @@ She describes the canteen and the school garden. | Describe el casino y el huert
 She mentions the problems: narrow stairs and a closed library. | Menciona los problemas: escaleras angostas y una biblioteca cerrada.
 She is at home with her family, doing her homework. | Está en casa con su familia, haciendo sus tareas.
 match:
-Martín | is an expert on the Incas.
-Valentina | is the class president and a great swimmer.
-Diego | wears blue glasses.
-Isidora | is quiet, shy and the best student in maths.
-Mr. Fuentes | is the head teacher and his examples are about real life.
-Miss Rojas | is young, energetic and a fan of old rock music.
-The canteen | is Antonia's favourite place at lunchtime.
-- | is the captain of the school basketball team.
+Martín | is an expert on the Incas. | es experto en los incas.
+Valentina | is the class president and a great swimmer. | es la presidenta de curso y una gran nadadora.
+Diego | wears blue glasses. | usa lentes azules.
+Isidora | is quiet, shy and the best student in maths. | es callada, tímida y la mejor alumna en matemáticas.
+Mr. Fuentes | is the head teacher and his examples are about real life. | es el profesor jefe y sus ejemplos son de la vida real.
+Miss Rojas | is young, energetic and a fan of old rock music. | es joven, enérgica y fanática del rock antiguo.
+The canteen | is Antonia's favourite place at lunchtime. | es el lugar favorito de Antonia a la hora de almuerzo.
+- | is the captain of the school basketball team. | es el capitán del equipo de básquetbol del colegio.
 complete: nervous, laboratory, posters, curly, medals, identical, organised, energetic, delicious, narrow
 ### be2
 tenses: be
@@ -6394,17 +6394,17 @@ The text describes the old wooden churches. | El texto describe las antiguas igl
 The writer explains what curanto is and how it is cooked. | El autor explica qué es el curanto y cómo se cocina.
 The writer describes the Trauco, the Pincoya and the Caleuche. | El autor describe al Trauco, la Pincoya y el Caleuche.
 The text mentions the difficulties of life on the island. | El texto menciona las dificultades de la vida en la isla.
-The writer talks about his cousin Fernanda and her grandmother. | El autor habla de su prima Fernanda y de su abuela.
+The writer talks about Fernanda, a cousin, and her grandmother. | Quien escribe habla de su prima Fernanda y de la abuela de ella.
 The writer recommends a visit to the island. | El autor recomienda visitar la isla.
 match:
-Castro | is the capital of the province and famous for its palafitos.
-Palafitos | are wooden houses on tall posts above the water.
-Curanto | is a mix of seafood, meat, potatoes and milcao.
-The Trauco | is a little man of the forest with a pointed hat.
-The Pincoya | is a woman of the sea and protector of the fish.
-The Caleuche | is a ghost ship full of lights.
-Fernanda | is a member of a folk dance group.
-- | is the biggest volcano on the island.
+Castro | is the capital of the province and famous for its palafitos. | es la capital de la provincia y es famosa por sus palafitos.
+Palafitos | are wooden houses on tall posts above the water. | son casas de madera sobre pilotes altos encima del agua.
+Curanto | is a mix of seafood, meat, potatoes and milcao. | es una mezcla de mariscos, carne, papas y milcao.
+The Trauco | is a little man of the forest with a pointed hat. | es un hombrecito del bosque con sombrero puntiagudo.
+The Pincoya | is a woman of the sea and protector of the fish. | es una mujer del mar y protectora de los peces.
+The Caleuche | is a ghost ship full of lights. | es un barco fantasma lleno de luces.
+Fernanda | is a member of a folk dance group. | es integrante de un grupo de danza folclórica.
+- | is the biggest volcano on the island. | es el volcán más grande de la isla.
 complete: rainy, posts, tourists, nails, potatoes, stones, golden, ferry, stove, umbrella
 ### be3
 tenses: be
@@ -6486,14 +6486,14 @@ The students see the Chinchorro mummies in a dark room. | Los estudiantes ven la
 The class has lunch in the park under the trees. | El curso almuerza en el parque bajo los árboles.
 Camila says that they are a great class and leaves. | Camila dice que son un gran curso y se va.
 match:
-Camila | is the guide and a biologist.
-Mr. Herrera | is the teacher with the list of names.
-Atacamatitan | is a dinosaur with a long neck.
-The pudú | is the smallest deer in the world.
-The huemul | is the national animal of Chile.
-The Chinchorro mummies | are about seven thousand years old.
-Benjamín | thinks the dinosaur is the best part of the day.
-- | is the director of the museum.
+Camila | is the guide and a biologist. | es la guía y es bióloga.
+Mr. Herrera | is the teacher with the list of names. | es el profesor con la lista de nombres.
+Atacamatitan | is a dinosaur with a long neck. | es un dinosaurio de cuello largo.
+The pudú | is the smallest deer in the world. | es el ciervo más pequeño del mundo.
+The huemul | is the national animal of Chile. | es el animal nacional de Chile.
+The Chinchorro mummies | are about seven thousand years old. | tienen unos siete mil años.
+Benjamín | thinks the dinosaur is the best part of the day. | piensa que el dinosaurio es lo mejor del día.
+- | is the director of the museum. | es el director del museo.
 complete: columns, biologist, enormous, flashes, footprints, flamingos, shield, jewellery, perfect, report
 ### be4
 tenses: be
@@ -6503,9 +6503,9 @@ draw: Draw the computer screen with the four cousins in their four different pla
 en:
 It is Sunday, and it is grandma Rosa's seventy-fifth birthday. She is at home in Concepción with her husband, Tito, but her grandchildren are not with her. They are in four different countries! So, at twelve o'clock, the whole family is on a video call. The laptop is on the dining table, next to a big chocolate cake, and grandpa Tito is in charge of the camera.
 
-The first face on the screen is Matías. He is fifteen, and he is in Madrid, in Spain, with his parents. "Hi, Grandma! Happy birthday!" he shouts. It is four in the afternoon in Madrid, and it is very hot. Matías is in shorts and a T-shirt, and his hair is wet because he is just back from the swimming pool. "Are you happy in Spain?" asks Grandma. "Yes, I am. My school is great and my friends are really nice, but the food is not as good as your empanadas!"
+The first face on the screen is Matías. He is fifteen, and he is in Madrid, in Spain, with his parents. "Hi, Grandma! Happy birthday!" he shouts. It is four in the afternoon in Madrid, and it is sunny but cold. Matías is in a tracksuit, and his hair is wet because he is just back from the indoor swimming pool. "Are you happy in Spain?" asks Grandma. "Yes, I am. My school is great and my friends are really nice, but the food is not as good as your empanadas!"
 
-The second face is Sofía. She is nineteen, and she is a university student in Toronto, in Canada. It is eleven in the morning there, and it is very cold: the temperature is minus ten degrees. Sofía is in a thick red jumper, and she is in her small room with a cup of hot chocolate. Behind her there is a window, and the view is completely white. "Is that snow?" asks Grandpa. "Yes, it is! It is everywhere. The streets are white and the lakes are frozen," Sofía says.
+The second face is Sofía. She is nineteen, and she is a university student in Toronto, in Canada. It is ten in the morning there, and it is very cold: the temperature is minus ten degrees. Sofía is in a thick red jumper, and she is in her small room with a cup of hot chocolate. Behind her there is a window, and the view is completely white. "Is that snow?" asks Grandpa. "Yes, it is! It is everywhere. The streets are white and the lakes are frozen," Sofía says.
 
 The third face is a little sleepy. It is Andrés, and he is twenty-two. He is in Melbourne, in Australia, where he is a cook in a restaurant. For him it is two o'clock in the morning, because Australia is fourteen hours ahead of Chile. "Are you tired, dear?" asks Grandma. "A little, but I am not in bed. Your birthday is more important than my sleep!" he answers. Andrés is in the kitchen of his apartment, and there is a kangaroo magnet on the fridge behind him.
 
@@ -6517,9 +6517,9 @@ After the call, the house in Concepción is quiet again. Grandpa is in the kitch
 es:
 Es domingo y es el cumpleaños número setenta y cinco de la abuela Rosa. Ella está en su casa en Concepción con su esposo, Tito, pero sus nietos no están con ella. ¡Están en cuatro países distintos! Así que, a las doce, toda la familia está en una videollamada. El notebook está en la mesa del comedor, junto a una gran torta de chocolate, y el abuelo Tito está a cargo de la cámara.
 
-La primera cara en la pantalla es la de Matías. Tiene quince años y está en Madrid, en España, con sus padres. "¡Hola, abuela! ¡Feliz cumpleaños!", grita. En Madrid son las cuatro de la tarde y hace mucho calor. Matías está con shorts y polera, y su pelo está mojado porque acaba de volver de la piscina. "¿Eres feliz en España?", pregunta la abuela. "Sí, lo soy. Mi colegio es genial y mis amigos son muy simpáticos, ¡pero la comida no es tan buena como tus empanadas!".
+La primera cara en la pantalla es la de Matías. Tiene quince años y está en Madrid, en España, con sus padres. "¡Hola, abuela! ¡Feliz cumpleaños!", grita. En Madrid son las cuatro de la tarde; hay sol, pero hace frío. Matías está con buzo y su pelo está mojado porque acaba de volver de la piscina temperada. "¿Eres feliz en España?", pregunta la abuela. "Sí, lo soy. Mi colegio es genial y mis amigos son muy simpáticos, ¡pero la comida no es tan buena como tus empanadas!".
 
-La segunda cara es la de Sofía. Tiene diecinueve años y es estudiante universitaria en Toronto, en Canadá. Allá son las once de la mañana y hace mucho frío: la temperatura es de diez grados bajo cero. Sofía está con un chaleco rojo y grueso, en su pequeña pieza con una taza de chocolate caliente. Detrás de ella hay una ventana y la vista está completamente blanca. "¿Eso es nieve?", pregunta el abuelo. "¡Sí! Está por todas partes. Las calles están blancas y los lagos están congelados", dice Sofía.
+La segunda cara es la de Sofía. Tiene diecinueve años y es estudiante universitaria en Toronto, en Canadá. Allá son las diez de la mañana y hace mucho frío: la temperatura es de diez grados bajo cero. Sofía está con un chaleco rojo y grueso, en su pequeña pieza con una taza de chocolate caliente. Detrás de ella hay una ventana y la vista está completamente blanca. "¿Eso es nieve?", pregunta el abuelo. "¡Sí! Está por todas partes. Las calles están blancas y los lagos están congelados", dice Sofía.
 
 La tercera cara está un poco somnolienta. Es Andrés, que tiene veintidós años. Está en Melbourne, en Australia, donde es cocinero en un restaurante. Para él son las dos de la mañana, porque Australia está catorce horas adelantada respecto de Chile. "¿Estás cansado, querido?", pregunta la abuela. "Un poco, pero no estoy en la cama. ¡Tu cumpleaños es más importante que mi sueño!", responde. Andrés está en la cocina de su departamento y detrás de él hay un imán de canguro en el refrigerador.
 
@@ -6551,7 +6551,7 @@ tf:
 T | The grandchildren are in four different countries. | Los nietos están en cuatro países distintos.
 F | The laptop is on the kitchen floor. | El notebook está en el suelo de la cocina.
 T | Matías is fifteen years old. | Matías tiene quince años.
-F | It is cold in Madrid during the call. | Hace frío en Madrid durante la llamada.
+F | It is very hot in Madrid during the call. | Hace mucho calor en Madrid durante la llamada.
 T | Sofía is in a thick red jumper. | Sofía está con un chaleco rojo y grueso.
 T | The lakes in Toronto are frozen. | Los lagos de Toronto están congelados.
 F | Andrés is in bed during the call. | Andrés está en la cama durante la llamada.
@@ -6571,15 +6571,15 @@ The candles on the cake are lit. | Se encienden las velas de la torta.
 The cousins sing "Happy Birthday" with a bad connection. | Los primos cantan "Cumpleaños feliz" con mala conexión.
 Grandma looks at four photos from the call in her armchair. | La abuela mira cuatro fotos de la llamada en su sillón.
 match:
-Grandma Rosa | is seventy-five years old today.
-Grandpa Tito | is in charge of the camera.
-Matías | is in Madrid and his hair is wet.
-Sofía | is a university student in Toronto.
-Andrés | is a cook in Melbourne.
-Emilia | is ten years old and her friend is a llama.
-Pancho | is a baby llama.
-- | is a dog with a kangaroo magnet.
-complete: dining, shorts, empanadas, jumper, frozen, ahead, magnet, archaeologist, candles, armchair
+Grandma Rosa | is seventy-five years old today. | cumple setenta y cinco años hoy.
+Grandpa Tito | is in charge of the camera. | está a cargo de la cámara.
+Matías | is in Madrid and his hair is wet. | está en Madrid y tiene el pelo mojado.
+Sofía | is a university student in Toronto. | es estudiante universitaria en Toronto.
+Andrés | is a cook in Melbourne. | es cocinero en Melbourne.
+Emilia | is ten years old and her friend is a llama. | tiene diez años y su amigo es una llama.
+Pancho | is a baby llama. | es una llama bebé.
+- | is a dog with a kangaroo magnet. | es un perro con un imán de canguro.
+complete: dining, tracksuit, empanadas, jumper, frozen, ahead, magnet, archaeologist, candles, armchair
 ### cont1
 tenses: cont
 img: party
@@ -6660,15 +6660,15 @@ Mr. Pérez is turning off the TV and looking for sweets. | El señor Pérez est�
 Tommy and Lucas are waiting in the queue for the tunnel. | Tommy y Lucas están esperando en la fila del túnel.
 The boys are walking home and talking about next year. | Los niños están caminando a casa y hablando del próximo año.
 match:
-Tommy | is wearing a black cape and vampire teeth.
-Lucas | is dressed as a wizard.
-Mrs. Gable | is giving chocolates at her front door.
-Mr. Clark | is carving an enormous pumpkin.
-Bruno | is lying on the grass in a hot dog costume.
-Joaquín | is painting his face to be a zombie.
-Mr. Pérez | is trying to watch a football match.
-- | is selling tickets for the haunted tunnel.
-complete: pavement, cape, broom, sweater, spiderwebs, jars, blankets, sign, annoyed, glowing
+Tommy | is wearing a black cape and vampire teeth. | lleva puesta una capa negra y dientes de vampiro.
+Lucas | is dressed as a wizard. | está disfrazado de mago.
+Mrs. Gable | is giving chocolates at her front door. | está regalando chocolates en la puerta de su casa.
+Mr. Clark | is carving an enormous pumpkin. | está tallando una calabaza enorme.
+Bruno | is lying on the grass in a hot dog costume. | está echado en el pasto con un disfraz de hot dog.
+Joaquín | is painting his face to be a zombie. | se está pintando la cara para ser un zombi.
+Mr. Pérez | is trying to watch a football match. | está tratando de ver un partido de fútbol.
+- | is selling tickets for the haunted tunnel. | está vendiendo entradas para el túnel embrujado.
+complete: pavement, cape, broom, sweater, spiderwebs, blankets, sign, doorbell, annoyed, glowing
 ### cont2
 tenses: cont
 img: mic
@@ -6749,14 +6749,14 @@ A student holds a flashlight over the solar oven. | Un estudiante sostiene una l
 The judges walk from table to table and write scores. | Los jueces caminan de mesa en mesa y anotan puntajes.
 Florencia says she is going to talk to the judges. | Florencia dice que va a conversar con los jueces.
 match:
-Florencia | is reporting live for the school radio.
-Tomás | is pouring vinegar into the volcano.
-Limpito | is a robot that picks up pieces of paper.
-Mr. Araya | is standing behind his students, looking proud.
-Javiera | is giving everybody a leaf to taste.
-Benjamín | is explaining how a lever works.
-The judges | are writing scores on their sheets.
-- | is selling food at the entrance of the gym.
+Florencia | is reporting live for the school radio. | está transmitiendo en vivo para la radio del colegio.
+Tomás | is pouring vinegar into the volcano. | está echando vinagre en el volcán.
+Limpito | is a robot that picks up pieces of paper. | es un robot que recoge trozos de papel.
+Mr. Araya | is standing behind his students, looking proud. | está de pie detrás de sus alumnos, con cara de orgullo.
+Javiera | is giving everybody a leaf to taste. | le está dando a todos una hoja para probar.
+Benjamín | is explaining how a lever works. | está explicando cómo funciona una palanca.
+The judges | are writing scores on their sheets. | están anotando puntajes en sus hojas.
+- | is selling food at the entrance of the gym. | está vendiendo comida en la entrada del gimnasio.
 complete: posters, plaster, foam, inventors, nutrients, crunchy, stick, cloudy, optimism, whisper
 ### cont3
 tenses: cont
@@ -6838,14 +6838,14 @@ Rocky is pushing his ball through the bars to Martina. | Rocky está empujando s
 Emma is writing descriptions for Instagram. | Emma está escribiendo descripciones para Instagram.
 Martina's family is signing the adoption papers. | La familia de Martina está firmando los papeles de adopción.
 match:
-Emma | is the youngest volunteer.
-Noah | is cutting carrots and apples.
-Rocky | is a big brown dog with a red ball.
-Luna | is a thin street cat.
-Dr. Paredes | is the veterinarian.
-Canela | is the mother of three puppies.
-Martina | is kneeling in front of Rocky's cage.
-- | is the cook of the shelter's restaurant.
+Emma | is the youngest volunteer. | es la voluntaria más joven.
+Noah | is cutting carrots and apples. | está cortando zanahorias y manzanas.
+Rocky | is a big brown dog with a red ball. | es un perro grande y café con una pelota roja.
+Luna | is a thin street cat. | es una gata callejera muy delgada.
+Dr. Paredes | is the veterinarian. | es el veterinario.
+Canela | is the mother of three puppies. | es la mamá de tres cachorros.
+Martina | is kneeling in front of Rocky's cage. | está arrodillada frente a la jaula de Rocky.
+- | is the cook of the shelter's restaurant. | es el cocinero del restaurante del refugio.
 complete: gate, bowls, rabbits, hose, ears, butterfly, bench, kneeling, account, collar
 ### cont4
 tenses: cont
@@ -6927,14 +6927,14 @@ Javiera is looking at krill under the microscope. | Javiera está mirando kril e
 Javiera is watching an enormous iceberg through the window. | Javiera está mirando un iceberg enorme por la ventana.
 Javiera is sending a cold hug to the class. | Javiera le está mandando un abrazo frío al curso.
 match:
-Javiera | is a biologist working in Antarctica.
-Pedro | is counting nests and playing the guitar.
-Don Luis | is the cook of the base.
-The doctor | is telling a story about a seal.
-Rosa | is an engineer talking to her children.
-Krill | is the main food of penguins, seals and whales.
-Adélie penguins | are standing on the rocks in thousands.
-- | is the captain of a fishing boat.
+Javiera | is a biologist working in Antarctica. | es una bióloga que trabaja en la Antártica.
+Pedro | is counting nests and playing the guitar. | está contando nidos y tocando la guitarra.
+Don Luis | is the cook of the base. | es el cocinero de la base.
+The doctor | is telling a story about a seal. | está contando una historia sobre una foca.
+Rosa | is an engineer talking to her children. | es una ingeniera que está hablando con sus hijos.
+Krill | is the main food of penguins, seals and whales. | es el alimento principal de pingüinos, focas y ballenas.
+Adélie penguins | are standing on the rocks in thousands. | están parados sobre las rocas por miles.
+- | is the captain of a fishing boat. | es el capitán de un barco pesquero.
 complete: windows, layers, colleague, slippery, nests, melting, lentil, microscope, slow, fragile
 ### past1
 tenses: past
@@ -7016,14 +7016,14 @@ The mother told stories about her village. | La mamá contó historias de su pue
 The writer studied his notes with a candle. | El narrador estudió sus apuntes con una vela.
 He got a 6.5 in the history test. | Sacó un 6,5 en la prueba de historia.
 match:
-Amanda | was in the bath and screamed.
-The father | found a torch and taught a card game.
-The mother | told stories about her village.
-The wind | broke an important electricity line.
-The fridge | woke the writer up at four o'clock.
-The candles | gave light in the living room.
-The history test | was about the independence of Chile.
-- | repaired the electricity line in ten minutes.
+Amanda | was in the bath and screamed. | estaba en la tina y gritó.
+The father | found a torch and taught a card game. | encontró una linterna y enseñó un juego de cartas.
+The mother | told stories about her village. | contó historias sobre su pueblo.
+The wind | broke an important electricity line. | rompió una línea eléctrica importante.
+The fridge | woke the writer up at four o'clock. | despertó a quien escribe a las cuatro.
+The candles | gave light in the living room. | dieron luz en el living.
+The history test | was about the independence of Chile. | era sobre la independencia de Chile.
+- | repaired the electricity line in ten minutes. | reparó la línea eléctrica en diez minutos.
 complete: honest, drawer, fuse, stars, battery, fireplace, childhood, village, summary, semester
 ### past2
 tenses: past
@@ -7105,14 +7105,14 @@ Don Hugo recognised the name on the identity card. | Don Hugo reconoció el nomb
 Mrs. Elena counted the money and cried. | La señora Elena contó el dinero y lloró.
 Vicente and his mother had tea at Mrs. Elena's house. | Vicente y su mamá tomaron once en la casa de la señora Elena.
 match:
-Vicente | found the wallet and gave it back.
-Vicente's mother | had the idea of going to the bakery.
-Don Hugo | is the baker who knew Mrs. Elena.
-Mrs. Elena | lost her wallet with her pension.
-The grandchildren | lived in Canada.
-The radio station | interviewed Vicente.
-The lemon pie | was made by Mrs. Elena.
-- | was a police officer who found the wallet first.
+Vicente | found the wallet and gave it back. | encontró la billetera y la devolvió.
+Vicente's mother | had the idea of going to the bakery. | tuvo la idea de ir a la panadería.
+Don Hugo | is the baker who knew Mrs. Elena. | es el panadero que conocía a la señora Elena.
+Mrs. Elena | lost her wallet with her pension. | perdió su billetera con su pensión.
+The grandchildren | lived in Canada. | vivían en Canadá.
+The radio station | interviewed Vicente. | entrevistó a Vicente.
+The lemon pie | was made by Mrs. Elena. | la hizo la señora Elena.
+- | was a police officer who found the wallet first. | era un carabinero que encontró la billetera primero.
 complete: shopping, leather, notes, trainers, idea, pension, medicine, reward, pie, embarrassed
 ### past3
 tenses: past
@@ -7124,9 +7124,9 @@ On the 16th of July, 1969, about one million people travelled to the beaches of 
 
 The trip to the Moon took three days. The astronauts travelled in a small spacecraft called Apollo 11. It had two parts: the command module, called Columbia, and the lunar module, called Eagle. Life inside was not comfortable. The space was very small, the astronauts ate dry food from plastic bags, and they slept in sleeping bags tied to the walls, because there was no gravity. Through the windows, they watched the Earth become smaller and smaller, like a blue and white ball in the darkness.
 
-On the 20th of July, the spacecraft arrived in orbit around the Moon. Armstrong and Aldrin climbed into the Eagle, and Collins stayed in Columbia. He had a very important job: he waited alone, flying around the Moon, ready to take his friends back to Earth. For almost an hour of each orbit, when he was behind the Moon, he could not talk to anybody. Later, he wrote that he never felt lonely, but that he felt very small.
+On the 19th of July, the spacecraft arrived in orbit around the Moon. The next day, Armstrong and Aldrin climbed into the Eagle, and Collins stayed in Columbia. He had a very important job: he waited alone, flying around the Moon, ready to take his friends back to Earth. For almost an hour of each orbit, when he was behind the Moon, he could not talk to anybody. Later, he wrote that he never felt lonely, but that he felt very small.
 
-The landing was the most dangerous part of the mission. When the Eagle was near the surface, Armstrong looked out of the window and saw that the computer was taking them to a place full of big rocks. He took manual control and flew over the rocks, looking for a flat area. Back in Houston, the engineers were very nervous, because the Eagle had fuel for less than one minute. Finally, at 4:17 in the afternoon, Houston time, Armstrong spoke on the radio: "Houston, Tranquility Base here. The Eagle has landed." In the control room, everybody cheered.
+The landing was the most dangerous part of the mission. When the Eagle was near the surface, Armstrong looked out of the window and saw that the computer was taking them to a place full of big rocks. He took manual control and flew over the rocks, looking for a flat area. Back in Houston, the engineers were very nervous, because the Eagle had fuel for less than one minute. Finally, at 4:17 in the afternoon, Florida time, Armstrong spoke on the radio: "Houston, Tranquility Base here. The Eagle has landed." In the control room, everybody cheered.
 
 About six hours later, Armstrong opened the door, climbed down a short ladder and put his left foot on the grey dust. Then he said his famous words: "That's one small step for man, one giant leap for mankind." About six hundred million people watched the black and white images on television. It was the biggest audience in history at that time. In Chile, many families stayed awake to watch it, and some people still remember exactly where they were that night.
 
@@ -7134,15 +7134,15 @@ Aldrin joined Armstrong twenty minutes later. He described the landscape as "mag
 
 After about twenty-one hours on the Moon, the Eagle took off and met Columbia again. On the 24th of July, the three astronauts came back to Earth. Their capsule fell into the Pacific Ocean, and a ship picked them up. They did not go home immediately: they stayed in quarantine for twenty-one days, because scientists were afraid of unknown germs from the Moon. Of course, there were none.
 
-The mission changed the way people saw our planet. The photos of the Earth from space showed a small, fragile world without borders. Between 1969 and 1972, ten more astronauts walked on the Moon. Since then, nobody has gone back, but today several countries are preparing new missions. Maybe someone reading this text is going to walk there one day.
+The mission changed the way people saw our planet. The photos of the Earth from space showed a small, fragile world without borders. Between 1969 and 1972, ten more astronauts walked on the Moon. Since then, nobody has walked on the Moon again, but today several countries are preparing new missions. Maybe someone reading this text is going to walk there one day.
 es:
 El 16 de julio de 1969, alrededor de un millón de personas viajaron a las playas de Florida, en Estados Unidos. Querían ver algo que nadie había visto antes: el inicio del primer viaje para llevar personas a la Luna. A las 9:32 de la mañana, el enorme cohete Saturno V encendió sus motores. El suelo tembló, una gran nube de humo cubrió la plataforma de lanzamiento y el cohete subió lentamente hacia el cielo azul. Adentro, tres astronautas estaban acostados de espaldas: Neil Armstrong, Buzz Aldrin y Michael Collins.
 
 El viaje a la Luna duró tres días. Los astronautas viajaron en una pequeña nave llamada Apolo 11. Tenía dos partes: el módulo de comando, llamado Columbia, y el módulo lunar, llamado Eagle. La vida adentro no era cómoda. El espacio era muy reducido, los astronautas comían comida seca de bolsas plásticas y dormían en sacos de dormir amarrados a las paredes, porque no había gravedad. Por las ventanas vieron cómo la Tierra se hacía cada vez más pequeña, como una pelota azul y blanca en la oscuridad.
 
-El 20 de julio, la nave llegó a la órbita de la Luna. Armstrong y Aldrin subieron al Eagle y Collins se quedó en Columbia. Él tenía un trabajo muy importante: esperó solo, volando alrededor de la Luna, listo para llevar a sus amigos de vuelta a la Tierra. Durante casi una hora de cada órbita, cuando estaba detrás de la Luna, no podía hablar con nadie. Más tarde escribió que nunca se sintió solo, pero que se sintió muy pequeño.
+El 19 de julio, la nave llegó a la órbita de la Luna. Al día siguiente, Armstrong y Aldrin subieron al Eagle y Collins se quedó en Columbia. Él tenía un trabajo muy importante: esperó solo, volando alrededor de la Luna, listo para llevar a sus amigos de vuelta a la Tierra. Durante casi una hora de cada órbita, cuando estaba detrás de la Luna, no podía hablar con nadie. Más tarde escribió que nunca se sintió solo, pero que se sintió muy pequeño.
 
-El alunizaje fue la parte más peligrosa de la misión. Cuando el Eagle estaba cerca de la superficie, Armstrong miró por la ventana y vio que el computador los estaba llevando a un lugar lleno de rocas grandes. Tomó el control manual y voló sobre las rocas, buscando una zona plana. En Houston, los ingenieros estaban muy nerviosos, porque al Eagle le quedaba combustible para menos de un minuto. Finalmente, a las 4:17 de la tarde, hora de Houston, Armstrong habló por radio: "Houston, aquí Base Tranquilidad. El Eagle ha alunizado". En la sala de control todos celebraron.
+El alunizaje fue la parte más peligrosa de la misión. Cuando el Eagle estaba cerca de la superficie, Armstrong miró por la ventana y vio que el computador los estaba llevando a un lugar lleno de rocas grandes. Tomó el control manual y voló sobre las rocas, buscando una zona plana. En Houston, los ingenieros estaban muy nerviosos, porque al Eagle le quedaba combustible para menos de un minuto. Finalmente, a las 4:17 de la tarde, hora de Florida, Armstrong habló por radio: "Houston, aquí Base Tranquilidad. El Eagle ha alunizado". En la sala de control todos celebraron.
 
 Unas seis horas después, Armstrong abrió la puerta, bajó por una escalera corta y puso su pie izquierdo en el polvo gris. Luego dijo sus famosas palabras: "Es un pequeño paso para el hombre, un gran salto para la humanidad". Unos seiscientos millones de personas vieron las imágenes en blanco y negro por televisión. Fue la mayor audiencia de la historia hasta ese momento. En Chile, muchas familias se quedaron despiertas para verlo, y algunas personas todavía recuerdan exactamente dónde estaban esa noche.
 
@@ -7150,7 +7150,7 @@ Aldrin se unió a Armstrong veinte minutos después. Describió el paisaje como 
 
 Después de unas veintiuna horas en la Luna, el Eagle despegó y se reunió otra vez con Columbia. El 24 de julio, los tres astronautas volvieron a la Tierra. Su cápsula cayó en el océano Pacífico y un barco los recogió. No se fueron a casa de inmediato: estuvieron en cuarentena durante veintiún días, porque los científicos temían gérmenes desconocidos de la Luna. Por supuesto, no había ninguno.
 
-La misión cambió la forma en que la gente veía nuestro planeta. Las fotos de la Tierra desde el espacio mostraron un mundo pequeño y frágil, sin fronteras. Entre 1969 y 1972, diez astronautas más caminaron sobre la Luna. Desde entonces nadie ha vuelto, pero hoy varios países están preparando nuevas misiones. Tal vez alguien que está leyendo este texto camine allí algún día.
+La misión cambió la forma en que la gente veía nuestro planeta. Las fotos de la Tierra desde el espacio mostraron un mundo pequeño y frágil, sin fronteras. Entre 1969 y 1972, diez astronautas más caminaron sobre la Luna. Desde entonces nadie ha vuelto a caminar sobre la Luna, pero hoy varios países están preparando nuevas misiones. Tal vez alguien que está leyendo este texto camine allí algún día.
 mc:
 When did Apollo 11 leave the Earth? | ¿Cuándo salió el Apolo 11 de la Tierra? | On the 16th of July, 1969 | On the 20th of July, 1969 | On the 24th of July, 1969 | On the 16th of July, 1972
 How many people travelled to the beaches of Florida to watch? | ¿Cuántas personas viajaron a las playas de Florida para mirar? | About one million | About six hundred million | About one thousand | About ten thousand
@@ -7194,14 +7194,14 @@ Armstrong said: "That's one small step for man". | Armstrong dijo: "Es un peque�
 The astronauts collected rocks and left a metal plaque. | Los astronautas recolectaron rocas y dejaron una placa de metal.
 The capsule fell into the Pacific Ocean. | La cápsula cayó en el océano Pacífico.
 match:
-Neil Armstrong | was the first person to walk on the Moon.
-Buzz Aldrin | described the landscape as "magnificent desolation".
-Michael Collins | waited alone, flying around the Moon.
-Saturn V | was the enormous rocket of the mission.
-Columbia | was the name of the command module.
-Houston | was where the engineers were waiting nervously.
-The plaque | had the message "We came in peace for all mankind".
-- | was the first dog to travel to the Moon.
+Neil Armstrong | was the first person to walk on the Moon. | fue la primera persona en caminar sobre la Luna.
+Buzz Aldrin | described the landscape as "magnificent desolation". | describió el paisaje como «magnífica desolación».
+Michael Collins | waited alone, flying around the Moon. | esperó solo, volando alrededor de la Luna.
+Saturn V | was the enormous rocket of the mission. | era el enorme cohete de la misión.
+Columbia | was the name of the command module. | era el nombre del módulo de mando.
+Houston | was where the engineers were waiting nervously. | era donde los ingenieros esperaban nerviosos.
+The plaque | had the message "We came in peace for all mankind". | tenía el mensaje «Vinimos en paz por toda la humanidad».
+- | was the first dog to travel to the Moon. | fue el primer perro en viajar a la Luna.
 complete: smoke, journey, gravity, orbit, lonely, fuel, dust, audience, kangaroos, quarantine
 ### past4
 tenses: past
@@ -7279,14 +7279,14 @@ They saw hundreds of flamingos in the Chaxa lagoon. | Vieron cientos de flamenco
 They looked at the rings of Saturn through a telescope. | Miraron los anillos de Saturno por un telescopio.
 Felipe said that it was the best week of his life. | Felipe dijo que fue la mejor semana de su vida.
 match:
-Ximena | was the guide of the trip.
-Felipe | was the noisiest boy in the class.
-Mrs. Soto | took the most popular photo of the trip.
-Catalina | bought a colourful scarf for her mother.
-Martina | cried a little because the sky was beautiful.
-Licancabur | is a snowy volcano.
-The flamingos | are pink because of their food.
-- | drove the bus from Santiago to Calama.
+Ximena | was the guide of the trip. | era la guía del viaje.
+Felipe | was the noisiest boy in the class. | era el niño más ruidoso del curso.
+Mrs. Soto | took the most popular photo of the trip. | sacó la foto más popular del viaje.
+Catalina | bought a colourful scarf for her mother. | compró una bufanda colorida para su mamá.
+Martina | cried a little because the sky was beautiful. | lloró un poco porque el cielo era hermoso.
+Licancabur | is a snowy volcano. | es un volcán nevado.
+The flamingos | are pink because of their food. | son rosados por su alimento.
+- | drove the bus from Santiago to Calama. | manejó el bus de Santiago a Calama.
 complete: bingo, adobe, driest, dunes, altitude, ice, wool, observatory, telescope, sand
 ### pp1
 tenses: pp
@@ -7368,14 +7368,14 @@ Gabriel talked about Daniel's family's restaurant. | Gabriel habló del restaura
 The grandfather said that the mountains have not changed. | El abuelo dijo que las montañas no han cambiado.
 Gabriel and his grandfather decided to meet every Sunday. | Gabriel y su abuelo decidieron juntarse todos los domingos.
 match:
-Gabriel | has lived in La Florida since he was born.
-Grandfather Ernesto | arrived in the neighbourhood in 1972.
-Gabriel's mother | now arrives at work in forty minutes.
-Mrs. Rosa | knew everybody's name in her store.
-Daniel | came from Caracas five years ago.
-The municipality | has transformed a rubbish dump into a park.
-The Andes | have always been behind the houses.
-- | has built a new airport near the river.
+Gabriel | has lived in La Florida since he was born. | ha vivido en La Florida desde que nació.
+Grandfather Ernesto | arrived in the neighbourhood in 1972. | llegó al barrio en 1972.
+Gabriel's mother | now arrives at work in forty minutes. | ahora llega a su trabajo en cuarenta minutos.
+Mrs. Rosa | knew everybody's name in her store. | sabía el nombre de todos en su almacén.
+Daniel | came from Caracas five years ago. | llegó desde Caracas hace cinco años.
+The municipality | has transformed a rubbish dump into a park. | ha transformado un basural en un parque.
+The Andes | have always been behind the houses. | siempre han estado detrás de las casas.
+- | has built a new airport near the river. | ha construido un nuevo aeropuerto cerca del río.
 complete: interview, cows, floors, gym, traffic, dump, laboratory, arepas, earthquake, report
 ### pp2
 tenses: pp
@@ -7477,14 +7477,14 @@ He remembers the final that he lost in Santiago. | Recuerda la final que perdió
 He says that chess has become popular among teenagers. | Dice que el ajedrez se ha vuelto popular entre los adolescentes.
 He talks about his dream of becoming a Grandmaster. | Habla de su sueño de ser Gran Maestro.
 match:
-Agustín | has won two national championships.
-His grandfather | taught him chess on a wooden board.
-Marcela Pinto | has been a champion of South America.
-The knight | is a piece that moves in a strange way.
-His classmates | have lent him their notes.
-A nine-year-old girl | played a difficult game against Agustín.
-Grandmaster | is the title that Agustín dreams of.
-- | has sold more than forty chess books.
+Agustín | has won two national championships. | ha ganado dos campeonatos nacionales.
+His grandfather | taught him chess on a wooden board. | le enseñó ajedrez en un tablero de madera.
+Marcela Pinto | has been a champion of South America. | ha sido campeona de Sudamérica.
+The knight | is a piece that moves in a strange way. | es una pieza que se mueve de forma extraña.
+His classmates | have lent him their notes. | le han prestado sus apuntes.
+A nine-year-old girl | played a difficult game against Agustín. | jugó una partida difícil contra Agustín.
+Grandmaster | is the title that Agustín dreams of. | es el título con el que sueña Agustín.
+- | has sold more than forty chess books. | ha vendido más de cuarenta libros de ajedrez.
 complete: trophies, knight, stubborn, defeat, abroad, patient, catch, position, series, engineering
 ### pp3
 tenses: pp
@@ -7566,14 +7566,14 @@ A volunteer cut her hand on broken glass. | Una voluntaria se cortó la mano con
 Other schools visited the Green Point. | Otros colegios visitaron el Punto Verde.
 The team wrote a letter about solar panels to the municipality. | El equipo escribió una carta a la municipalidad sobre los paneles solares.
 match:
-Renata | is the leader of The Green Team.
-Martín | is the youngest member and grows strawberries.
-The Green Point | has six containers of different colours.
-The red container | is for batteries.
-The compost boxes | turn fruit and vegetable waste into soil.
-Renata's little brother | has become the recycling police.
-The Ministry of the Environment | gave the school a prize.
-- | has built a new recycling factory in the school.
+Renata | is the leader of The Green Team. | es la líder del Green Team.
+Martín | is the youngest member and grows strawberries. | es el integrante más joven y cultiva frutillas.
+The Green Point | has six containers of different colours. | tiene seis contenedores de distintos colores.
+The red container | is for batteries. | es para las pilas.
+The compost boxes | turn fruit and vegetable waste into soil. | convierten los restos de frutas y verduras en tierra.
+Renata's little brother | has become the recycling police. | se ha convertido en la policía del reciclaje.
+The Ministry of the Environment | gave the school a prize. | le dio un premio al colegio.
+- | has built a new recycling factory in the school. | ha construido una nueva fábrica de reciclaje en el colegio.
 complete: bins, members, cardboard, landfill, fountains, worms, coriander, rota, convinced, panels
 ### pp4
 tenses: pp
@@ -7655,14 +7655,14 @@ She recorded forty-three bird species in her garden. | Registró cuarenta y tres
 She received a suspicious message about a car. | Recibió un mensaje sospechoso sobre un auto.
 Grandma sent a message with three emojis. | La abuela mandó un mensaje con tres emojis.
 match:
-Grandma Teresa | has gone digital at seventy-six.
-Uncle Pablo | lives in Germany and sent the tablet.
-Valentina | is the writer's cousin and one of the teachers.
-The new grandson | was born in Berlin in March.
-The bird app | identifies birds by their songs.
-The art teacher | is a young woman in Madrid.
-The suspicious message | said that Grandma had won a car.
-- | repaired the tablet when it was broken.
+Grandma Teresa | has gone digital at seventy-six. | se ha vuelto digital a los setenta y seis años.
+Uncle Pablo | lives in Germany and sent the tablet. | vive en Alemania y envió la tablet.
+Valentina | is the writer's cousin and one of the teachers. | es prima de quien escribe y una de sus profesoras.
+The new grandson | was born in Berlin in March. | nació en Berlín en marzo.
+The bird app | identifies birds by their songs. | identifica aves por su canto.
+The art teacher | is a young woman in Madrid. | es una mujer joven de Madrid.
+The suspicious message | said that Grandma had won a car. | decía que la abuela había ganado un auto.
+- | repaired the tablet when it was broken. | reparó la tablet cuando estaba rota.
 complete: landline, patience, password, sew, sunrise, curry, species, suspicious, connected, essays
 ### sp1
 tenses: sp
@@ -7744,14 +7744,14 @@ The text explains the different kinds of emergencies. | El texto explica los dis
 The text describes the training on Tuesdays and Thursdays. | El texto describe el entrenamiento de los martes y jueves.
 Carolina asks her friends to help the firefighters. | Carolina les pide a sus amigos que ayuden a los bomberos.
 match:
-Carolina | is a nurse and a volunteer firefighter.
-Andrés | drives a bus and is Carolina's husband.
-Don Raúl | is the captain with forty years of experience.
-The radio | gives the address of the emergency.
-The engine from 1925 | is in a small museum at the station.
-Carolina's grandfather | was a firefighter for fifty years.
-The forest fires | are a big problem in summer.
-- | sells tickets to visit the fire station.
+Carolina | is a nurse and a volunteer firefighter. | es enfermera y bombera voluntaria.
+Andrés | drives a bus and is Carolina's husband. | maneja un bus y es el esposo de Carolina.
+Don Raúl | is the captain with forty years of experience. | es el capitán con cuarenta años de experiencia.
+The radio | gives the address of the emergency. | da la dirección de la emergencia.
+The engine from 1925 | is in a small museum at the station. | está en un pequeño museo del cuartel.
+Carolina's grandfather | was a firefighter for fifty years. | fue bombero durante cincuenta años.
+The forest fires | are a big problem in summer. | son un gran problema en verano.
+- | sells tickets to visit the fire station. | vende entradas para visitar el cuartel.
 complete: salary, avocado, shift, helmet, lifts, eucalyptus, ladders, experience, birthdays, respect
 ### sp2
 tenses: sp
@@ -7833,14 +7833,14 @@ The bees close the cell with a thin lid of wax. | Las abejas cierran la celda co
 The text describes the problems that bees have today. | El texto describe los problemas que tienen hoy las abejas.
 The writer and the grandfather take the honey out in March. | El narrador y el abuelo sacan la miel en marzo.
 match:
-The queen | lays up to two thousand eggs a day.
-Young workers | clean the cells and build walls of wax.
-Guard bees | attack animals at the entrance.
-Old workers | collect nectar and pollen from flowers.
-Drones | are male bees with no sting.
-Grandfather Manuel | is a beekeeper with twelve hives.
-Lavender and rosemary | are flowers that help the bees.
-- | are birds that eat the honey at night.
+The queen | lays up to two thousand eggs a day. | pone hasta dos mil huevos al día.
+Young workers | clean the cells and build walls of wax. | limpian las celdas y construyen paredes de cera.
+Guard bees | attack animals at the entrance. | atacan a los animales en la entrada.
+Old workers | collect nectar and pollen from flowers. | recolectan néctar y polen de las flores.
+Drones | are male bees with no sting. | son abejas macho sin aguijón.
+Grandfather Manuel | is a beekeeper with twelve hives. | es apicultor y tiene doce colmenas.
+Lavender and rosemary | are flowers that help the bees. | son flores que ayudan a las abejas.
+- | are birds that eat the honey at night. | son aves que se comen la miel de noche.
 complete: beekeeper, eggs, wax, guards, sting, tongue, lid, eight, almonds, jars
 ### sp3
 tenses: sp
@@ -7922,15 +7922,15 @@ Josefa has dinner and finishes her homework. | Josefa cena y termina sus tareas.
 She goes to bed at half past ten. | Se acuesta a las diez y media.
 On Saturday her family watches her match. | El sábado su familia ve su partido.
 match:
-Josefa | is a fourteen-year-old midfielder.
-Paula Soto | is a strict coach and a former player.
-Josefa's mother | brings sandwiches to the matches.
-Josefa's father | shouts instructions from the stands.
-Josefa's brothers | film the best moments with their phones.
-The forwards | receive the passes from Josefa.
-Physiotherapy | is Josefa's plan B.
-- | is the captain of the men's national team.
-complete: dream, banana, uniform, strict, midfielder, tired, sandwiches, stands, marks, defeat
+Josefa | is a fourteen-year-old midfielder. | es una mediocampista de catorce años.
+Paula Soto | is a strict coach and a former player. | es una entrenadora estricta y ex jugadora.
+Josefa's mother | brings sandwiches to the matches. | lleva sándwiches a los partidos.
+Josefa's father | shouts instructions from the stands. | grita instrucciones desde la galería.
+Josefa's brothers | film the best moments with their phones. | graban las mejores jugadas con sus teléfonos.
+The forwards | receive the passes from Josefa. | reciben los pases de Josefa.
+Physiotherapy | is Josefa's plan B. | es el plan B de Josefa.
+- | is the captain of the men's national team. | es el capitán de la selección masculina.
+complete: dream, banana, uniform, strict, midfielder, sandwiches, tired, marks, physiotherapy, defeat
 ### sp4
 tenses: sp
 img: phone
@@ -8011,14 +8011,14 @@ The text explains the rule of the box on the teacher's desk. | El texto explica 
 The class tries the experiment for one week. | El curso prueba el experimento durante una semana.
 The class prepares a presentation for the whole school. | El curso prepara una presentación para todo el colegio.
 match:
-Ignacia | likes that her mother calls her when she is late.
-Martín | says that real life is not like the photos.
-Miss Contreras | thinks that students read less today.
-Alonso | reads a comic every night now.
-Trinidad | has more time for her drawings.
-8th grade C | asked 120 students about their phones.
-The box | is where phones stay during lessons.
-- | sells phones at a shop near the school.
+Ignacia | likes that her mother calls her when she is late. | le gusta que su mamá la llame cuando se atrasa.
+Martín | says that real life is not like the photos. | dice que la vida real no es como las fotos.
+Miss Contreras | thinks that students read less today. | piensa que hoy los estudiantes leen menos.
+Alonso | reads a comic every night now. | ahora lee un cómic todas las noches.
+Trinidad | has more time for her drawings. | tiene más tiempo para sus dibujos.
+8th grade C | asked 120 students about their phones. | les preguntó a 120 estudiantes sobre sus teléfonos.
+The box | is where phones stay during lessons. | es donde quedan los teléfonos durante las clases.
+- | sells phones at a shop near the school. | vende teléfonos en una tienda cerca del colegio.
 complete: survey, average, groups, safe, lonely, notifications, desk, screen, midnight, tools
 ### will1
 tenses: will
@@ -8100,14 +8100,14 @@ Miss Rojas said that a machine won't make friends for you. | La señorita Rojas 
 Tomás and Antonia explained their worries. | Tomás y Antonia explicaron sus preocupaciones.
 The class decided to put the predictions in a time capsule. | El curso decidió poner las predicciones en una cápsula del tiempo.
 match:
-Mr. Vega | thinks that teachers will teach people to think.
-Miss Rojas | believes that languages will still be important.
-Tomás | is worried about too much time with screens.
-Antonia | is worried about poor schools.
-The AI tutor | will explain fractions in a different way.
-The time capsule | will be opened in 2050.
-Solar panels | will produce energy for the school buildings.
-- | will replace all the teachers in 2030.
+Mr. Vega | thinks that teachers will teach people to think. | piensa que los profesores enseñarán a pensar.
+Miss Rojas | believes that languages will still be important. | cree que los idiomas seguirán siendo importantes.
+Tomás | is worried about too much time with screens. | está preocupado por pasar demasiado tiempo frente a pantallas.
+Antonia | is worried about poor schools. | está preocupada por los colegios pobres.
+The AI tutor | will explain fractions in a different way. | explicará las fracciones de otra manera.
+The time capsule | will be opened in 2050. | se abrirá en 2050.
+Solar panels | will produce energy for the school buildings. | producirán energía para los edificios del colegio.
+- | will replace all the teachers in 2030. | reemplazará a todos los profesores en 2030.
 complete: articles, flexible, weaknesses, instantly, debates, rainwater, greenhouses, programming, disagrees, capsule
 ### will2
 tenses: will
@@ -8189,14 +8189,14 @@ Ignacio says that Mrs. Fuentes will cry. | Ignacio dice que la señora Fuentes v
 The text explains the rules of the party. | El texto explica las reglas de la fiesta.
 Mrs. Fuentes offers to help to clean the gym. | La señora Fuentes se ofrece a ayudar a limpiar el gimnasio.
 match:
-Ignacio | is the class president and coordinates everything.
-Catalina | explains the idea for the decorations.
-Martina | is going to prepare sandwiches with her dad.
-Diego | is going to play songs as a DJ.
-Javiera | is going to organise a photo corner.
-Mrs. Fuentes | is the head teacher who always cries at the end of the year.
-Benjamín's mother | has promised a big chocolate cake.
-- | is going to sing with the band from 4th year.
+Ignacio | is the class president and coordinates everything. | es el presidente de curso y coordina todo.
+Catalina | explains the idea for the decorations. | explica la idea para la decoración.
+Martina | is going to prepare sandwiches with her dad. | va a preparar sándwiches con su papá.
+Diego | is going to play songs as a DJ. | va a poner canciones como DJ.
+Javiera | is going to organise a photo corner. | va a organizar un rincón de fotos.
+Mrs. Fuentes | is the head teacher who always cries at the end of the year. | es la profesora jefe que siempre llora a fin de año.
+Benjamín's mother | has promised a big chocolate cake. | prometió una gran torta de chocolate.
+- | is going to sing with the band from 4th year. | va a cantar con la banda de 4° medio.
 complete: coordinate, fabric, catering, biscuits, reggaeton, frame, permission, broom, groan, technical
 ### will3
 tenses: will
@@ -8278,14 +8278,14 @@ Mr. Torres asks who will climb the hill with him. | El señor Torres pregunta qu
 Mrs. Torres reads the list of things to pack. | La señora Torres lee la lista de cosas que hay que empacar.
 Grandma Inés calls because she wants to go too. | La abuela Inés llama porque también quiere ir.
 match:
-Mrs. Torres | has booked the campsite and will pack the food.
-Mr. Torres | is going to climb a hill to watch the sunrise.
-Bastián | is going to go rafting on Saturday.
-Sofía | is worried because there won't be any internet.
-Grandma Inés | will cook the best barbecue.
-Joaquín | went rafting last year.
-El Velo de la Novia | is a waterfall.
-- | is the guide who is going to teach Sofía to swim.
+Mrs. Torres | has booked the campsite and will pack the food. | reservó el camping y va a empacar la comida.
+Mr. Torres | is going to climb a hill to watch the sunrise. | va a subir un cerro para ver el amanecer.
+Bastián | is going to go rafting on Saturday. | va a hacer rafting el sábado.
+Sofía | is worried because there won't be any internet. | está preocupada porque no habrá internet.
+Grandma Inés | will cook the best barbecue. | cocinará el mejor asado.
+Joaquín | went rafting last year. | hizo rafting el año pasado.
+El Velo de la Novia | is a waterfall. | es una cascada.
+- | is the guide who is going to teach Sofía to swim. | es el guía que le va a enseñar a nadar a Sofía.
 complete: valley, booked, forecast, jackets, goats, marshmallows, sunrise, stove, rubbish, barbecue
 ### will4
 tenses: will
@@ -8377,14 +8377,14 @@ She writes about her worries about the climate. | Escribe sobre sus preocupacion
 She gives some advice to her future self. | Le da algunos consejos a su yo del futuro.
 She is going to put the letter in an envelope. | Va a poner la carta en un sobre.
 match:
-Amanda | will probably study veterinary medicine.
-Miss Contreras | is going to send the letters by email.
-Mota and Pimienta | are Amanda's two cats.
-Lenta | is a turtle.
-Fernanda | is Amanda's best friend and wants to be an architect.
-Grandma | loves the Sunday calls.
-The pudú | had a broken leg.
-- | is Amanda's dog in Puerto Varas.
+Amanda | will probably study veterinary medicine. | probablemente estudiará medicina veterinaria.
+Miss Contreras | is going to send the letters by email. | va a enviar las cartas por correo electrónico.
+Mota and Pimienta | are Amanda's two cats. | son los dos gatos de Amanda.
+Lenta | is a turtle. | es una tortuga.
+Fernanda | is Amanda's best friend and wants to be an architect. | es la mejor amiga de Amanda y quiere ser arquitecta.
+Grandma | loves the Sunday calls. | adora las llamadas de los domingos.
+The pudú | had a broken leg. | tenía una pata quebrada.
+- | is Amanda's dog in Puerto Varas. | es el perro de Amanda en Puerto Varas.
 complete: apartment, turtle, lakes, kindergarten, architect, camera, koalas, plastic, mistakes, envelope`;
 function rtParse(raw){
   const out=[];
@@ -8406,7 +8406,7 @@ function rtParse(raw){
       if(sec==='mc')R.mc.push({q:p[0],qes:p[1],ok:p[2],bad:p.slice(3,6)});
       else if(sec==='tf')R.tf.push({ans:/^t/i.test(p[0])?'T':'F',en:p[1],es:p[2]});
       else if(sec==='order')R.order.push({en:p[0],es:p[1]});
-      else if(sec==='match'){if(p[0]==='-')R.extra=p[1];else R.match.push({a:p[0],b:p[1]});}
+      else if(sec==='match'){if(p[0]==='-'){R.extra=p[1];R.extraEs=p[2]||'';}else R.match.push({a:p[0],b:p[1],bes:p[2]||''});}
       else if(sec==='complete')R.complete.push(...t.split(',').map(x=>x.trim()).filter(Boolean));
     }
     flush();R.words=R.en.split(/\s+/).filter(Boolean).length;out.push(R);
@@ -8433,20 +8433,26 @@ function rtFillSelect(){const sel=$('#abTopic');if(!sel)return;const cur=sel.val
     Object.keys(AB_LABEL).filter(t=>AB.tenses.includes(t)).map(t=>`<optgroup label="${abEsc(AB_LABEL[t])} · ${abEsc(AB_LABEL_ES[t])}">${RT_BANK.filter(r=>r.tenses[0]===t||(!AB.tenses.includes(r.tenses[0])&&r.tenses.includes(t))).map(r=>`<option value="${r.id}">${abEsc(r.title)} · ${abEsc(r.titleEs)} (${r.words} words)</option>`).join('')}</optgroup>`).join('');
   sel.value=[...sel.options].some(o=>o.value===cur)?cur:'random';
   const n=$('#abBankNote');if(n)n.textContent=`Banco: ${RT_BANK.length} lecturas en total · ${pool.length} para los tiempos elegidos. Cada lectura tiene su texto en inglés y su traducción al español, 18 preguntas de alternativas, 13 de verdadero o falso, 8 hechos para ordenar, 7 relaciones (+1 distractor), 10 palabras para completar y un dibujo.`;}
+function rtRng(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}let s=h>>>0;return()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 function generateAssessment(){
   if(!AB.tenses.length)throw new Error('Selecciona al menos un tiempo verbal.');
   const sel=$('#abTopic').value,pool=rtPool();if(!pool.length)throw new Error('No hay lecturas para esos tiempos verbales.');
   let R=sel==='random'?null:RT_BANK.find(r=>r.id===sel);
+  const vIn=$('#abVersion'),vTyped=vIn&&vIn.value.trim()?parseInt(vIn.value,10):NaN;
+  if(vIn&&vIn.value.trim()&&!(vTyped>=100&&vTyped<=999))throw new Error('El N° de versión debe ser un número entre 100 y 999.');
+  if(Number.isFinite(vTyped)&&!R)throw new Error('Para recuperar una versión, elige primero en la lista la misma lectura de esa prueba.');
   if(!R){const fresh=pool.filter(r=>r.id!==AB.last);R=abShuffle(fresh.length?fresh:pool)[0];}
+  const version=Number.isFinite(vTyped)?vTyped:Math.floor(Math.random()*900+100);
+  const rnd=rtRng(R.id+':'+version),shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const L='abcd';
-  const tq=R.mc.map((q,i)=>{const opts=abShuffle([q.ok,...q.bad]);return{n:i+1,q:q.q,qes:q.qes,opts,ans:q.ok,letter:L[opts.indexOf(q.ok)]};});
+  const tq=R.mc.map((q,i)=>{const opts=shuf([q.ok,...q.bad]);return{n:i+1,q:q.q,qes:q.qes,opts,ans:q.ok,letter:L[opts.indexOf(q.ok)]};});
   const tf=R.tf.map((x,i)=>Object.assign({n:i+1},x));
-  let order=abShuffle(R.order.map((x,i)=>Object.assign({ans:i+1},x)));
+  let order=shuf(R.order.map((x,i)=>Object.assign({ans:i+1},x)));
   if(order.every((x,i)=>x.ans===i+1))order.reverse();
   order=order.map((x,i)=>Object.assign({n:i+1},x));
-  const A=R.match.map((m,i)=>({n:i+1,text:m.a})),B=abShuffle(R.match.map((m,i)=>({text:m.b,num:i+1})).concat(R.extra?[{text:R.extra,num:0}]:[])).map((b,i)=>Object.assign({letter:'ABCDEFGHIJ'[i]},b));
+  const A=R.match.map((m,i)=>({n:i+1,text:m.a})),B=shuf(R.match.map((m,i)=>({text:m.b,es:m.bes,num:i+1})).concat(R.extra?[{text:R.extra,es:R.extraEs,num:0}]:[])).map((b,i)=>Object.assign({letter:'ABCDEFGHIJ'[i]},b));
   const complete=rtComplete(R).map((c,i)=>Object.assign({n:i+1},c));
-  AB.data={R,tq,tf,order,A,B,complete,version:Math.floor(Math.random()*900+100),sheet:!!($('#abSheet')&&$('#abSheet').checked)};AB.last=R.id;
+  AB.data={R,tq,tf,order,A,B,complete,version,sheet:!!($('#abSheet')&&$('#abSheet').checked)};AB.last=R.id;
   renderAssessment();
   ['abPrintStudent','abPrintKey','abStartOnline'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=false;});
   const v=document.getElementById('abVirtual');if(v)v.classList.add('hidden');
@@ -8495,7 +8501,7 @@ function rtMainHTML(d){const R=d.R,T=rtTotals(d),pic=IMG[R.img]?`<div class="rt-
   // III. order of the events
   h+=`<div><h2 class="rt-item rt-gap">III.- The following events from '${abEsc(R.title)}' are in the wrong order. Read the text carefully and write the numbers 1 to ${d.order.length} on the line on the left to show the order in which they appear in the text. (${RT_PTS.order} point each)</h2><div class="rt-ordh"><span>Order</span><span>Event</span></div>${d.order.map(rtOrd).join('')}</div></div>`;
   // IV. matching: Column A numbered, Column B lettered with a line for the number
-  const rows=[];for(let i=0;i<Math.max(d.A.length,d.B.length);i++){const a=d.A[i],b=d.B[i];rows.push(`<div class="rt-mrow"><div>${a?`${a.n}.- ${abEsc(a.text)}`:''}</div><div>${b?`${b.letter}) ____ ${abEsc(b.text)}`:''}</div></div>`);}
+  const rows=[];for(let i=0;i<Math.max(d.A.length,d.B.length);i++){const a=d.A[i],b=d.B[i];rows.push(`<div class="rt-mrow"><div>${a?`${a.n}.- ${abEsc(a.text)}`:''}</div><div>${b?`${b.letter}) ____ ${abEsc(b.text)}${b.es?` <i>(${abEsc(b.es)})</i>`:''}`:''}</div></div>`);}
   h+=`<div class="rt-pg rt-one"><div><h2 class="rt-item">IV.- Match each item in Column A with its correct description in Column B. Write the number of Column A on the line provided. Warning: there is ONE extra option in Column B that does not match any item. (${RT_PTS.match} points each)</h2><div class="rt-mrow rt-mh"><div>Column A</div><div>Column B</div></div>${rows.join('')}</div>`;
   // V. completion
   const cp=d.complete.map(c=>`<div class="rt-cp">${c.n}.- ${abEsc(c.text).replace('§§','<span class="rt-blank"></span>')}</div>`);
@@ -8533,7 +8539,7 @@ function rtKeyHTML(d){const R=d.R,T=rtTotals(d);
   for(let i=0;i<d.tf.length;i+=2)h+=`<tr>${[d.tf[i],d.tf[i+1]].map(x=>x?`<td><b>${x.n}. ${x.ans}</b> — ${abEsc(x.en)}</td>`:'<td></td>').join('')}</tr>`;
   const seq=d.order.slice().sort((a,b)=>a.ans-b.ans);
   h+=`</table><h2 class="rt-item">III.- Order of events (${T.order} pts)</h2><table class="rt-tab"><tr><th>Row in the test</th><th>Answer</th><th>Event (correct sequence)</th></tr>${seq.map(x=>`<tr><td>${x.n}</td><td><b>${x.ans}</b></td><td>${abEsc(x.en)}</td></tr>`).join('')}</table>`;
-  h+=`<h2 class="rt-item">IV.- Matching (${T.match} pts)</h2><table class="rt-tab rt-k2">${d.B.map(b=>`<tr><td><b>${b.letter}</b> · ${abEsc(b.text)}</td><td>${b.num?`<b>${b.num}</b> · ${abEsc(d.A[b.num-1].text)}`:'— <i>extra option · distractor</i>'}</td></tr>`).join('')}</table>`;
+  h+=`<h2 class="rt-item">IV.- Matching (${T.match} pts)</h2><table class="rt-tab rt-k2">${d.B.map(b=>`<tr><td><b>${b.letter}</b> · ${abEsc(b.text)}${b.es?` <i>(${abEsc(b.es)})</i>`:''}</td><td>${b.num?`<b>${b.num}</b> · ${abEsc(d.A[b.num-1].text)}`:'— <i>extra option · distractor</i>'}</td></tr>`).join('')}</table>`;
   h+=`<h2 class="rt-item">V.- Completion (${T.complete} pts)</h2><table class="rt-tab rt-k2">`;
   for(let i=0;i<d.complete.length;i+=2)h+=`<tr>${[d.complete[i],d.complete[i+1]].map(c=>c?`<td><b>${c.n}. ${abEsc(c.ans)}</b></td>`:'<td></td>').join('')}</tr>`;
   h+=`</table><h2 class="rt-item">VI.- Drawing (${T.draw} pts)</h2><p class="rt-inst">${abEsc(R.draw)} — 1 pt: related, not coloured · 3 pts: complete, two details, half coloured · 5 pts: complete, coloured, three or more details.</p>`;
@@ -8588,7 +8594,7 @@ function renderOnlineAssessment(){
   h+=`<h2 class="rt-item">II.- True or False (${T.tf} pts)<i>Verdadero o falso.</i></h2>${d.tf.map(x=>`<div class="ab-online-question"><b>${x.n}.- ${abEsc(x.en)}</b> <i class="rt-esq">(${abEsc(x.es)})</i><div class="ab-online-options">${radios('tf'+x.n,['T · True / Verdadero','F · False / Falso'])}</div></div>`).join('')}`;
   const nums=Array.from({length:d.order.length},(_,i)=>i+1);
   h+=`<h2 class="rt-item">III.- Order the events (${T.order} pts)<i>Elige el número de orden de cada hecho.</i></h2>${d.order.map(x=>`<div class="ab-online-question rt-row"><select name="ord${x.n}"><option value="">—</option>${nums.map(k=>`<option>${k}</option>`).join('')}</select><span>${abEsc(x.en)} <i class="rt-esq">(${abEsc(x.es)})</i></span></div>`).join('')}`;
-  h+=`<h2 class="rt-item">IV.- Matching (${T.match} pts)<i>Escribe el número de la columna A junto a cada descripción. Una descripción sobra: déjala en «—».</i></h2><div class="rt-colA">${d.A.map(a=>`<span><b>${a.n}.</b> ${abEsc(a.text)}</span>`).join('')}</div>${d.B.map(b=>`<div class="ab-online-question rt-row"><select name="mat${b.letter}"><option value="">—</option>${d.A.map(a=>`<option value="${a.n}">${a.n}</option>`).join('')}</select><span>${abEsc(b.text)}</span></div>`).join('')}`;
+  h+=`<h2 class="rt-item">IV.- Matching (${T.match} pts)<i>Escribe el número de la columna A junto a cada descripción. Una descripción sobra: déjala en «—».</i></h2><div class="rt-colA">${d.A.map(a=>`<span><b>${a.n}.</b> ${abEsc(a.text)}</span>`).join('')}</div>${d.B.map(b=>`<div class="ab-online-question rt-row"><select name="mat${b.letter}"><option value="">—</option>${d.A.map(a=>`<option value="${a.n}">${a.n}</option>`).join('')}</select><span>${abEsc(b.text)}${b.es?` <i class="rt-esq">(${abEsc(b.es)})</i>`:''}</span></div>`).join('')}`;
   h+=`<h2 class="rt-item">V.- Completion (${T.complete} pts)<i>Escribe la palabra exacta del texto.</i></h2>${d.complete.map(c=>`<div class="ab-online-question"><b>${c.n}.-</b> ${abEsc(c.text).replace('§§',`<input name="com${c.n}" class="rt-inp" autocomplete="off" spellcheck="false">`)}</div>`).join('')}`;
   h+=`<h2 class="rt-item">VI.- ${abEsc(R.draw)} (${T.draw} pts, revisado por el profesor)<i>${abEsc(R.drawEs)}</i></h2><div class="ab-canvas-wrap"><canvas id="abDrawCanvas" width="900" height="400"></canvas></div><button type="button" class="btn ghost" id="abClearCanvas">Borrar dibujo · Clear</button>
   <div class="actions"><button type="button" class="btn" id="abFinishOnline">✔ Finalizar y corregir · Finish</button></div><div id="abOnlineResult"></div></div>`;
