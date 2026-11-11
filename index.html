@@ -528,6 +528,14 @@ mark{background:#FFE58A;color:inherit;border-radius:5px;padding:0 3px;box-shadow
 .asg-card .actions{margin-top:6px}
 #studentAssign h2{margin-top:6px}
 @media print{#abAssign,#shAssign{display:none!important}}
+.dr-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0;padding:8px;border:1px solid #cfe7e3;border-radius:12px;background:#f8fffd}
+.dr-tools,.dr-colors,.dr-acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.dr-tool{display:flex;flex-direction:column;align-items:center;min-width:62px;padding:4px 6px;border:2px solid #cfe7e3;border-radius:10px;background:#fff;font-size:20px;cursor:pointer;color:#1f2937}
+.dr-tool small{font-size:11px}.dr-tool.on{border-color:#0f766e;background:#ccfbf1}
+.dr-col{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #9ca3af;cursor:pointer;padding:0}
+.dr-col.on{box-shadow:0 0 0 3px #0f766e}
+.dr-custom{display:flex;align-items:center;gap:2px;font-size:20px;cursor:pointer}.dr-custom input{width:34px;height:30px;padding:0;border:none;background:none}
+.dr-meter{margin:6px 0 4px;padding:8px 12px;border-radius:10px;background:#eef6ff;color:#1f2937}
 </style>
 </head>
 <body>
@@ -6263,12 +6271,12 @@ function renderResults(){
   $('#rCourse').innerHTML = '<option value="">All classes</option>' + courses.filter(Boolean).map(c => `<option${c===cur?' selected':''}>${esc(c)}</option>`).join('') + (courses.includes('') ? `<option value="__none"${cur==='__none'?' selected':''}>No class</option>` : '');
   const list = filtered();
   $('#rCnt').textContent = `${list.length} of ${all.length} sessions · ${new Set(all.map(s => (s.first+' '+s.last).toLowerCase())).size} students`;
-  const active = all.filter(s => s.status !== 'done' && Date.now() - (s.end || s.start) < 15 * 60000);
-  $('#liveBar').innerHTML = active.length ? `<span class="livedot"></span><b>${active.length} working now · trabajando ahora:</b> ${active.map(s => `${esc(s.first)} ${esc(s.last)} (${answeredOf(s)}/${s.total})`).join(' · ')}` : ($('#rLive').checked ? '<span class="livedot"></span>Live monitor on · nobody is working right now · nadie está trabajando ahora.' : '');
+  const active = all.filter(s => s.status !== 'done' && Date.now() - (s.updated || s.end || s.start) < 8 * 60000);
+  $('#liveBar').innerHTML = active.length ? `<span class="livedot"></span><b>${active.length} working now · trabajando ahora:</b> ${active.map(s => `${esc(s.first)} ${esc(s.last)} · ${esc(s.course||'')} (${answeredOf(s)}/${s.qn||s.total} · ${modeOf(s)} · activo hace ${Math.max(0,Math.round((Date.now()-(s.updated||s.start))/60000))} min)`).join(' · ')}` : ($('#rLive').checked ? '<span class="livedot"></span>Live monitor on · nobody is working right now · nadie está trabajando ahora.' : '');
   $('#rBody').innerHTML = list.length ? list.map(s => { const g = gOf(s), done = s.status === 'done'; const ans = answeredOf(s);
     return `<tr class="${done ? '' : 'inprog'}"><td>${fdate(s.start)}</td><td><b>${esc(s.last)}</b>, ${esc(s.first)}</td><td>${esc(s.course||'')}</td><td>${modeOf(s)} · ${groupsOf(s)} · ${s.total}</td>
       <td>${String(Math.round(s.pts*10)/10).replace('.',',')} / ${baseOf(s)}</td><td class="${s.settings.practice ? '' : g<4?'g-bad':'g-ok'}">${s.settings.practice ? 'No grade' : fmtG(g)}</td><td>${fmtDur(s)}<br><small class="muted">≈${avgSecs(s)} s/q</small></td>
-      <td>${done ? (s.finishedEarly ? `⏹ Finished early (${ans}/${s.total})` : '✅ Finished') : `⏳ Not finished ${ans}/${s.total}`}</td>
+      <td>${done ? (s.finishedEarly ? `⏹ Finished early (${ans}/${s.total})` : '✅ Finished') : `⏳ Not finished ${ans}/${s.qn||s.total}`}</td>
       <td style="white-space:nowrap"><button class="btn ghost sm" data-view="${s.id}">View</button> <button class="btn ghost sm" data-rdel="${s.id}" title="Delete">🗑</button></td></tr>`; }).join('')
     : '<tr><td colspan="9" class="muted">No results yet. They will appear here when students practise.</td></tr>';
   $$('[data-view]').forEach(b => b.onclick = () => viewSession(b.dataset.view));
@@ -8694,20 +8702,61 @@ function renderOnlineAssessment(opts){
   h+=`<h2 class="rt-item">III.- Order the events (${T.order} pts)<i>Elige el número de orden de cada hecho.</i></h2>${d.order.map(x=>`<div class="ab-online-question rt-row"><select name="ord${x.n}"><option value="">—</option>${nums.map(k=>`<option>${k}</option>`).join('')}</select><span>${abEsc(x.en)} <i class="rt-esq">(${abEsc(x.es)})</i></span></div>`).join('')}`;
   h+=`<h2 class="rt-item">IV.- Matching (${T.match} pts)<i>Escribe el número de la columna A junto a cada descripción. Una descripción sobra: déjala en «—».</i></h2><div class="rt-colA">${d.A.map(a=>`<span><b>${a.n}.</b> ${abEsc(a.text)}</span>`).join('')}</div>${d.B.map(b=>`<div class="ab-online-question rt-row"><select name="mat${b.letter}"><option value="">—</option>${d.A.map(a=>`<option value="${a.n}">${a.n}</option>`).join('')}</select><span>${abEsc(b.text)}${b.es?` <i class="rt-esq">(${abEsc(b.es)})</i>`:''}</span></div>`).join('')}`;
   h+=`<h2 class="rt-item">V.- Completion (${T.complete} pts)<i>Escribe la palabra exacta del texto.</i></h2>${d.complete.map(c=>`<div class="ab-online-question"><b>${c.n}.-</b> ${abEsc(c.text).replace('§§',`<input name="com${c.n}" class="rt-inp" autocomplete="off" spellcheck="false">`)}</div>`).join('')}`;
-  h+=`<h2 class="rt-item">VI.- ${abEsc(R.draw)} (${T.draw} pts, revisado por el profesor)<i>${abEsc(R.drawEs)}</i></h2><div class="ab-canvas-wrap"><canvas id="abDrawCanvas" width="900" height="400"></canvas></div><button type="button" class="btn ghost" id="abClearCanvas">Borrar dibujo · Clear</button>
+  h+=`<h2 class="rt-item">VI.- ${abEsc(R.draw)} (${T.draw} pts)<i>${abEsc(R.drawEs)}</i></h2>
+  <p class="note dr-scale">Escala · Scale: <b>1 pt</b> dibujo sin pintar · <b>3 pts</b> dibujo pintado hasta la mitad · <b>5 pts</b> dibujo completo y pintado. Truco: dibuja con ✏️ figuras cerradas y píntalas rápido con 🪣 Rellenar.</p>
+  <div class="dr-bar"><div class="dr-tools">${[['pencil','✏️','Lápiz'],['marker','🖊️','Plumón'],['brush','🖌️','Pincel'],['roller','🧽','Brocha gruesa'],['fill','🪣','Rellenar'],['eraser','⬜','Goma']].map(([k,i,n],j)=>`<button type="button" class="dr-tool${j===0?' on':''}" data-tool="${k}" title="${n}">${i}<small>${n}</small></button>`).join('')}</div>
+  <div class="dr-colors">${['#111111','#6b7280','#8b4513','#f5c6a5','#ef4444','#f97316','#facc15','#22c55e','#15803d','#38bdf8','#2563eb','#9333ea','#ec4899'].map((c,j)=>`<button type="button" class="dr-col${j===0?' on':''}" data-col="${c}" style="background:${c}" title="${c}"></button>`).join('')}<label class="dr-custom" title="Otro color">🎨<input type="color" id="drCustom" value="#ff66cc"></label></div>
+  <div class="dr-acts"><button type="button" class="btn ghost sm" id="drUndo">↩ Deshacer</button><button type="button" class="btn ghost sm" id="abClearCanvas">🗑 Borrar todo</button></div></div>
+  <div class="ab-canvas-wrap"><canvas id="abDrawCanvas" width="900" height="400" style="touch-action:none;background:#fff;cursor:crosshair"></canvas></div><div id="drMeter" class="dr-meter"></div>
   <div class="actions"><button type="button" class="btn" id="abFinishOnline">${asg?'📤 Entregar prueba · Hand in':'✔ Finalizar y corregir · Finish'}</button></div><div id="abOnlineResult"></div></div>`;
   v.innerHTML=h;
-  const canvas=document.getElementById('abDrawCanvas'),ctx=canvas.getContext('2d');ctx.lineWidth=3;ctx.lineCap='round';ctx.strokeStyle='#111';let drawing=false;
-  const point=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};};
-  canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
-  canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
-  // borrador automático en este navegador, para no perder respuestas si se cierra la página
-  const dKey=asg?'asgDraft.'+asg.id+'.'+asgStudentKey():null;
-  const saveDraft=()=>{if(!dKey)return;try{const o={};v.querySelectorAll('input[name],select[name]').forEach(e=>{if(e.type==='radio'){if(e.checked)o[e.name]=e.value;}else if(e.value)o[e.name]=e.value;});o.__draw=canvas.toDataURL('image/png');localStorage.setItem(dKey,JSON.stringify(o));}catch(e){}};
-  if(dKey){try{const o=JSON.parse(localStorage.getItem(dKey)||'null');if(o){v.querySelectorAll('input[name],select[name]').forEach(e=>{if(!(e.name in o))return;if(e.type==='radio')e.checked=e.value===o[e.name];else e.value=o[e.name];});if(o.__draw){const im=new Image();im.onload=()=>ctx.drawImage(im,0,0);im.src=o.__draw;}}}catch(e){}
-    v.addEventListener('change',saveDraft);v.addEventListener('input',saveDraft);}
-  ['pointerup','pointercancel','pointerleave'].forEach(ev=>canvas.addEventListener(ev,()=>{if(drawing&&dKey)setTimeout(saveDraft,0);drawing=false;}));
-  document.getElementById('abClearCanvas').onclick=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);saveDraft();};
+  // ---------- herramientas de dibujo y pintura ----------
+  const canvas=document.getElementById('abDrawCanvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.lineCap='round';ctx.lineJoin='round';
+  const TOOLS={pencil:4,marker:10,brush:22,roller:46,eraser:28};let tool='pencil',color='#111111',drawing=false,last=null;const undo=[];
+  const snap=()=>{undo.push(ctx.getImageData(0,0,canvas.width,canvas.height));if(undo.length>20)undo.shift();};
+  const point=e=>{const r=canvas.getBoundingClientRect();return{x:Math.round((e.clientX-r.left)*canvas.width/r.width),y:Math.round((e.clientY-r.top)*canvas.height/r.height)};};
+  const hex=c=>[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];
+  function floodFill(x0,y0,col){const W=canvas.width,Hh=canvas.height,img=ctx.getImageData(0,0,W,Hh),p=img.data,[fr,fg,fb]=hex(col);const i0=(y0*W+x0)*4,tr=p[i0],tg=p[i0+1],tb=p[i0+2];
+    if(Math.abs(tr-fr)+Math.abs(tg-fg)+Math.abs(tb-fb)<10)return false;const TOL=110,seen=new Uint8Array(W*Hh),match=i=>Math.abs(p[i]-tr)+Math.abs(p[i+1]-tg)+Math.abs(p[i+2]-tb)<=TOL;const st=[x0,y0];
+    while(st.length){const y=st.pop(),x=st.pop();let lx=x;while(lx>=0&&!seen[y*W+lx]&&match((y*W+lx)*4))lx--;lx++;let rx=x;while(rx<W&&!seen[y*W+rx]&&match((y*W+rx)*4))rx++;rx--;
+      for(let i=lx;i<=rx;i++){const k=y*W+i;seen[k]=1;p[k*4]=fr;p[k*4+1]=fg;p[k*4+2]=fb;p[k*4+3]=255;for(const ny of [y-1,y+1]){if(ny<0||ny>=Hh)continue;const kk=ny*W+i;if(!seen[kk]&&match(kk*4)){st.push(i,ny);}}}}
+    ctx.putImageData(img,0,0);return true;}
+  // análisis automático: ¿hay dibujo? ¿qué parte está pintada?
+  function drawScore(){const W=canvas.width,Hh=canvas.height,p=ctx.getImageData(0,0,W,Hh).data,S=3,gw=Math.floor(W/S),gh=Math.floor(Hh/S),ink=new Uint8Array(gw*gh),solid=new Uint8Array(gw*gh);
+    const white=i=>p[i]>232&&p[i+1]>232&&p[i+2]>232;let inkN=0,x0=gw,y0=gh,x1=-1,y1=-1;
+    for(let gy=0;gy<gh;gy++)for(let gx=0;gx<gw;gx++){let n=0;for(let dy=0;dy<S;dy++)for(let dx=0;dx<S;dx++){if(!white(((gy*S+dy)*W+gx*S+dx)*4))n++;}const k=gy*gw+gx;if(n){ink[k]=1;inkN++;if(gx<x0)x0=gx;if(gx>x1)x1=gx;if(gy<y0)y0=gy;if(gy>y1)y1=gy;}if(n>=8)solid[k]=1;}
+    if(inkN<60)return{drawn:false,pct:0,pts:0};
+    let paint=0;for(let gy=2;gy<gh-2;gy++)for(let gx=2;gx<gw-2;gx++){const k=gy*gw+gx;if(!solid[k])continue;let s=0;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)s+=solid[k+dy*gw+dx];if(s>=23)paint++;}
+    const out=new Uint8Array(gw*gh),q=[];for(let gx=0;gx<gw;gx++){q.push(gx,gw*(gh-1)+gx);}for(let gy=0;gy<gh;gy++){q.push(gy*gw,gy*gw+gw-1);}
+    while(q.length){const k=q.pop();if(out[k]||ink[k])continue;out[k]=1;const gx=k%gw,gy=(k-gx)/gw;if(gx>0)q.push(k-1);if(gx<gw-1)q.push(k+1);if(gy>0)q.push(k-gw);if(gy<gh-1)q.push(k+gw);}
+    let holes=0;for(let k=0;k<gw*gh;k++)if(!ink[k]&&!out[k])holes++;
+    const box=Math.max(1,(x1-x0+1)*(y1-y0+1)),ratio=paint/Math.max(1,paint+holes),cover=paint/box,pct=paint?Math.round(Math.min(1,ratio,cover/0.15)*100):0;
+    const pts=ratio>=0.97&&cover>=0.15?5:((ratio>=0.3&&paint>=40)||cover>=0.1)?3:1;return{drawn:true,pct,pts};}
+  const meter=document.getElementById('drMeter');let mT=null;
+  const showMeter=()=>{clearTimeout(mT);mT=setTimeout(()=>{const s=drawScore();meter.innerHTML=!s.drawn?'✏️ Aún no hay dibujo · No drawing yet → <b>0 / 5 pts</b>':`✏️ Dibujo: ✔ · 🎨 Pintado: <b>${s.pct}%</b> → puntaje del dibujo: <b>${s.pts} / 5</b>${s.pts<5?' · <span class="muted">pinta todas las figuras para llegar a 5</span>':' ✅'}`;},250);};
+  canvas.addEventListener('pointerdown',e=>{e.preventDefault();const pt=point(e);snap();
+    if(tool==='fill'){if(!floodFill(Math.min(canvas.width-1,Math.max(0,pt.x)),Math.min(canvas.height-1,Math.max(0,pt.y)),color))undo.pop();saveDraft();showMeter();return;}
+    drawing=true;canvas.setPointerCapture(e.pointerId);ctx.strokeStyle=ctx.fillStyle=tool==='eraser'?'#ffffff':color;ctx.lineWidth=TOOLS[tool];ctx.beginPath();ctx.arc(pt.x,pt.y,TOOLS[tool]/2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(pt.x,pt.y);last=pt;});
+  canvas.addEventListener('pointermove',e=>{if(!drawing)return;const pt=point(e);ctx.lineTo(pt.x,pt.y);ctx.stroke();ctx.beginPath();ctx.moveTo(pt.x,pt.y);last=pt;});
+  ['pointerup','pointercancel'].forEach(ev=>canvas.addEventListener(ev,()=>{if(drawing){drawing=false;saveDraft();showMeter();}}));
+  v.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;v.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('on',x===b));canvas.style.cursor=tool==='fill'?'cell':'crosshair';});
+  const pickCol=c=>{color=c;v.querySelectorAll('[data-col]').forEach(x=>x.classList.toggle('on',x.dataset.col===c));if(tool==='eraser'){tool='pencil';v.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('on',x.dataset.tool==='pencil'));}};
+  v.querySelectorAll('[data-col]').forEach(b=>b.onclick=()=>pickCol(b.dataset.col));document.getElementById('drCustom').oninput=e=>pickCol(e.target.value);
+  document.getElementById('drUndo').onclick=()=>{const im=undo.pop();if(im){ctx.putImageData(im,0,0);saveDraft();showMeter();}};
+  document.getElementById('abClearCanvas').onclick=()=>{if(!confirm('¿Borrar todo el dibujo?'))return;snap();ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);saveDraft();showMeter();};
+  // ---------- borrador y avance en vivo (solo evaluaciones asignadas) ----------
+  const dKey=asg?'asgDraft.'+asg.id+'.'+asgStudentKey():null;let SID='s'+Date.now()+Math.random().toString(36).slice(2,6),T0r=T0,handed=false,lastPush=0,hb=null;
+  const nQ=d.tq.length+d.tf.length+d.order.length+d.A.length+d.complete.length+1,maxPts=T.all;
+  function answeredList(){const out=[];d.tq.forEach(q=>{const a=v.querySelector(`input[name="tq${q.n}"]:checked`);if(a)out.push(`I.${q.n}`);});d.tf.forEach(x=>{if(v.querySelector(`input[name="tf${x.n}"]:checked`))out.push(`II.${x.n}`);});
+    v.querySelectorAll('select[name^="ord"],select[name^="mat"],input[name^="com"]').forEach(e=>{if(e.value)out.push(e.name);});if(drawScore().drawn)out.push('VI');return out;}
+  function pushProgress(force){if(!asg||handed)return;if(!force&&Date.now()-lastPush<30000)return;lastPush=Date.now();const st=STUDENT_SESSION||{},ans=answeredList();
+    saveSession({id:SID,first:st.first,last:st.last,course:st.course,start:T0r,status:'progress',settings:{mode:'reading',groups:[],types:[],timer:0,p1:0,p2:0,chosenBy:'assignment',assign:asg.id,atitle:asg.title,part:'reading',rid:R.id,version:d.version},total:maxPts,qn:nQ,pts:0,grade:null,
+      items:ans.map(l=>({sentence:l,f:'',t:'',mode:'reading',part:l.split('.')[0],attempts:['…'],correct:false,timeout:false,pts:0,secs:null,phase:0}))});}
+  function saveDraft(){if(!dKey)return;try{const o={__sid:SID,__t0:T0r};v.querySelectorAll('input[name],select[name]').forEach(e=>{if(e.type==='radio'){if(e.checked)o[e.name]=e.value;}else if(e.value)o[e.name]=e.value;});o.__draw=canvas.toDataURL('image/png');localStorage.setItem(dKey,JSON.stringify(o));}catch(e){}pushProgress(false);}
+  if(dKey){try{const o=JSON.parse(localStorage.getItem(dKey)||'null');if(o){if(o.__sid)SID=o.__sid;if(o.__t0)T0r=o.__t0;v.querySelectorAll('input[name],select[name]').forEach(e=>{if(!(e.name in o))return;if(e.type==='radio')e.checked=e.value===o[e.name];else e.value=o[e.name];});if(o.__draw){const im=new Image();im.onload=()=>{ctx.drawImage(im,0,0);showMeter();};im.src=o.__draw;}}}catch(e){}
+    v.addEventListener('change',saveDraft);v.addEventListener('input',e=>{if(e.target.id!=='drCustom')saveDraft();});
+    pushProgress(true);window.__asgFlush=()=>pushProgress(true);const onHide=()=>{if(document.visibilityState==='hidden')pushProgress(true);};document.addEventListener('visibilitychange',onHide);addEventListener('pagehide',()=>pushProgress(true));hb=setInterval(()=>{if(handed||!document.body.contains(canvas)||CURRENT_VIEW!=='asg'){clearInterval(hb);return;}if(document.visibilityState==='visible')pushProgress(true);},120000);}
+  showMeter();
   document.getElementById('abFinishOnline').onclick=()=>{
     if(asg&&!confirm('¿Entregar la prueba? Después no podrás cambiar tus respuestas. · Hand in the test?'))return;
     let score=0,max=0;const det=[];
@@ -8719,20 +8768,21 @@ function renderOnlineAssessment(opts){
     d.B.forEach(b=>{const g=val(`[name="mat${b.letter}"]`);if(b.num){grade(`IV.${b.letter}`,b.text,+g===b.num,g,String(b.num)+' · '+d.A[b.num-1].text,RT_PTS.match);}else if(g)det.push({label:`IV.${b.letter}`,q:b.text,ok:false,given:g,correct:'— (extra)',w:0});});
     const norm=s=>String(s||'').trim().toLowerCase().replace(/[’']/g,"'").replace(/[.,!?;:"«»]/g,'');
     d.complete.forEach(c=>{const g=val(`[name="com${c.n}"]`);grade(`V.${c.n}`,c.text.replace('§§','____'),norm(g)===norm(c.ans),g,c.ans,RT_PTS.complete);});
+    const DS=drawScore();max+=T.draw;score+=DS.pts;det.push({label:'VI',q:R.draw,ok:DS.pts===T.draw,given:DS.drawn?`${DS.pts}/${T.draw} pts · pintado ${DS.pct}%`:'sin dibujo',correct:'dibujo completo y pintado',w:T.draw,earned:DS.pts});
     const pct=max?score/max:0,grd=typeof gradeOf==='function'&&typeof CFG!=='undefined'?gradeOf(pct,CFG.exig,CFG.min):null;
     const res=document.getElementById('abOnlineResult');
     if(asg){
       const st=STUDENT_SESSION||{};
-      const sess={id:'s'+Date.now()+Math.random().toString(36).slice(2,6),first:st.first,last:st.last,course:st.course,start:T0,end:Date.now(),status:'done',gradeBase:'all',finishedEarly:false,
+      handed=true;window.__asgFlush=null;if(hb)clearInterval(hb);const sess={id:SID,first:st.first,last:st.last,course:st.course,start:T0r,end:Date.now(),status:'done',gradeBase:'all',finishedEarly:false,
         settings:{mode:'reading',groups:[],types:[],timer:0,p1:0,p2:0,chosenBy:'assignment',assign:asg.id,atitle:asg.title,part:'reading',rid:R.id,version:d.version},
-        total:max,pts:score,grade:grd,drawing:canvas.toDataURL('image/png'),
-        items:det.map(x=>({sentence:`${x.label} · ${x.q}`,f:'',t:'',mode:'reading',part:x.label.split('.')[0],attempts:x.given&&x.given!=='—'?[x.given]:[],correct:!!x.ok,timeout:false,pts:x.ok?x.w:0,secs:null,phase:0,answer:x.correct,full:'',clue:''}))};
+        total:max,qn:nQ,pts:score,grade:grd,drawPts:DS.pts,drawAuto:DS.pts,drawPct:DS.pct,drawing:canvas.toDataURL('image/png'),
+        items:det.map(x=>({sentence:`${x.label} · ${x.q}`,f:'',t:'',mode:'reading',part:x.label.split('.')[0],attempts:x.given&&x.given!=='—'?[x.given]:[],correct:!!x.ok,timeout:false,pts:x.earned!=null?x.earned:(x.ok?x.w:0),secs:null,phase:0,answer:x.correct,full:'',clue:''}))};
       saveSession(sess);try{localStorage.removeItem(dKey);}catch(e){}
-      v.querySelectorAll('input,select,button#abFinishOnline,#abClearCanvas').forEach(e=>e.disabled=true);canvas.style.pointerEvents='none';
-      res.innerHTML=`<div class="ab-online-feedback"><h2>✅ Prueba entregada · Test handed in</h2><p><b>Puntaje automático: ${score} / ${max} (${Math.round(pct*100)}%)${grd!=null?` · Nota provisoria: ${grd.toFixed(1).replace('.',',')}`:''}</b></p><p>El dibujo (ítem VI, ${T.draw} puntos) lo revisa tu profesor. Tu profesor verá el detalle de tus respuestas.</p><button type="button" class="btn" id="asgDoneBack">← Volver a Mi espacio</button></div>`;
+      v.querySelectorAll('input,select,button').forEach(e=>{if(e.id!=='asgDoneBack')e.disabled=true;});canvas.style.pointerEvents='none';
+      res.innerHTML=`<div class="ab-online-feedback"><h2>✅ Prueba entregada · Test handed in</h2><p><b>Puntaje automático: ${score} / ${max} (${Math.round(pct*100)}%)${grd!=null?` · Nota provisoria: ${grd.toFixed(1).replace('.',',')}`:''}</b></p><p>Dibujo (ítem VI): ${DS.pts} de ${T.draw} puntos (pintado ${DS.pct}%). Tu profesor verá el detalle de tus respuestas y puede revisar el puntaje del dibujo.</p><button type="button" class="btn" id="asgDoneBack">← Volver a Mi espacio</button></div>`;
       document.getElementById('asgDoneBack').onclick=()=>renderStudentDashboard();
     }else{
-      res.innerHTML=`<div class="ab-online-feedback"><h2>Resultado de ${abEsc(document.getElementById('abOnlineName').value||'estudiante')}</h2><p><b>Puntaje automático: ${score} / ${max} (${Math.round(pct*100)}%)${grd!=null?` · Nota provisoria: ${grd.toFixed(1).replace('.',',')}`:''}</b></p><p>El dibujo (Ítem VI, ${T.draw} puntos) lo revisa el profesor. Total de la prueba: ${T.all} puntos.</p><h3>Revisión por pregunta</h3>${det.map(x=>`<p class="${x.ok?'good':'bad'}"><b>${x.label}: ${x.ok?'✔ Correcto':'✘ Revisar'}</b> · tu respuesta: ${abEsc(x.given)}${x.ok?'':` · correcta: <b>${abEsc(x.correct)}</b>`}</p>`).join('')}<button type="button" class="btn ghost" onclick="window.print()">🖨 Imprimir resultado</button></div>`;
+      res.innerHTML=`<div class="ab-online-feedback"><h2>Resultado de ${abEsc(document.getElementById('abOnlineName').value||'estudiante')}</h2><p><b>Puntaje automático: ${score} / ${max} (${Math.round(pct*100)}%)${grd!=null?` · Nota provisoria: ${grd.toFixed(1).replace('.',',')}`:''}</b></p><p>Dibujo (ítem VI): ${DS.pts} de ${T.draw} puntos, calculado automáticamente (pintado ${DS.pct}%). Total de la prueba: ${T.all} puntos.</p><h3>Revisión por pregunta</h3>${det.map(x=>`<p class="${x.ok?'good':'bad'}"><b>${x.label}: ${x.ok?'✔ Correcto':'✘ Revisar'}</b> · tu respuesta: ${abEsc(x.given)}${x.ok?'':` · correcta: <b>${abEsc(x.correct)}</b>`}</p>`).join('')}<button type="button" class="btn ghost" onclick="window.print()">🖨 Imprimir resultado</button></div>`;
     }
     res.scrollIntoView({behavior:'smooth',block:'start'});
   };
@@ -8852,10 +8902,13 @@ function startAssignment(id,part){const a=asgList().find(x=>x.id===id);if(!a||!S
   const c=Object.assign(asgTestCfg({mode:part,groups:a.groups,types:a.types,n:a.n}),{assign:a.id,atitle:a.title,part});
   const list=withSeed(seed,()=>buildTest(c));if(!list.length){alert('No hay preguntas para esta parte. Avísale a tu profesor.');return;}
   const st=student();activateStudentSession(st);PRACT=false;GPLAY=false;startTest(c,'assignment',list);}
-$('#asgBack').onclick=()=>{if(confirm('¿Salir de la prueba? Tus respuestas quedan guardadas en este navegador como borrador.'))renderStudentDashboard();};
+$('#asgBack').onclick=()=>{if(confirm('¿Salir de la prueba? Tus respuestas quedan guardadas en este navegador como borrador.')){try{window.__asgFlush&&window.__asgFlush();}catch(e){}window.__asgFlush=null;renderStudentDashboard();}};
 // el profesor ve el dibujo del ítem VI al revisar una prueba de lectura
 ASG_READY=true;if(CURRENT_VIEW==='student'){try{renderStudentAssign();}catch(e){}}
-{const _vs=viewSession;viewSession=function(id){_vs(id);const s=loadRes().find(x=>x.id===id);if(s&&s.drawing){$('#rDetail').insertAdjacentHTML('beforeend',`<h3>Ítem VI · Dibujo del estudiante</h3><img src="${s.drawing}" alt="Dibujo" style="max-width:100%;border:1px solid #ccc;border-radius:8px;background:#fff">`);}};}
+{const _vs=viewSession;viewSession=function(id){_vs(id);const s=loadRes().find(x=>x.id===id);if(s&&s.drawing){const cur=Number.isFinite(s.drawPts)?s.drawPts:null;
+  $('#rDetail').insertAdjacentHTML('beforeend',`<h3>Ítem VI · Dibujo del estudiante</h3><img src="${s.drawing}" alt="Dibujo" style="max-width:100%;border:1px solid #ccc;border-radius:8px;background:#fff">
+  <p><label>Puntaje del dibujo: <select id="drOverride" style="width:auto">${[0,1,3,5].map(n=>`<option value="${n}"${n===cur?' selected':''}>${n} pts${n===0?' · sin dibujo':n===1?' · sin pintar':n===3?' · pintado a medias':' · completo y pintado'}</option>`).join('')}</select></label> <small class="muted">${Number.isFinite(s.drawAuto)?`Automático: ${s.drawAuto} pts (pintado ${s.drawPct}%)`:''}${s.drawTeacher?' · ajustado por el profesor':''}</small></p>`);
+  $('#drOverride').onchange=e=>{const n=+e.target.value,old=Number.isFinite(s.drawPts)?s.drawPts:0;s.pts=Math.max(0,(s.pts||0)-old+n);s.drawPts=n;s.drawTeacher=true;const it=(s.items||[]).find(i=>i.part==='VI');if(it){it.pts=n;it.correct=n===5;}s.grade=gradeOf(s.total?s.pts/s.total:0,CFG.exig,CFG.min);saveSession(s);renderResults();viewSession(id);};}};}
 
 try{$('#studentLoginLogo').src=LOGO;}catch(e){}
 if(STUDENT_SESSION){try{renderStudentDashboard();}catch(e){}}
