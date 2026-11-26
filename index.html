@@ -689,7 +689,12 @@ mark{background:#FFE58A;color:inherit;border-radius:5px;padding:0 3px;box-shadow
 <div id="studentSessionBar" class="student-session-bar hidden" role="region" aria-label="Student session"><span id="studentSessionLabel"></span><button class="btn ghost sm" id="studentPracticeBtn" type="button">🛠️ Práctica</button><button class="btn ghost sm" id="studentEvalBarBtn" type="button">▶ Iniciar test</button><button class="btn ghost sm" id="studentDashboardBtn" type="button">📊 Mi perfil</button><button class="btn ghost sm" id="studentCloseBtn" type="button">🔒 Cerrar sesión</button></div>
 <main>
 
-<section id="v-student-login" class="panel start"><div class="hero"><img class="hero-logo" id="studentLoginLogo" alt="Liceo Thomas Alva Edison"><div><div class="hero-school">Liceo Thomas Alva Edison</div><h1>👋 Bienvenido · Welcome</h1><div class="hero-sub">Ingresa tus datos para abrir tu sesión de estudiante · Enter your details to open your student session</div></div></div><div class="row" style="gap:12px;align-items:flex-end"><div style="flex:1;min-width:180px"><label class="lbl" for="studentLoginFirst">Nombre · First name *</label><input id="studentLoginFirst" autocomplete="given-name"></div><div style="flex:1;min-width:180px"><label class="lbl" for="studentLoginLast">Apellido · Last name *</label><input id="studentLoginLast" autocomplete="family-name"></div><div style="width:150px"><label class="lbl" for="studentLoginCourse">Curso · Class *</label><input id="studentLoginCourse" placeholder="8°B" autocomplete="off"></div></div><p id="studentLoginError" class="note" style="color:var(--bad);display:none">Completa nombre, apellido y curso para entrar. · Enter your first name, last name and class.</p><div class="actions"><button class="btn" id="studentLoginBtn" type="button">▶ Entrar a mi perfil · Open my profile</button></div><p class="note">Tus resultados se guardarán en este navegador y estarán disponibles en Teacher mode → Results. · Your results will be saved in this browser and appear in Teacher mode → Results.</p></section>
+<section id="v-student-login" class="panel start"><div class="hero"><img class="hero-logo" id="studentLoginLogo" alt="Liceo Thomas Alva Edison"><div><div class="hero-school">Liceo Thomas Alva Edison</div><h1>👋 Bienvenido · Welcome</h1><div class="hero-sub">Entra con tu usuario y tu clave · Log in with your username and password</div></div></div>
+<div class="row" style="gap:12px;align-items:flex-end"><div style="flex:1;min-width:180px"><label class="lbl" for="slUser">Usuario · Username *</label><input id="slUser" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ej. juan.perez"></div><div style="flex:1;min-width:180px"><label class="lbl" for="slPass">Clave · Password *</label><input id="slPass" type="password" autocomplete="current-password"></div><div id="slPass2Box" class="hidden" style="flex:1;min-width:180px"><label class="lbl" for="slPass2">Repite la clave · Repeat password *</label><input id="slPass2" type="password" autocomplete="new-password"></div></div>
+<div id="slRegFields" class="row hidden" style="gap:12px;align-items:flex-end;margin-top:10px"><div style="flex:1;min-width:180px"><label class="lbl" for="studentLoginFirst">Nombre · First name *</label><input id="studentLoginFirst" autocomplete="given-name"></div><div style="flex:1;min-width:180px"><label class="lbl" for="studentLoginLast">Apellido · Last name *</label><input id="studentLoginLast" autocomplete="family-name"></div><div style="width:150px"><label class="lbl" for="studentLoginCourse">Curso · Class *</label><input id="studentLoginCourse" placeholder="8°B" autocomplete="off"></div></div>
+<p id="studentLoginError" class="note" style="color:var(--bad);display:none"></p>
+<div class="actions"><button class="btn" id="studentLoginBtn" type="button">▶ Entrar · Log in</button><button class="btn ghost" id="slToggle" type="button">¿Primera vez? Crear cuenta · Sign up</button></div>
+<p class="note">Usuario: 3 a 30 caracteres, sin tildes ni ñ (letras, números, punto o guion). Clave: mínimo 6 caracteres. Si olvidas tu clave, avísale a tu profesor. Tus resultados se guardan en línea y tu profesor puede verlos. · Your results are saved online and your teacher can see them.</p></section>
 <section id="v-asg" class="hidden panel"><button class="btn ghost" id="asgBack" type="button">← Volver a Mi espacio · Back</button><div id="asgHost"></div></section>
 <section id="v-student" class="hidden panel start"><div class="hero"><img class="hero-logo" id="studentLogo" alt="Liceo Thomas Alva Edison"><div><div class="hero-school">Liceo Thomas Alva Edison</div><h1>📊 Mi espacio · My student space</h1><div class="hero-sub" id="studentGreeting"></div></div></div><div id="studentAssign"></div><p class="prev" id="studentTenseSelection"></p><div class="actions"><button class="btn" id="studentPracticeBtn2" type="button">🛠️ Practicar · Practice</button><button class="btn" id="studentEvalBtn" type="button">▶ Iniciar test · Start test for selected tense</button><button class="btn ghost" id="studentGamesBtn" type="button">🎮 Juegos con nota · Graded games</button></div><div class="grid2" id="studentSummary"></div><h2>Mis actividades · My activities</h2><div style="overflow:auto"><table class="tt"><thead><tr><th>Fecha · Date</th><th>Actividad · Activity</th><th>Tiempo verbal · Tense</th><th>Resultado · Result</th><th>Tiempo · Duration</th><th>Estado · Status</th></tr></thead><tbody id="studentHistory"></tbody></table></div><p class="note" id="studentHistoryEmpty"></p></section>
 <!-- START -->
@@ -881,8 +886,8 @@ mark{background:#FFE58A;color:inherit;border-radius:5px;padding:0 3px;box-shadow
 <section id="v-pin" class="hidden panel" style="max-width:460px;margin:30px auto">
   <h1 id="pinTitle">Teacher mode</h1>
   <p class="muted" id="pinMsg"></p>
-  <input type="password" id="pin1" inputmode="numeric" placeholder="PIN" autocomplete="off">
-  <input type="password" id="pin2" inputmode="numeric" placeholder="Repeat the PIN" autocomplete="off" style="margin-top:8px">
+  <input type="email" id="pin1" placeholder="Correo del profesor · Teacher email" autocomplete="username">
+  <input type="password" id="pin2" placeholder="Contraseña · Password" autocomplete="current-password" style="margin-top:8px">
   <p class="note" id="pinErr" style="color:var(--bad)"></p>
   <div class="actions"><button class="btn" id="pinBtn">Enter</button></div>
 </section>
@@ -1102,11 +1107,11 @@ mark{background:#FFE58A;color:inherit;border-radius:5px;padding:0 3px;box-shadow
         <div class="prev" id="scaleTbl"></div>
       </div>
       <div>
-        <h2>Teacher PIN</h2>
-        <input type="password" id="newPin" inputmode="numeric" placeholder="New PIN (4+ digits)">
-        <div class="actions"><button class="btn ghost sm" id="pinSave">Change PIN</button></div>
-        <h2 style="margin-top:20px">Where are the results saved?</h2>
-        <p class="note">Results are saved in <b>this browser on this computer</b>. Always open the program with the same browser and don't clear the browser data. If students use several computers, press <b>Backup results</b> on each one and then <b>Add results from another computer</b> on yours.</p>
+        <h2>Contraseña del profesor</h2>
+        <p class="note">El acceso de profesor usa tu cuenta de Firebase. Para cambiar la contraseña, te llegará un correo.</p>
+        <div class="actions"><button class="btn ghost sm" id="pinSave">📧 Enviarme correo para cambiar la contraseña</button></div>
+        <h2 style="margin-top:20px">¿Dónde se guardan los resultados?</h2>
+        <p class="note">En la nube (Firebase). Cada estudiante entra con su usuario y clave desde cualquier equipo, y sus sesiones aparecen aquí en tiempo real. La configuración de pruebas, juegos, escala de notas y oraciones que cambies aquí también se aplica a todos los estudiantes. Usa <b>Backup results</b> de vez en cuando para tener una copia propia.</p>
       </div>
     </div>
   </div>
@@ -4767,8 +4772,227 @@ function resultSheets(sessions, cfg) {
 if (typeof module !== 'undefined') module.exports = { gradeOf, resultSheets };
 
 </script>
+<div id="fbLoading" style="position:fixed;inset:0;z-index:99999;background:#fff;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;font:18px Arial,sans-serif;color:#00776f;text-align:center;padding:20px">⏳ Cargando… · Loading…</div>
+<div id="fbToast" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99998;background:#7f1d1d;color:#fff;padding:10px 16px;border-radius:10px;font:14px Arial,sans-serif;display:none;max-width:90vw"></div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as fbSignOut, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { getFirestore, doc, getDoc, getDocs, setDoc, collection, query, where, orderBy, limit, onSnapshot, writeBatch } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+// ================== CONFIGURACIÓN (solo se edita esta parte) ==================
+const firebaseConfig = {
+  apiKey: "AIzaSyAAV25HTbPTclX7ddqifV2l_W2Zb0LOLJU",
+  authDomain: "mixed-tenses-liceo.firebaseapp.com",
+  projectId: "mixed-tenses-liceo",
+  storageBucket: "mixed-tenses-liceo.firebasestorage.app",
+  messagingSenderId: "500401239563",
+  appId: "1:500401239563:web:0ffa7818095cb59d86790e"
+};
+const TEACHER_EMAIL  = 'mauricio.quirogah.amayah@gmail.com';
+const STUDENT_DOMAIN = 'alumnos.liceo-edison.app';   // correo ficticio interno de los alumnos
+const TEACHER_MAX_RESULTS = 2000;                     // sesiones más recientes que ve el profesor
+// =============================================================================
+
+const $L = document.getElementById('fbLoading');
+const toastEl = document.getElementById('fbToast');
+let toastT = null;
+function toast(msg){ toastEl.textContent = msg; toastEl.style.display = 'block'; clearTimeout(toastT); toastT = setTimeout(() => toastEl.style.display = 'none', 6000); }
+function fatal(msg){ $L.innerHTML = '⚠️ ' + msg; $L.style.color = '#7f1d1d'; }
+
+const RES = new Map();          // id -> sesión (cache local de resultados)
+const PENDING = new Map();      // id -> {sess, timer}
+let unsub = null, cfgTimer = null, auth, db;
+
+const FBX = window.FBX = {
+  role: 'none', uid: null, profile: null, cfg: null, bank: null,
+  teacherEmail: TEACHER_EMAIL, onResultsChange: null, toast,
+  results: () => [...RES.values()],
+  saveResult, replaceResults, flush, saveConfig, saveBank,
+  studentLogin, studentRegister, teacherLogin, signOut, resetTeacherPassword, refreshConfig, listStudents
+};
+
+function friendly(e){
+  const c = e && e.code || '';
+  const m = {
+    'auth/invalid-credential': 'Usuario o clave incorrectos. · Wrong username or password.',
+    'auth/wrong-password': 'Usuario o clave incorrectos. · Wrong username or password.',
+    'auth/user-not-found': 'Usuario o clave incorrectos. · Wrong username or password.',
+    'auth/invalid-email': 'Usuario no válido. · Invalid username.',
+    'auth/email-already-in-use': 'Ese usuario ya existe: elige otro. · That username is taken.',
+    'auth/weak-password': 'La clave debe tener al menos 6 caracteres. · Password: 6+ characters.',
+    'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos. · Too many attempts, wait a few minutes.',
+    'auth/network-request-failed': 'Sin conexión a internet. · No internet connection.',
+    'auth/operation-not-allowed': 'El profesor debe activar "Correo electrónico/contraseña" en Firebase.',
+    'permission-denied': 'Firebase rechazó la operación (revisa las reglas de seguridad).'
+  }[c];
+  return new Error(m || ('Error: ' + (e && e.message || e)));
+}
+const normUser = s => String(s || '').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '.');
+const emailOf = u => `${u}@${STUDENT_DOMAIN}`;
+const notify = () => { try{ FBX.onResultsChange && FBX.onResultsChange(); }catch(e){ console.error(e); } };
+
+// ---------- resultados ----------
+function toDoc(s){
+  return { uid: s.uid, first: s.first || '', last: s.last || '', course: s.course || '',
+    start: s.start || 0, updated: s.updated || Date.now(), status: s.status || '',
+    grade: Number.isFinite(s.grade) ? s.grade : null, data: JSON.stringify(s) };
+}
+function writeNow(id){
+  const p = PENDING.get(id); if(!p) return Promise.resolve();
+  clearTimeout(p.timer); PENDING.delete(id);
+  return setDoc(doc(db, 'results', id), toDoc(p.sess)).catch(e => { console.error(e); toast('⚠️ No se pudo guardar el resultado en la nube. ' + friendly(e).message); });
+}
+function saveResult(sess){
+  if(!FBX.uid){ toast('⚠️ Inicia sesión para guardar tus resultados. · Log in to save your results.'); return; }
+  if(!sess.uid) sess.uid = FBX.uid;
+  const copy = JSON.parse(JSON.stringify(sess));
+  RES.set(copy.id, copy);
+  const old = PENDING.get(copy.id); if(old) clearTimeout(old.timer);
+  PENDING.set(copy.id, { sess: copy, timer: setTimeout(() => writeNow(copy.id), copy.status === 'done' ? 0 : 2500) });
+}
+function flush(){ return Promise.all([...PENDING.keys()].map(writeNow)); }
+addEventListener('pagehide', flush);
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') flush(); });
+
+async function replaceResults(arr){
+  const keep = new Map(arr.map(s => [s.id, s]));
+  const ops = [];
+  for(const id of RES.keys()) if(!keep.has(id)) ops.push(['del', id]);
+  for(const s of arr) if(!RES.has(s.id)){ if(!s.uid) s.uid = FBX.uid; ops.push(['set', s]); }
+  ops.forEach(([k, x]) => k === 'del' ? (RES.delete(x), PENDING.delete(x)) : RES.set(x.id, JSON.parse(JSON.stringify(x))));
+  notify();
+  try{
+    for(let i = 0; i < ops.length; i += 400){
+      const b = writeBatch(db);
+      ops.slice(i, i + 400).forEach(([k, x]) => k === 'del' ? b.delete(doc(db, 'results', x)) : b.set(doc(db, 'results', x.id), toDoc(x)));
+      await b.commit();
+    }
+  }catch(e){ console.error(e); toast('⚠️ ' + friendly(e).message); }
+}
+
+function stopListener(){ if(unsub){ unsub(); unsub = null; } RES.clear(); }
+function startListener(){
+  stopListener();
+  let q;
+  if(FBX.role === 'teacher') q = query(collection(db, 'results'), orderBy('start', 'desc'), limit(TEACHER_MAX_RESULTS));
+  else if(FBX.role === 'student') q = query(collection(db, 'results'), where('uid', '==', FBX.uid));
+  else return;
+  unsub = onSnapshot(q, snap => {
+    snap.docChanges().forEach(ch => {
+      const id = ch.doc.id;
+      if(ch.type === 'removed'){ RES.delete(id); return; }
+      if(PENDING.has(id)) return;              // hay una versión local más nueva
+      try{ RES.set(id, JSON.parse(ch.doc.data().data)); }catch(e){}
+    });
+    notify();
+  }, e => { console.error(e); toast('⚠️ No se pudieron leer los resultados. ' + friendly(e).message); });
+}
+
+// ---------- configuración del profesor (compartida con los alumnos) ----------
+function saveConfig(cfg){
+  clearTimeout(cfgTimer);
+  cfgTimer = setTimeout(() => { const c = Object.assign({}, cfg); delete c.pin;
+    setDoc(doc(db, 'config', 'main'), { json: JSON.stringify(c), updated: Date.now() }).catch(e => toast('⚠️ No se guardó la configuración. ' + friendly(e).message)); }, 1200);
+}
+function saveBank(bank){
+  const json = JSON.stringify(bank);
+  if(json.length > 900000){ toast('⚠️ El banco de oraciones es demasiado grande para guardarlo en la nube.'); return; }
+  setDoc(doc(db, 'config', 'bank'), { json, updated: Date.now() }).catch(e => toast('⚠️ No se guardaron las oraciones. ' + friendly(e).message));
+}
+
+// ---------- asignaciones: config al día y lista de estudiantes ----------
+async function refreshConfig(){ const c = await getDoc(doc(db, 'config', 'main')); if(!c.exists()) return null; const o = JSON.parse(c.data().json); FBX.cfg = o; return o; }
+async function listStudents(){ if(FBX.role !== 'teacher') return []; const s = await getDocs(collection(db, 'students')); return s.docs.map(d => Object.assign({ uid: d.id }, d.data())); }
+
+// ---------- sesiones ----------
+async function setRole(user, profile){
+  stopListener();
+  FBX.uid = user ? user.uid : null; FBX.profile = null; FBX.role = 'none';
+  if(user){
+    const em = (user.email || '').toLowerCase();
+    if(em === TEACHER_EMAIL) FBX.role = 'teacher';
+    else{
+      if(!profile){ try{ const s = await getDoc(doc(db, 'students', user.uid)); if(s.exists()) profile = s.data(); }catch(e){ console.error(e); } }
+      if(profile){ FBX.role = 'student'; FBX.profile = { first: profile.first, last: profile.last, course: profile.course, username: profile.username, uid: user.uid }; }
+    }
+    startListener();
+  }
+  notify();
+}
+async function signOut(){
+  await Promise.race([flush(), new Promise(r => setTimeout(r, 4000))]);
+  stopListener(); await fbSignOut(auth).catch(() => {}); await setRole(null);
+}
+async function studentLogin(username, password){
+  const u = normUser(username);
+  if(!u || !password) throw new Error('Escribe tu usuario y tu clave. · Enter your username and password.');
+  await flush(); stopListener();
+  let cred; try{ cred = await signInWithEmailAndPassword(auth, emailOf(u), password); }catch(e){ throw friendly(e); }
+  await setRole(cred.user);
+  if(FBX.role !== 'student'){ await signOut(); throw new Error('Tu cuenta no tiene perfil. Usa "Crear cuenta" con el mismo usuario y clave. · Use "Sign up" with the same username and password.'); }
+  return FBX.profile;
+}
+async function studentRegister({ first, last, course, username, password }){
+  const u = normUser(username);
+  if(!/^[a-z0-9._-]{3,30}$/.test(u)) throw new Error('Usuario: 3 a 30 caracteres, solo letras, números, punto, guion o guion bajo (sin ñ ni tildes). · Username: 3-30 letters/numbers.');
+  if(String(password || '').length < 6) throw new Error('La clave debe tener al menos 6 caracteres. · Password: 6+ characters.');
+  await flush(); stopListener();
+  let user;
+  try{ user = (await createUserWithEmailAndPassword(auth, emailOf(u), password)).user; }
+  catch(e){
+    if(e.code !== 'auth/email-already-in-use') throw friendly(e);
+    // la cuenta existe: si la clave coincide y no tiene perfil, la completamos
+    try{ user = (await signInWithEmailAndPassword(auth, emailOf(u), password)).user; }catch(e2){ throw friendly(e); }
+    const s = await getDoc(doc(db, 'students', user.uid)).catch(() => null);
+    if(s && s.exists()){ await setRole(user, s.data()); return FBX.profile; }
+  }
+  const profile = { first, last, course, username: u, created: Date.now() };
+  try{ await setDoc(doc(db, 'students', user.uid), profile); }
+  catch(e){ await fbSignOut(auth).catch(() => {}); throw friendly(e); }
+  await setRole(user, profile);
+  return FBX.profile;
+}
+async function teacherLogin(email, password){
+  if(String(email).trim().toLowerCase() !== TEACHER_EMAIL) throw new Error('Ese correo no corresponde al profesor.');
+  await flush(); stopListener();
+  let cred; try{ cred = await signInWithEmailAndPassword(auth, TEACHER_EMAIL, password); }catch(e){ throw friendly(e); }
+  await setRole(cred.user);
+}
+async function resetTeacherPassword(){ try{ await sendPasswordResetEmail(auth, TEACHER_EMAIL); }catch(e){ throw friendly(e); } }
+
+// ---------- arranque ----------
+(async () => {
+  if(!firebaseConfig || !firebaseConfig.apiKey){ fatal('Falta pegar el bloque <b>firebaseConfig</b> en el archivo.'); return; }
+  try{
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app); db = getFirestore(app);
+  }catch(e){ fatal('No se pudo iniciar Firebase: ' + e.message); return; }
+  const firstUser = new Promise(r => { const u = onAuthStateChanged(auth, x => { u(); r(x); }); });
+  const timeout = new Promise(r => setTimeout(() => r('timeout'), 12000));
+  const boot = Promise.all([
+    getDoc(doc(db, 'config', 'main')).catch(() => null),
+    getDoc(doc(db, 'config', 'bank')).catch(() => null),
+    firstUser
+  ]);
+  const r = await Promise.race([boot, timeout]);
+  if(r === 'timeout') toast('⚠️ Conexión lenta: algunos datos podrían no estar al día.');
+  else{
+    const [c, b, user] = r;
+    try{ if(c && c.exists()) FBX.cfg = JSON.parse(c.data().json); }catch(e){}
+    try{ if(b && b.exists()) FBX.bank = JSON.parse(b.data().json); }catch(e){}
+    await setRole(user);
+  }
+  if(window.__appStarted){ toast('Conexión lista: recarga la página para usar tus datos en línea.'); return; }
+  try{ window.__startApp(); }catch(e){ console.error(e); fatal('Error al iniciar la aplicación: ' + e.message); return; }
+  $L.remove();
+})();
+</script>
 <script>
-(function(){
+// 5.45: si Firebase no carga (sin internet o archivo abierto desde el computador), el programa parte igual en modo local
+setTimeout(function(){ if(window.FBX||window.__appStarted) return; try{ var L=document.getElementById('fbLoading'); window.__startApp(); if(L) L.remove(); var t=document.getElementById('fbToast'); if(t){ t.textContent='⚠️ Sin conexión con la nube: modo local (los datos quedan solo en este navegador).'; t.style.display='block'; setTimeout(function(){t.style.display='none';},9000);} }catch(e){ console.error(e); } }, 15000);
+</script>
+<script>
+window.__startApp=(function(){if(window.__appStarted)return;window.__appStarted=true;
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const KEY = 'mixPractice.db.v1', RKEY = 'mixPractice.results.v1', CKEY = 'mixPractice.settings.v1';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -4776,19 +5000,21 @@ const clone = x => JSON.parse(JSON.stringify(x));
 
 // ---------- data ----------
 function loadDB(){
+  if(window.FBX&&Array.isArray(FBX.bank)&&FBX.bank.length) return FBX.bank;
   try{ const j = localStorage.getItem(KEY); if(j){ const d = JSON.parse(j); if(Array.isArray(d) && d.length) return d; } }catch(e){}
   return clone(DEFAULT_DB);
 }
-function saveDB(){ try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(e){ alert('Changes could not be saved in this browser. Use "Export" so you don\'t lose them.\n\nNo se pudieron guardar los cambios. Usa "Export".'); } }
+function saveDB(){ if(window.FBX&&FBX.role==='teacher')FBX.saveBank(DB); try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(e){ alert('Changes could not be saved in this browser. Use "Export" so you don\'t lose them.\n\nNo se pudieron guardar los cambios. Usa "Export".'); } }
 let DB = loadDB();
 DB = DB.concat(NEW_TENSE_BANK.filter(e => !DB.some(x => x.id === e.id)));
 try{ $('#hdrLogo').src = LOGO; $('#heroLogo').src = LOGO; const ic = document.createElement('link'); ic.rel = 'icon'; ic.href = LOGO; document.head.appendChild(ic); }catch(e){}
 const lsGet = (k, d) => { try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } };
 const lsSet = (k, v) => { try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ alert('The browser could not save the data. Ask your teacher.\nEl navegador no pudo guardar los datos.'); return false; } };
-let CFG = Object.assign({ exig: 60, min: 2, pin: null }, lsGet(CKEY, {}));
-const saveCFG = () => lsSet(CKEY, CFG);
-const loadRes = () => lsGet(RKEY, []);
-function saveSession(sess){ sess.updated=Date.now(); const all = loadRes(); const i = all.findIndex(x => x.id === sess.id); if(i >= 0) all[i] = sess; else all.push(sess); lsSet(RKEY, all); }
+let CFG = Object.assign({ exig: 60, min: 2, pin: null }, (window.FBX&&FBX.cfg)||lsGet(CKEY, {}));
+const saveCFG = () => { if(window.FBX&&FBX.role==='teacher')FBX.saveConfig(CFG); return lsSet(CKEY, CFG); };
+const loadRes = () => window.FBX ? FBX.results() : lsGet(RKEY, []);
+const resSet = arr => window.FBX ? FBX.replaceResults(arr) : resSet(arr);
+function saveSession(sess){ sess.updated=Date.now(); if(window.FBX){ FBX.saveResult(sess); return; } const all = loadRes(); const i = all.findIndex(x => x.id === sess.id); if(i >= 0) all[i] = sess; else all.push(sess); lsSet(RKEY, all); }
 const fmtG = g => g.toFixed(1).replace('.', ',');
 
 // ---------- sound ----------
@@ -5008,7 +5234,7 @@ const sentenceText = ex => ex.kind==='picverb'?`Picture vocabulary · Spanish me
 // highlight the clue inside a text (already escaped)
 function markClue(html, ex){ let out = html; clueParts(ex).forEach(p => { const re = new RegExp('(' + esc(p).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'i'); out = out.replace(re, '<mark>$1</mark>'); }); return out; }
 const cleanName = s => s.trim().replace(/\s+/g, ' ').replace(/(^|[\s-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
-const STUDENT_SESSION_KEY='mixPractice.student.session.v1';let STUDENT_SESSION=(()=>{try{const x=JSON.parse(localStorage.getItem(STUDENT_SESSION_KEY)||'null');return x&&x.first&&x.last?x:null;}catch(e){return null;}})();
+const STUDENT_SESSION_KEY='mixPractice.student.session.v1';let STUDENT_SESSION=(()=>{let x=null;try{x=JSON.parse(localStorage.getItem(STUDENT_SESSION_KEY)||'null');}catch(e){}if(window.FBX){if(FBX.role!=='student'||!FBX.profile)return null;return Object.assign({},x&&x.uid===FBX.uid?x:{},FBX.profile,{opened:Date.now()});}return x&&x.first&&x.last?x:null;})();
 function storeStudentSession(st){STUDENT_SESSION={...(STUDENT_SESSION||{}),first:cleanName(st.first),last:cleanName(st.last),course:String(st.course||'').trim().toUpperCase(),opened:STUDENT_SESSION?.opened||Date.now()};try{localStorage.setItem(STUDENT_SESSION_KEY,JSON.stringify(STUDENT_SESSION));}catch(e){}updateStudentSessionUI();return STUDENT_SESSION;}
 function updateStudentSessionUI(){const active=!!STUDENT_SESSION,bar=$('#studentSessionBar');if(bar){bar.classList.toggle('hidden',!active||['play','game','teacher','pin'].includes(CURRENT_VIEW));if(active)$('#studentSessionLabel').textContent=`👤 ${STUDENT_SESSION.first} ${STUDENT_SESSION.last}${STUDENT_SESSION.course?' · '+STUDENT_SESSION.course:''} · Sesión activa`;}[['stIdentityFields','nameErr'],['pIdentityFields','pNameErr'],['gIdentityFields','gNameErr']].forEach(([row,err])=>{if($(row))$(row).classList.add('hidden');if($(err))$(err).style.display='none';});if(active){['pPackFirst','pPackLast','pPackCourse'].forEach(id=>{const input=$('#'+id);if(input){input.classList.toggle('hidden',active);if(input.previousElementSibling)input.previousElementSibling.classList.toggle('hidden',active);}});}}
 function activateStudentSession(st){if(!st||st.first.length<2||st.last.length<2)return false;storeStudentSession(st);return true;}
@@ -5016,10 +5242,17 @@ function student(){if(STUDENT_SESSION)return {...STUDENT_SESSION};const p=GPLAY?
 function elapsedLabel(ms){const sec=Math.max(0,Math.floor(ms/1000)),h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),r=sec%60;return h?`${h} h ${m} min`:`${m} min ${r} s`;}
 function studentResults(){return STUDENT_SESSION?loadRes().filter(x=>x.first===STUDENT_SESSION.first&&x.last===STUDENT_SESSION.last&&(x.course||'')===STUDENT_SESSION.course).sort((a,b)=>(b.start||0)-(a.start||0)):[];}
 function renderStudentDashboard(){if(!STUDENT_SESSION){goHome();return;}try{$('#studentLogo').src=LOGO;}catch(e){}$('#studentGreeting').textContent=`${STUDENT_SESSION.first} ${STUDENT_SESSION.last}${STUDENT_SESSION.course?' · '+STUDENT_SESSION.course:''}`;$('#studentTenseSelection').textContent='Tiempos para la evaluación: '+((PCH.groups||STUDENT_SESSION.lastTenses||ALLG).map(g=>GN[g]||g).join(', '));const rows=studentResults(),done=rows.filter(x=>x.status==='done'),graded=done.filter(x=>Number.isFinite(x.grade)),practice=done.filter(x=>x.settings?.practice),avg=graded.length?graded.reduce((a,x)=>a+x.grade,0)/graded.length:null,totalMs=rows.reduce((a,x)=>a+Math.max(0,(x.end||x.updated||Date.now())-(x.start||Date.now())),0);$('#studentSummary').innerHTML=`<div class="student-summary-card"><b>${done.length}</b>Actividades terminadas · Finished</div><div class="student-summary-card"><b>${graded.length}</b>Evaluaciones con nota · Graded</div><div class="student-summary-card"><b>${avg===null?'—':fmtG(avg)}</b>Promedio de notas · Average</div><div class="student-summary-card"><b>${elapsedLabel(totalMs)}</b>Tiempo registrado · Time recorded</div><div class="student-summary-card"><b>${practice.length}</b>Prácticas terminadas · Practice sessions</div>`;const labels={tense:'Which tense?',choose:'Choose the form',complete:'Write the verb',sentences:'Write full sentences',forms:'Verb forms',listen:'Listening',dialog:'Listening dialogues',dragverb:'Drag the verb',dragparts:'Order sentence parts',pictureverb:'Verb from picture',games:'Juegos · Games'};$('#studentHistory').innerHTML=rows.map(x=>{const title=(x.settings?.atitle?'📋 '+x.settings.atitle+' · ':'')+(x.settings?.mode==='reading'?'Reading test':(labels[x.settings?.mode]||x.settings?.mode||'Actividad'));const tenses=(x.settings?.groups||[]).map(g=>GN[g]||g).join(', ')||'—';const correct=(x.items||[]).filter(i=>i.correct).length,practiceOnly=!!x.settings?.practice,score=Number.isFinite(x.grade)?`Nota ${fmtG(x.grade)} · ${fmtP(x.pts||0)}/${x.total||0} puntos`:practiceOnly?`Práctica ${correct}/${x.total||0}`:`${fmtP(x.pts||0)}/${x.total||0} puntos`;const status=x.status==='done'?'Terminada · Finished':'Iniciada · In progress';return `<tr><td>${new Date(x.start||Date.now()).toLocaleString('es-CL')}</td><td>${esc(title)}</td><td>${esc(tenses)}</td><td>${esc(score)}</td><td>${elapsedLabel((x.end||x.updated||Date.now())-(x.start||Date.now()))}</td><td>${esc(status)}</td></tr>`;}).join('');$('#studentHistoryEmpty').textContent=rows.length?'Los registros se guardan en este navegador y también aparecen en Teacher mode → Results.':'Aún no hay actividades guardadas en esta sesión.';renderStudentAssign();show('student');}
-function returnStudentHome(){PRACT=false;GPLAY=false;if(STUDENT_SESSION)renderStudentDashboard();else show('student-login');}function returnStudentPractice(){GPLAY=false;PRACT=false;openPractice();}function closeStudentSession(){if(!STUDENT_SESSION)return;if(!confirm('¿Cerrar la sesión de '+STUDENT_SESSION.first+' '+STUDENT_SESSION.last+'? Los resultados guardados se conservarán.'))return;try{localStorage.removeItem(STUDENT_SESSION_KEY);}catch(e){}STUDENT_SESSION=null;['studentLoginFirst','studentLoginLast','studentLoginCourse','stFirst','stLast','stCourse','pFirst','pLast','pCourse','gFirst','gLast','gCourse','pPackFirst','pPackLast','pPackCourse'].forEach(id=>{if($(id))$(id).value='';});updateStudentSessionUI();if(CURRENT_VIEW==='student'||CURRENT_VIEW==='pstart'||CURRENT_VIEW==='gstart')returnStudentHome();else renderStart();}
-$('#studentLoginBtn').onclick=()=>{const st={first:cleanName($('#studentLoginFirst').value),last:cleanName($('#studentLoginLast').value),course:$('#studentLoginCourse').value.trim().toUpperCase()};if(st.first.length<2||st.last.length<2||!st.course){$('#studentLoginError').style.display='block';return;}$('#studentLoginError').style.display='none';activateStudentSession(st);renderStudentDashboard();};$('#studentDashboardBtn').onclick=renderStudentDashboard;$('#studentPracticeBtn').onclick=returnStudentPractice;$('#studentPracticeBtn2').onclick=returnStudentPractice;$('#studentGamesBtn').onclick=()=>openGames();$('#studentEvalBtn').onclick=()=>startStudentEvaluation(PCH.groups);$('#studentEvalBarBtn').onclick=()=>startStudentEvaluation(PCH.groups);$('#studentCloseBtn').onclick=closeStudentSession;$('#endStudentHomeBtn').onclick=returnStudentHome;$('#endStudentPracticeBtn').onclick=returnStudentPractice;$('#endStudentResultsBtn').onclick=renderStudentDashboard;updateStudentSessionUI();
+function returnStudentHome(){PRACT=false;GPLAY=false;if(STUDENT_SESSION)renderStudentDashboard();else show('student-login');}function returnStudentPractice(){GPLAY=false;PRACT=false;openPractice();}function closeStudentSession(){if(!STUDENT_SESSION)return;if(!confirm('¿Cerrar la sesión de '+STUDENT_SESSION.first+' '+STUDENT_SESSION.last+'? Los resultados guardados se conservarán.'))return;try{localStorage.removeItem(STUDENT_SESSION_KEY);}catch(e){}STUDENT_SESSION=null;if(window.FBX)FBX.signOut();['studentLoginFirst','studentLoginLast','studentLoginCourse','stFirst','stLast','stCourse','pFirst','pLast','pCourse','gFirst','gLast','gCourse','pPackFirst','pPackLast','pPackCourse'].forEach(id=>{if($(id))$(id).value='';});updateStudentSessionUI();if(CURRENT_VIEW==='student'||CURRENT_VIEW==='pstart'||CURRENT_VIEW==='gstart')returnStudentHome();else renderStart();}
+if(!window.FBX){$('#studentLoginBtn').onclick=()=>{const st={first:cleanName($('#studentLoginFirst').value),last:cleanName($('#studentLoginLast').value),course:$('#studentLoginCourse').value.trim().toUpperCase()};if(st.first.length<2||st.last.length<2||!st.course){$('#studentLoginError').textContent='Completa nombre, apellido y curso. · Enter your first name, last name and class.';$('#studentLoginError').style.display='block';return;}$('#studentLoginError').style.display='none';activateStudentSession(st);renderStudentDashboard();};$('#slRegFields').classList.remove('hidden');['slUser','slPass'].forEach(id=>{const e=$('#'+id);if(e)e.closest('div').classList.add('hidden');});$('#slToggle').classList.add('hidden');$('#studentLoginBtn').textContent='▶ Entrar · Log in';}else{
+let SL_MODE='login';function slMode(m){SL_MODE=m;$('#slRegFields').classList.toggle('hidden',m!=='register');$('#slPass2Box').classList.toggle('hidden',m!=='register');$('#slPass').autocomplete=m==='register'?'new-password':'current-password';$('#studentLoginBtn').textContent=m==='register'?'✅ Crear mi cuenta · Create account':'▶ Entrar · Log in';$('#slToggle').textContent=m==='register'?'¿Ya tienes cuenta? Entrar · Log in':'¿Primera vez? Crear cuenta · Sign up';$('#studentLoginError').style.display='none';}
+$('#slToggle').onclick=()=>slMode(SL_MODE==='login'?'register':'login');
+function slErr(m){const e=$('#studentLoginError');e.textContent=m;e.style.display='block';}
+$('#studentLoginBtn').onclick=async()=>{const btn=$('#studentLoginBtn'),user=$('#slUser').value,pass=$('#slPass').value;btn.disabled=true;try{let prof;if(SL_MODE==='register'){const st={first:cleanName($('#studentLoginFirst').value),last:cleanName($('#studentLoginLast').value),course:$('#studentLoginCourse').value.trim().toUpperCase()};if(st.first.length<2||st.last.length<2||!st.course){slErr('Completa nombre, apellido y curso. · Enter your first name, last name and class.');return;}if(pass!==$('#slPass2').value){slErr('Las dos claves no coinciden. · The passwords do not match.');return;}prof=await FBX.studentRegister({...st,username:user,password:pass});}else prof=await FBX.studentLogin(user,pass);$('#studentLoginError').style.display='none';$('#slPass').value='';$('#slPass2').value='';STUDENT_SESSION={uid:prof.uid,username:prof.username};storeStudentSession(prof);slMode('login');renderStudentDashboard();}catch(e){slErr(e.message||String(e));}finally{btn.disabled=false;}};
+['slUser','slPass','slPass2'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#studentLoginBtn').click();}));
+}$('#studentDashboardBtn').onclick=renderStudentDashboard;$('#studentPracticeBtn').onclick=returnStudentPractice;$('#studentPracticeBtn2').onclick=returnStudentPractice;$('#studentGamesBtn').onclick=()=>openGames();$('#studentEvalBtn').onclick=()=>startStudentEvaluation(PCH.groups);$('#studentEvalBarBtn').onclick=()=>startStudentEvaluation(PCH.groups);$('#studentCloseBtn').onclick=closeStudentSession;$('#endStudentHomeBtn').onclick=returnStudentHome;$('#endStudentPracticeBtn').onclick=returnStudentPractice;$('#endStudentResultsBtn').onclick=renderStudentDashboard;updateStudentSessionUI();
 
 $('#goBtn').onclick = () => {
+  if(window.FBX&&!STUDENT_SESSION){ show('student-login'); return; }
   const st = student();
   if(st.first.length < 2 || st.last.length < 2){ $('#nameErr').style.display = 'block'; (st.first.length < 2 ? $('#stFirst') : $('#stLast')).focus(); return; }
   $('#nameErr').style.display = 'none';
@@ -6190,7 +6423,10 @@ $('#studyPrintBtn').onclick=()=>{document.body.classList.add('p-study');window.a
 // ---------- teacher access (PIN) ----------
 let unlocked = false;
 const hashPin = p => { let h = 5381; for(const c of 'mx#' + p) h = ((h << 5) + h + c.charCodeAt(0)) >>> 0; return h.toString(36); };
-function openTeacher(){
+function openTeacher(){ return window.FBX ? openTeacherFB() : openTeacherLocal(); }
+function tryPin(){ return window.FBX ? tryPinFB() : tryPinLocal(); }
+function openTeacherLocal(){
+  $('#pin1').type='password'; $('#pin1').setAttribute('inputmode','numeric'); $('#pin1').placeholder='PIN'; $('#pin2').placeholder='Repeat the PIN';
   if(unlocked){ showSub('res'); show('teacher'); return; }
   const first = !CFG.pin;
   $('#pinTitle').textContent = first ? 'Create a teacher PIN' : 'Teacher mode';
@@ -6198,7 +6434,7 @@ function openTeacher(){
   $('#pin2').classList.toggle('hidden', !first); $('#pin1').value = $('#pin2').value = ''; $('#pinErr').textContent = '';
   show('pin'); $('#pin1').focus();
 }
-function tryPin(){
+function tryPinLocal(){
   const p1 = $('#pin1').value.trim(), p2 = $('#pin2').value.trim();
   if(!CFG.pin){
     if(!/^\d{4,}$/.test(p1)){ $('#pinErr').textContent = 'Use at least 4 digits.'; return; }
@@ -6207,9 +6443,28 @@ function tryPin(){
   } else if(hashPin(p1) !== CFG.pin){ $('#pinErr').textContent = 'Wrong PIN.'; $('#pin1').select(); return; }
   unlocked = true; openTeacher();
 }
+function openTeacherFB(){
+  $('#pin1').type='email'; $('#pin1').removeAttribute('inputmode'); $('#pin1').placeholder='Correo del profesor · Teacher email'; $('#pin2').placeholder='Contraseña · Password'; $('#pin2').classList.remove('hidden');
+  if(window.FBX && FBX.role === 'teacher') unlocked = true;
+  if(unlocked){ showSub('res'); show('teacher'); return; }
+  $('#pinTitle').textContent = 'Teacher mode · Acceso profesor';
+  $('#pinMsg').textContent = STUDENT_SESSION ? 'Hay un estudiante con la sesión abierta en este equipo: al entrar como profesor se cerrará. · A student session is open and will be closed.' : 'Ingresa tu correo y tu contraseña de profesor. · Enter your teacher email and password.';
+  $('#pin1').value = FBX.teacherEmail; $('#pin2').value = ''; $('#pinErr').textContent = '';
+  show('pin'); $('#pin2').focus();
+}
+async function tryPinFB(){
+  const em = $('#pin1').value.trim(), pw = $('#pin2').value;
+  if(!pw){ $('#pinErr').textContent = 'Escribe tu contraseña. · Enter your password.'; return; }
+  $('#pinErr').textContent = ''; $('#pinBtn').disabled = true;
+  try{ await FBX.teacherLogin(em, pw);
+    if(STUDENT_SESSION){ STUDENT_SESSION = null; try{ localStorage.removeItem(STUDENT_SESSION_KEY); }catch(e){} updateStudentSessionUI(); }
+    unlocked = true; $('#pin2').value = ''; openTeacher();
+  }catch(e){ $('#pinErr').textContent = e.message || String(e); }
+  finally{ $('#pinBtn').disabled = false; }
+}
 $('#pinBtn').onclick = tryPin;
 ['pin1','pin2'].forEach(id => $('#'+id).addEventListener('keydown', e => { if(e.key === 'Enter') tryPin(); }));
-$('#lockBtn').onclick = () => { unlocked = false; renderStart(); show('start'); };
+$('#lockBtn').onclick = async () => { unlocked = false; if(window.FBX){ await FBX.signOut(); show('student-login'); } else { renderStart(); show('start'); } };
 function showSub(k){ ['res','stu','test','sen','bank','tensepacks','study','assess','scan','asg','set'].forEach(x => $('#sub-'+x).classList.toggle('hidden', x !== k));
   $$('.subtabs .chip[data-sub]').forEach(c => c.classList.toggle('on', c.dataset.sub === k));
   if(k === 'res') renderResults(); if(k === 'test'){ renderTestSetup(); renderGSetup(); } if(k === 'sen') renderTable(); if(k === 'bank') renderSheet(); if(k === 'tensepacks'){} if(k === 'study') renderStudyQuestionnaire(); if(k === 'assess') initAssessmentBuilder(); if(k === 'set') renderSettings(); if(k === 'asg') renderAsgPanel(); if(k === 'scan') renderScan(); if(k === 'stu') renderStu(); if(k === 'bank') stuMatRender('worksheet'); if(k === 'tensepacks') stuMatRender('guide'); if(k === 'study') stuMatRender('study'); if(k === 'bank' || k === 'assess') renderAsgBoxes(); }
@@ -6244,7 +6499,7 @@ function renderResults(){
       <td style="white-space:nowrap"><button class="btn ghost sm" data-view="${s.id}">View</button> <button class="btn ghost sm" data-rdel="${s.id}" title="Delete">🗑</button></td></tr>`; }).join('')
     : '<tr><td colspan="9" class="muted">No results yet. They will appear here when students practise.</td></tr>';
   $$('[data-view]').forEach(b => b.onclick = () => viewSession(b.dataset.view));
-  $$('[data-rdel]').forEach(b => b.onclick = () => { if(confirm('Delete this result?')){ lsSet(RKEY, loadRes().filter(x => x.id !== b.dataset.rdel)); $('#rDetail').classList.add('hidden'); renderResults(); } });
+  $$('[data-rdel]').forEach(b => b.onclick = () => { if(confirm('Delete this result?')){ resSet(loadRes().filter(x => x.id !== b.dataset.rdel)); $('#rDetail').classList.add('hidden'); renderResults(); } });
 }
 $('#rSearch').oninput = renderResults; $('#rCourse').onchange = renderResults;
 let liveT = null;
@@ -6268,10 +6523,11 @@ $('#bakBtn').onclick = () => download(JSON.stringify(loadRes()), `backup_mixed_t
 $('#bakFile').onchange = e => { const f = e.target.files[0]; if(!f) return; const rd = new FileReader();
   rd.onload = () => { try{ const d = JSON.parse(rd.result); if(!Array.isArray(d) || !d.every(x => x.id && x.items)) throw 0;
     const all = loadRes(), ids = new Set(all.map(x => x.id)); let n = 0; d.forEach(x => { if(!ids.has(x.id)){ all.push(x); n++; } });
-    lsSet(RKEY, all); renderResults(); alert(`${n} new sessions added (${d.length - n} were already here).`); }catch(err){ alert('This file is not a results backup.'); } };
+    resSet(all); renderResults(); alert(`${n} new sessions added (${d.length - n} were already here).`); }catch(err){ alert('This file is not a results backup.'); } };
   rd.readAsText(f); e.target.value = ''; };
-$('#clrStudentBtn').onclick = () => { const visible=filtered(); const people=[...new Map(visible.map(x=>[`${x.first.toLowerCase()}|${x.last.toLowerCase()}|${x.course||''}`,{first:x.first,last:x.last,course:x.course||''}])).values()]; if(people.length!==1){alert('Search for one student by name, and select the class if needed. · Busca a un estudiante por su nombre y selecciona el curso si hace falta.');return;} const person=people[0], all=loadRes(), matches=all.filter(x=>x.first.toLowerCase()===person.first.toLowerCase()&&x.last.toLowerCase()===person.last.toLowerCase()&&(x.course||'')===person.course); if(!matches.length)return; const label=`${person.first} ${person.last}${person.course?' · '+person.course:''}`; if(confirm(`Delete all ${matches.length} recorded activities for ${label}? This also removes them from the student profile and cannot be undone.\n\n¿Borrar las ${matches.length} actividades registradas de ${label}? También desaparecerán del perfil del estudiante y no se puede deshacer.`)){lsSet(RKEY,all.filter(x=>!matches.includes(x)));$('#rDetail').classList.add('hidden');renderResults();} };
-$('#clrBtn').onclick = () => { if(confirm('Delete ALL results? Export them to Excel first if you need them.') && confirm('Are you sure? This cannot be undone.')){ lsSet(RKEY, []); $('#rDetail').classList.add('hidden'); renderResults(); } };
+$('#clrStudentBtn').onclick = () => { const visible=filtered(); const people=[...new Map(visible.map(x=>[`${x.first.toLowerCase()}|${x.last.toLowerCase()}|${x.course||''}`,{first:x.first,last:x.last,course:x.course||''}])).values()]; if(people.length!==1){alert('Search for one student by name, and select the class if needed. · Busca a un estudiante por su nombre y selecciona el curso si hace falta.');return;} const person=people[0], all=loadRes(), matches=all.filter(x=>x.first.toLowerCase()===person.first.toLowerCase()&&x.last.toLowerCase()===person.last.toLowerCase()&&(x.course||'')===person.course); if(!matches.length)return; const label=`${person.first} ${person.last}${person.course?' · '+person.course:''}`; if(confirm(`Delete all ${matches.length} recorded activities for ${label}? This also removes them from the student profile and cannot be undone.\n\n¿Borrar las ${matches.length} actividades registradas de ${label}? También desaparecerán del perfil del estudiante y no se puede deshacer.`)){resSet(all.filter(x=>!matches.includes(x)));$('#rDetail').classList.add('hidden');renderResults();} };
+if(window.FBX) FBX.onResultsChange = () => { try{ if(!$('#v-teacher').classList.contains('hidden') && !$('#sub-res').classList.contains('hidden')) renderResults(); else if(CURRENT_VIEW === 'student') renderStudentDashboard(); }catch(e){ console.error(e); } };
+$('#clrBtn').onclick = () => { if(confirm('Delete ALL results? Export them to Excel first if you need them.') && confirm('Are you sure? This cannot be undone.')){ resSet([]); $('#rDetail').classList.add('hidden'); renderResults(); } };
 
 // ---------- settings ----------
 function renderSettings(){ $('#cExig').value = String(CFG.exig); $('#cMin').value = String(CFG.min);
@@ -6279,7 +6535,7 @@ function renderSettings(){ $('#cExig').value = String(CFG.exig); $('#cMin').valu
   $('#scaleTbl').innerHTML = `<table class="dt"><tr><th>% achieved</th><th>Grade</th></tr>${rows}</table>`; }
 $('#cExig').onchange = () => { CFG.exig = +$('#cExig').value; saveCFG(); renderSettings(); };
 $('#cMin').onchange = () => { CFG.min = +$('#cMin').value; saveCFG(); renderSettings(); };
-$('#pinSave').onclick = () => { const p = $('#newPin').value.trim(); if(!/^\d{4,}$/.test(p)){ alert('Use at least 4 digits.'); return; } CFG.pin = hashPin(p); saveCFG(); $('#newPin').value = ''; alert('PIN changed.'); };
+$('#pinSave').onclick = async () => { if(!window.FBX){ const p=($('#newPin')||{}).value||''; if(!/^\d{4,}$/.test(p.trim())){ alert('Use at least 4 digits.'); return; } CFG.pin=hashPin(p.trim()); saveCFG(); alert('PIN changed.'); return; } try{ await FBX.resetTeacherPassword(); alert('Te enviamos un correo a ' + FBX.teacherEmail + ' para cambiar la contraseña (revisa también Spam).'); }catch(e){ alert(e.message || e); } };
 
 // ---------- Expanded teacher assessment builder: randomized banks, long readings, separate answer sheet ----------
 const PARQUES_LOGO='data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHdpZHRoPSI3NC43bW0iIGhlaWdodD0iMzMuM21tIiB2aWV3Qm94PSI2NzcyIDEzMTkzIDc0NzAgMzMyOCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLXdpZHRoPSIyOC4yMjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6b29vPSJodHRwOi8veG1sLm9wZW5vZmZpY2Uub3JnL3N2Zy9leHBvcnQiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpwcmVzZW50YXRpb249Imh0dHA6Ly9zdW4uY29tL3htbG5zL3N0YXJvZmZpY2UvcHJlc2VudGF0aW9uIiB4bWxuczpzbWlsPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1NNSUwyMC8iIHhtbG5zOmFuaW09InVybjpvYXNpczpuYW1lczp0YzpvcGVuZG9jdW1lbnQ6eG1sbnM6YW5pbWF0aW9uOjEuMCIgeG1sbnM6c3ZnPSJ1cm46b2FzaXM6bmFtZXM6dGM6b3BlbmRvY3VtZW50OnhtbG5zOnN2Zy1jb21wYXRpYmxlOjEuMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CiA8ZGVmcyBjbGFzcz0iQ2xpcFBhdGhHcm91cCI+CiAgPGNsaXBQYXRoIGlkPSJwcmVzZW50YXRpb25fY2xpcF9wYXRoIiBjbGlwUGF0aFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMTAwMCIgaGVpZ2h0PSIyOTcwMCIvPgogIDwvY2xpcFBhdGg+CiAgPGNsaXBQYXRoIGlkPSJwcmVzZW50YXRpb25fY2xpcF9wYXRoX3NocmluayIgY2xpcFBhdGhVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICA8cmVjdCB4PSIyMSIgeT0iMjkiIHdpZHRoPSIyMDk1OCIgaGVpZ2h0PSIyOTY0MSIvPgogIDwvY2xpcFBhdGg+CiA8L2RlZnM+CiA8ZGVmcyBjbGFzcz0iVGV4dFNoYXBlSW5kZXgiPgogIDxnIG9vbzpzbGlkZT0iaWQxIiBvb286aWQtbGlzdD0iaWQzIi8+CiA8L2RlZnM+CiA8ZGVmcyBjbGFzcz0iRW1iZWRkZWRCdWxsZXRDaGFycyI+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlLTU3MzU2IiB0cmFuc2Zvcm09InNjYWxlKDAuMDAwNDg4MjgxMjUsLTAuMDAwNDg4MjgxMjUpIj4KICAgPHBhdGggZD0iTSA1ODAsMTE0MSBMIDExNjMsNTcxIDU4MCwwIC00LDU3MSA1ODAsMTE0MSBaIi8+CiAgPC9nPgogIDxnIGlkPSJidWxsZXQtY2hhci10ZW1wbGF0ZS01NzM1NCIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gOCwxMTI4IEwgMTEzNywxMTI4IDExMzcsMCA4LDAgOCwxMTI4IFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlLTEwMTQ2IiB0cmFuc2Zvcm09InNjYWxlKDAuMDAwNDg4MjgxMjUsLTAuMDAwNDg4MjgxMjUpIj4KICAgPHBhdGggZD0iTSAxNzQsMCBMIDYwMiw3MzkgMTc0LDE0ODEgMTQ1Niw3MzkgMTc0LDAgWiBNIDEzNTgsNzM5IEwgMzA5LDEzNDYgNjU5LDczOSAxMzU4LDczOSBaIi8+CiAgPC9nPgogIDxnIGlkPSJidWxsZXQtY2hhci10ZW1wbGF0ZS0xMDEzMiIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gMjAxNSw3MzkgTCAxMjc2LDAgNzE3LDAgMTI2MCw1NDMgMTc0LDU0MyAxNzQsOTM2IDEyNjAsOTM2IDcxNywxNDgxIDEyNzQsMTQ4MSAyMDE1LDczOSBaIi8+CiAgPC9nPgogIDxnIGlkPSJidWxsZXQtY2hhci10ZW1wbGF0ZS0xMDAwNyIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gMCwtMiBDIC03LDE0IC0xNiwyNyAtMjUsMzcgTCAzNTYsNTY3IEMgMjYyLDgyMyAyMTUsOTUyIDIxNSw5NTQgMjE1LDk3OSAyMjgsOTkyIDI1NSw5OTIgMjY0LDk5MiAyNzYsOTkwIDI4OSw5ODcgMzEwLDk5MSAzMzEsOTk5IDM1NCwxMDEyIEwgMzgxLDk5OSA0OTIsNzQ4IDc3MiwxMDQ5IDgzNiwxMDI0IDg2MCwxMDQ5IEMgODgxLDEwMzkgOTAxLDEwMjUgOTIyLDEwMDYgODg2LDkzNyA4MzUsODYzIDc3MCw3ODQgNzY5LDc4MyA3MTAsNzE2IDU5NCw1ODQgTCA3NzQsMjIzIEMgNzc0LDE5NiA3NTMsMTY4IDcxMSwxMzkgTCA3MjcsMTE5IEMgNzE3LDkwIDY5OSw3NiA2NzIsNzYgNjQxLDc2IDU3MCwxNzggNDU3LDM4MSBMIDE2NCwtNzYgQyAxNDIsLTExMCAxMTEsLTEyNyA3MiwtMTI3IDMwLC0xMjcgOSwtMTEwIDgsLTc2IDEsLTY3IC0yLC01MiAtMiwtMzIgLTIsLTIzIC0xLC0xMyAwLC0yIFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlLTEwMDA0IiB0cmFuc2Zvcm09InNjYWxlKDAuMDAwNDg4MjgxMjUsLTAuMDAwNDg4MjgxMjUpIj4KICAgPHBhdGggZD0iTSAyODUsLTMzIEMgMTgyLC0zMyAxMTEsMzAgNzQsMTU2IDUyLDIyOCA0MSwzMzMgNDEsNDcxIDQxLDU0OSA1NSw2MTYgODIsNjcyIDExNiw3NDMgMTY5LDc3OCAyNDAsNzc4IDI5Myw3NzggMzI4LDc0NyAzNDYsNjg0IEwgMzY5LDUwOCBDIDM3Nyw0NDQgMzk3LDQxMSA0MjgsNDEwIEwgMTE2MywxMTE2IEMgMTE3NCwxMTI3IDExOTYsMTEzMyAxMjI5LDExMzMgMTI3MSwxMTMzIDEyOTIsMTExOCAxMjkyLDEwODcgTCAxMjkyLDk2NSBDIDEyOTIsOTI5IDEyODIsOTAxIDEyNjIsODgxIEwgNDQyLDQ3IEMgMzkwLC02IDMzOCwtMzMgMjg1LC0zMyBaIi8+CiAgPC9nPgogIDxnIGlkPSJidWxsZXQtY2hhci10ZW1wbGF0ZS05Njc5IiB0cmFuc2Zvcm09InNjYWxlKDAuMDAwNDg4MjgxMjUsLTAuMDAwNDg4MjgxMjUpIj4KICAgPHBhdGggZD0iTSA4MTMsMCBDIDYzMiwwIDQ4OSw1NCAzODMsMTYxIDI3NiwyNjggMjIzLDQxMSAyMjMsNTkyIDIyMyw3NzMgMjc2LDkxNiAzODMsMTAyMyA0ODksMTEzMCA2MzIsMTE4NCA4MTMsMTE4NCA5OTIsMTE4NCAxMTM2LDExMzAgMTI0NSwxMDIzIDEzNTMsOTE2IDE0MDcsNzcyIDE0MDcsNTkyIDE0MDcsNDEyIDEzNTMsMjY4IDEyNDUsMTYxIDExMzYsNTQgOTkyLDAgODEzLDAgWiIvPgogIDwvZz4KICA8ZyBpZD0iYnVsbGV0LWNoYXItdGVtcGxhdGUtODIyNiIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gMzQ2LDQ1NyBDIDI3Myw0NTcgMjA5LDQ4MyAxNTUsNTM1IDEwMSw1ODYgNzQsNjQ5IDc0LDcyMyA3NCw3OTYgMTAxLDg1OSAxNTUsOTExIDIwOSw5NjMgMjczLDk4OSAzNDYsOTg5IDQxOSw5ODkgNDgwLDk2MyA1MzEsOTEwIDU4Miw4NTkgNjA4LDc5NiA2MDgsNzIzIDYwOCw2NDggNTgzLDU4NiA1MzIsNTM1IDQ4Miw0ODMgNDIwLDQ1NyAzNDYsNDU3IFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlLTgyMTEiIHRyYW5zZm9ybT0ic2NhbGUoMC4wMDA0ODgyODEyNSwtMC4wMDA0ODgyODEyNSkiPgogICA8cGF0aCBkPSJNIC00LDQ1OSBMIDExMzUsNDU5IDExMzUsNjA2IC00LDYwNiAtNCw0NTkgWiIvPgogIDwvZz4KICA8ZyBpZD0iYnVsbGV0LWNoYXItdGVtcGxhdGUtNjE1NDgiIHRyYW5zZm9ybT0ic2NhbGUoMC4wMDA0ODgyODEyNSwtMC4wMDA0ODgyODEyNSkiPgogICA8cGF0aCBkPSJNIDE3Myw3NDAgQyAxNzMsOTAzIDIzMSwxMDQzIDM0NiwxMTU5IDQ2MiwxMjc0IDYwMSwxMzMyIDc2NSwxMzMyIDkyOCwxMzMyIDEwNjcsMTI3NCAxMTgzLDExNTkgMTI5OSwxMDQzIDEzNTcsOTAzIDEzNTcsNzQwIDEzNTcsNTc3IDEyOTksNDM3IDExODMsMzIyIDEwNjcsMjA2IDkyOCwxNDggNzY1LDE0OCA2MDEsMTQ4IDQ2MiwyMDYgMzQ2LDMyMiAyMzEsNDM3IDE3Myw1NzcgMTczLDc0MCBaIi8+CiAgPC9nPgogPC9kZWZzPgogPGc+CiAgPGcgaWQ9ImlkMiIgY2xhc3M9Ik1hc3Rlcl9TbGlkZSI+CiAgIDxnIGlkPSJiZy1pZDIiIGNsYXNzPSJCYWNrZ3JvdW5kIi8+CiAgIDxnIGlkPSJiby1pZDIiIGNsYXNzPSJCYWNrZ3JvdW5kT2JqZWN0cyIvPgogIDwvZz4KIDwvZz4KIDxnIGNsYXNzPSJTbGlkZUdyb3VwIj4KICA8Zz4KICAgPGcgaWQ9ImNvbnRhaW5lci1pZDEiPgogICAgPGcgaWQ9ImlkMSIgY2xhc3M9IlNsaWRlIiBjbGlwLXBhdGg9InVybCgjcHJlc2VudGF0aW9uX2NsaXBfcGF0aCkiPgogICAgIDxnIGNsYXNzPSJQYWdlIj4KICAgICAgPGcgY2xhc3M9IkdyYXBoaWMiPgogICAgICAgPGcgaWQ9ImlkMyI+CiAgICAgICAgPHJlY3QgY2xhc3M9IkJvdW5kaW5nQm94IiBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiIHg9IjY4MzIiIHk9IjEzMjUzIiB3aWR0aD0iNzMzNiIgaGVpZ2h0PSIzMTk0Ii8+CiAgICAgICAgPGRlZnM+CiAgICAgICAgIDxjbGlwUGF0aCBpZD0iY2xpcF9wYXRoXzEiIGNsaXBQYXRoVW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgICAgIDxwYXRoIGQ9Ik0gNjgzMiwxMzI1MyBMIDE0MTY3LDEzMjUzIDE0MTY3LDE2NDQ2IDY4MzIsMTY0NDYgNjgzMiwxMzI1MyBaIi8+CiAgICAgICAgIDwvY2xpcFBhdGg+CiAgICAgICAgPC9kZWZzPgogICAgICAgIDxnIGNsaXAtcGF0aD0idXJsKCNjbGlwX3BhdGhfMSkiPgogICAgICAgICA8aW1hZ2UgeD0iNjgzMiIgeT0iMTMyNTMiIHdpZHRoPSI3MzUwIiBoZWlnaHQ9IjMyMDgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBZDBBQUFEU0NBSUFBQUNBZm8xWUFBQWdBRWxFUVZSNG5PM2RlVnhNKy84NDhQZE11eGFwdENsTEpWTkpVcUV1NGlZcExVS0thd25WZFpIOUVoY1JJWFN0VjNabHUxbmFpVktScGVKU2lrcHBrYVo5MVpTYW1wbnorK044Ny96bVV6T25xWVk3OUhvKy9ERnozdS96UHU4NWs5ZWM4ejd2aFlSaEdBSUFBQ0EweVA5MUJRQUFBUHdQaU1zQUFDQmNJQzREQUlCd2diZ01BQURDQmVJeUFBQUlGNGpMQUFBZ1hDQXVBd0NBY0lHNERBQUF3Z1hpTWdBQUNCZUl5d0FBSUZ3Z0xnTUFnSENCdUF3QUFNSUY0aklBQUFnWGlNc0FBQ0JjSUM0REFJQndnYmdNQUFEQ0JlSXlBQUFJRjRqTEFBQWdYQ0F1QXdDQWNJRzREQUFBd2dYaU1nQUFDQmVJeXdBQUlGd2dMZ01BZ0hDQnVBd0FBTUlGNGpJQUFBZ1hpTXNBQUNCY0lDNERBSUJ3Z2JnTUFBRENCZUl5QUFBSUY0akxBQUFnWENBdUF3Q0FjSUc0REFBQXdnWGlNZ0FBQ0JlSXkrQy9sSnljN08vdlgxUlVKUENTUTBKQ2podzUwdGJXSnZDU0FmamFJQzZELzB4TFM4dXVYYnRxYW1wR2pCZ2gySkt6c3JJQ0FnSTBORFFrSlNVRld6SUEzd0FKd3pEQmxvaGhXRWRIaDdpNHVHQ0xKY0JrTWpFTUV4VVZKYzdHWXJFUVFtUnliMzZLMnR2YkNUNFJjZXIzanNGZ2tNbmtucDYzOXZaMk1URXhFb2xFa0tlbHBhV3dzRkJYVjFmZzBiTzZ1cnF4c1hIa3lKSEVGZWlwM3AwS0FIcEtrSEc1cmEwdE1EQXdNakt5dWJsWlZWVjEvdno1bnA2ZW9xS2lJU0VoMTY1ZDQ4d3BKeWNYRmhhMlpjdVdqSXlNLzZzSGlhU3RyZTN0N2EydnIrL3U3bDVUVXhNYUdpb3JLNHVuSmlZbUhqeDRjTjY4ZVFvS0N1Zk9uZHU3ZCsvRWlSTVJRc25KeVVGQlFWbFpXUWdoTFMydEpVdVd1TGk0a0Vpa1U2ZE9SVVZGblR0M0RyOFFpNG1KdVhUcFVuNStQb1pobzBlUDl2RHdtREZqQm1kOVBuejRzR3JWS2pjM3R4VXJWbkJ1cjZ1ck8zbnlaRnhjWEdOam80eU1qTFcxOWJwMTYxUlVWTmlwSjA2Y2VQRGdRVk5UazR5TXpQVHAwOWV0VzZlcXFvcW4wdWwwTnplMzV1Wm1lM3Y3ZGV2VzRSdGpZbUpPbkRpeGUvZnVuMzc2cWVzSmZQWHExYlp0MjlnblJGbFoyYzdPenRYVlZVUkVwTEd4MGNYRnBWUCs3ZHUzVDVzMkRYLzl6ei8vYk4rK3ZWT0d5NWN2SnlRa1hMOStIWDlMSnBPMXRMUisrZVdYU1pNbUlZVEN3OE9EZ29JNEt4TVlHUGpnd1lQcjE2OHJLeXN6bWN6cjE2OWZ1M2F0dExSVVJFUmszTGh4YTlhc0dUOStQTHZ3dlh2M1BubnlSRmxaK2VyVnEreFE5ZVhMbHpObnprUkZSVlZYVjB0SVNFeWFOR245K3ZVNk9qb01CbVAyN05tNnVycC8vdmtuUXFpaG9lSEVpUk54Y1hFTkRRMHlNakpXVmxicjFxMVRVMVBEaTMzNThtVlFVSkNHaGdaZXBwdWJtNXljM0xsejU5aUh2bmp4WW1ob0tQdEVhV2xwclYyN1ZsOWYvL3IxNjhIQndRRUJBZVBHamNOVGZYMTlVMU5UdzhQRDQrUGpnNEtDMkNVb0tDak1uVHQzL3Z6NUNLRmx5NVl4R0l5clY2OXluanI4anpNdUxvNU1Kak1ZakpDUWtORFFVQ3FWS2lZbVptSmk0dTN0elQ0RVFtam56cDFwYVdsRGhneTVmUG15WUg4SlFQOGt5Ri8rbzBlUFhydDJ6ZGpZZU9YS2xTb3FLaWRPbk5pNmRTdENxS21waVVxbHFxcXE2dnhMVzFzYklWUlZWVlZXVm9adkdUNThlR3BxcXJ1N2UxVlZsWm1aV1ZGUjBmMzc5OWtsMzd4NWswcWxXbHBhNGtYaGpZYTNiOTlldVhKbGZuNytqQmt6N08zdEd4b2FmSDE5RHh3NGdCQnFhR2lnVXFrZEhSMElvZVBIajIvWnNxVzZ1dHJKeWNuSnlhbWtwR1RkdW5XWExsM2lySGw3ZXp1VlN2MzgrVFBueHRyYTJnVUxGdHk4ZVhQNDhPRUxGeTQwTURDSWlJaHdkWFV0THk5SENOWFYxYm01dWQyNmRXdllzR0V1TGk3YTJ0cVJrWkd1cnE2VmxaWDQ3bzhlUFhyLy9uMVpXZG1OR3pmb2REcStrVWFqVWFuVTF0WldyaWVRVHFkVHFWUUpDUW44RkpXVmxlM2R1M2ZUcGswWWhqR1pUQ3FWeW1Bd2REaXdmN2NRUW0xdGJWUXFkY0NBQVp3WnhNVEVQbi8rekQ3NVE0Y09mZkhpaGFlbjU0MGJON2hXcHI2K25rcWw0dmNmVzdkdVBYRGdRSHQ3dTdPejg5U3BVek16TTkzZDNSOCtmSWpuL1B6NWMxaFlXSGw1ZVhwNitzdVhMOWwxV0xaczJmbno1MlZsWmVmTm0yZGlZcEtVbERSLy92eWNuQnlFRUpWS3JhcXF3by9pNnVvYUdocUtuOWpSbzBkSFJVVzV1TGhRcVZTRVVFMU5UVUZCd2JwMTY5aE53MlZsWlJVVkZad25xckd4a1VxbHFxbXA0WDg1YVdscFM1Y3VyYXlzNVB6ellIK0pwYVdsTEJZTC83QWFHaHJHeHNiR3hzYjRYOHU5ZS9jUVF1WGw1WjNLUndoVlYxZmo5V0d4V0JzM2JqeHk1QWlUeVhSMmRwNDBhZEkvLy95emVQSGk1T1JrOWlHaW9xTEt5c3BldkhqeDVzMGJydDhzQUQyRENZNkxpNHVCZ1FHTlJzUGp5T25UcCsvY3VjTmdNRTZjT0VHaFVMS3pzenZsWDdKa2laR1JFZnZ0L2Z2M0tSUktTRWhJV1ZtWm5wNmVxNnNydnIyaW9rSlBUMi9ldkhrWWhsMjRjSUZDb1R4NjlLaW1wc2JJeU9pbm4zNHFLU25CczMzKy9ObloyWG5zMkxGbFpXVitmbjRVQ2lVdkwrLzkrL2Y2K3ZxT2pvNE5EUTE0dHBxYW1oa3paaGdZR0h6NjlJbDk2SGZ2M2xFb2xNREFRTTdxN2RpeGcwS2hYTDU4bWIzbHpwMDdGQXBsL2ZyMTdOU3paOCt5VTBOQ1F2VDA5UDc4ODAvOHJhZW5wNkdoNGJGanh5Z1VTbXhzTEw3eCt2WHJGQXJsNGNPSFhFL2dzMmZQS0JUS2hRc1g4TGV0cmExZVhsNFVDaVVwS2FtMnRwWkNvV3pidG8zWHlYL3k1QW1GUXJsKy9YcW43WGdGY25OejhiZmw1ZVZUcDA0MU1qS3FyNjhQRGc3dVZKbnQyN2RUS0pUeTh2S2twQ1FLaGJKa3laTFcxbFk4S1Njbng4VEVaUGJzMlN3V0M4T3dHemR1VUNpVVU2ZE82ZW5wNGI4Y0dJYWRPM2VPUXFIczJMR0R3V0RnVzVLU2t2VDA5RFpzMk5EUjBXRmtaTFJ3NFVJTXczYnYzazJoVU02ZE84YytibVJrSklWQ1diMTZOWVpoM3Q3ZUZBcUZRcUhzM0xrVFQ1MDBhWks5dlQzbmh6cHk1QWlGUXNGdmdEQU1pNCtQcDFBb1FVRkJwMCtmcGxBb3o1OC9aK2RjdFdvVmhVTDUvUGt6L21GVFVsTHc3Zm41K1JRS3hjL1BEOE93R1RObVdGbFpkVHB2UzVjdXBWQW9UQ1lULzdQMDlQUmtuNHFzckN3akk2UDU4K2ZqYnk5ZnZreWhVUDc2Nnk4S2hiSjkrM1plWHhBQS9CUGs5ZkxreVpPWlRLYURnME5BUU1DYk4yKzh2THptenAwcklpS0NwejU3OWl6MlgvaDFVeWNNQmdNaFJDYVQxZFhWcDB5WmtwbVpXVkJRZ0JDS2pvN0dNQXkvNVdSNyt2UXBuVTVmdm56NTBLRkQ4UzF5Y25JWExseElUVTFWVjFkblowdElTR0N4V0t0WHI1YVhsOGUzS0NrcHJWcTFpc2xrSmlVbEVYd1dKcE1aSHgrdnFhbTVaTWtTOXNZNWMrYm82ZWs5ZXZTb3JhMHRMaTVPVlZYVnc4T0RuYnBvMGFLa3BLUU5HellnaENvcUtwNDlleloxNnRURml4ZUxpWW5kdVhPbkIrZnhYNUtTa25nRHlPUEhqL0V0cGFXbDdIUEl2a3JsOU83ZE8zYUd2THk4cmhuVTFOUVdMVnBFcDlOZnZIaEJjT2dIRHg0Z2hMWnMyY0p1K2RYVDA0dU5qYjF6NXc1K254NGVIaTRqSTdOaXhRb1RFNU9FaElTbXBpWjhMM0Z4OFMxYnRyQy85R25UcGlVbEpRVUdCckpMeGpBTVAzV2NUVVpPVGs2R2hvYVBIejltWDd5UEd6ZnU5dTNiWVdGaC9Kd29UVTFOaEZCTFMwdTNPWE56YzFOU1VsSlRVL0U3Qm5OejgyNTM2WG9xREEwTjQrUGo4Ukl3REFzTEM1T1hsMSt4WW9XaG9XRmNYQncvMVFDQVdEZlB5bnBrOWVyVktpb3FkKzdjQ1FrSkNRNE9WbE5UMjdKbHk4eVpNL0hVbzBlUHNuTUdCUVhocmJUdDdlMWVYbDc0aS9UMGREazVPUnNiRzRTUWk0dExjbkp5UkVURTVzMmJ3OFBEcGFTazdPenNPSTlWVTFPREVPcjBIRjlCUWFGVGxiaG1HelpzR0VLb3JxNk80TE4wZEhRME5UV05IajJhOHlFUGlVUWFQbng0Ym01dWJXMXRjM096Z1lFQlp5cVpUR1kzTGtkRlJXRVlObWZPSEFVRmhhbFRweVltSnBhWGwzUCtZUEFKMzRWZDFWZXZYcjE2OVFwL1BXblNKTTdXWGx4RVJFUkVSQVQrK3RkZmZ4MDFhbFRYTXZFb1ZsOWZUM0JjL0x6aEo0cE5XVmtaZjVHWGwvZnUzVHNYRnhkSlNjbTVjK2UrZXZYcTd0MjdDeGN1cksydFZWQlE0R3hkUVFpeHp3bU9UcWMzTmphT0h6KyswOU96NGNPSHYzMzdGby92Q0tFREJ3NjR1N3Z2M2J0WFQwK1BWeVVmUDM2Y2s1UERZREQrL3Z0dmhOQ1VLVlBZSjRlWHc0Y1BjMWFNb0hDMjJ0cGFFUkVSL0tTeHNVOUZWbFpXUVVIQm9rV0xKQ1FrNXN5WnMyZlBucmk0dURsejVuUmJMQUFFQkJtWFNTU1N2YjM5L1Buekt5b3FFaElTZ29LQ05tM2FOSHIwYUR6MStQSGplTE15K3QvL3E0Mk5qZTN0N1hsNWVSb2FHbWZPbkJrOGVEQkN5TkxTVWxsWk9Tb3FhdkxreVNVbEpTNHVMdExTMHB6SHdrdkl5OHRqUC9oQ0NOWFYxUTBZTUVCS1NvcTlCWS8raFlXRkkwZU9aRy9FZTh1eS8ydHhKUzR1UG1qUW9PTGlZaWFUeWI3Nnd6Q3NxS2hJUWtKaThPREI4dkx5QlFVRkRBYUQzUStFeFdKVlZsYXFxNnV6V0t6dzhIQVNpWlNjblB6OCtmT21waVlXaXhVUkViRjY5ZW9lbmxIMDhlTkhoQkIrVGhCQytJTkgvUFdBQVFPNjV2L3R0OTltelpxRnYyYmZJblNDZjN4RlJjWGEybHFFRUdkckxONE96djZCK2ZEaGc3R3hNVHUxb3FKQ1dWbFpSRVFrUER3Y0lWUlpXZW52Ny8vbHl4ZUVVRVJFeE1LRkMxVlVWTEt6cyt2cjZ6bC9JTXZLeWpoL2tDUWxKUWNOR3ZUeDQwZk9FNHZYU2x4Y25GM25RWU1HSFR0MmJQSGl4WndOelozZ2p4QVJRaElTRWx1MmJERXpNOE1mSTdlM3Q3UHpNQmdNRW9uRWZoWVhHQmlJUDYralVxbGVYbDdidDI4UENRbmhXamliaW9vS2s4a3NLaXJpRE9MbDVlV3FxcXBrTWhuL0ZhUlNxZjcrL2pRYURTRVVGaFlHY1JuMGtjRGFNV3ByYTYydHJaY3ZYOTdXMXFhbXByWjQ4V0lIQndjOFZPRVpORFEwdFAvRkRyTGk0dUszYnQwS0R3ODNNek1yS3l0cmJtN0d0NHVLaWpvN085ZlYxZTNhdFFzaE5HL2V2RTZIbXpKbGlyUzA5T1hMbHo5OCtJQnZhV2hvV0xGaWhibTVPZWN6bkJrelpwQklwQk1uVHJBdk9Tc3JLNE9DZ3NURnhhZFBuMDd3Y2Noa3NvMk5UVVZGeGZuejU3Ri91Nno4L2ZmZmVYbDVNMmJNa0pDUXNMR3hxYTJ0UFg3OE9EczFPRGpZeXNycStQSGpyMTY5S2kwdEZSY1h2M3YzYm1Sa1pIWjJOcGxNam95TXhEdnE4YSs1dVJsdkFiQ3lzc0szeU1qSXNNOGgzbnVoRXlVbEpYWUdSVVhGcmhtS2lvcXVYcjBxSlNWbGJtNnVwYVdGRUVwSVNNQS9RbE5UMDRzWEwyUmxaUlVWRmZHN2s0Q0FBRHpXSUlTeXM3Tm56Wm8xYjk2OHRyYTJtSmdZRVJHUmpJeU15TWpJK1BoNENRbUpkKy9ldlgvL2Z0YXNXU3dXYS8vKy9YaVRGRUxvNGNPSDA2ZFAzN1JwRTJjZDdPenNxcXFxenB3NXd6NTF0MjdkeXM3T3RyS3lrcENRWUdjYk0yYk10bTNicUZRcSs2K2lrNU1uVDBaSFI4ZkV4RHgvL256WnNtWG8zeHVqeE1SRVBFTnRiVzE2ZXJxeXNqTDdFbjdRb0VHcXFxcXFxcXJqeG8xVFVGQW9MQ3pzN2t0QXRyYTJDS0g5Ky9lekd5amV2SGxqWjJmbjV1YlcxdFoyNzk0OUVSR1JWNjllUlVaR0ppWW1pb3VMWjJSazhGTXNBQVFFZHIyc3BLUTBiZHEwYTlldU9UZzRUSjA2bFVhanhjYkdEaGt5eE1EQUlEVTFGU0hrNit2TERzY3lNaktuVHAxaTcwc21rL2Z1M2V2azVMUjkrL1k3ZCs3Z0Y3eHo1c3c1Zi81OGFXa3BoVUl4TkRUc2REaDVlWGxmWDE4Zkg1OTU4K1paV0ZpSWlZbWxwYVhSYUxUbHk1ZHpCaXh0YmUzMTY5Y2ZQWHJVMXRZV2IvNSsvdng1YzNQenpwMDdPOTFmSTRTaW82UFpOOEpLU2twK2ZuNHZYNzQ4ZnZ6NHc0Y1A5ZlQwQ2dvS01qTXpod3dac25uelpvVFFoZzBiWHI1OGVlSENoY2VQSCtPcHVibTVxcXFxQ3hZc3dJUHByVnUzZEhWMThkSU9IejU4NmRJbGRwUHUwYU5IMlIxQ0prK2UvTnR2djNGVzQrYk5tMCtmUG1VeW1mbjUrVTFOVFU1T1RwTW1UY0ovVjU0OGVlTHU3czdPNmUzdGJXSml3cm52bFN0WDR1UGoyVy9aRGJzN2QrNlVscFp1YjI5LzkrNGRnOEh3OS9lWGs1T2JNR0VDM2lUNnl5Ky9qQmd4SWpVMXRiYTIxdHZiVzFSVWROS2tTUzR1THJkdjM1NDVjNmFabVZsTFMwdEtTZ3AreE9UazVJYUdoZzBiTnVBTlVBaWgxNjlmTDFxMEtDd3M3UGZmZjA5TVRMeDM3MTVtWnFhUmtWRmxaZVhyMTY5bFpHUisvZlZYemtwNmUzdW5wcWFlT25VcU1UR1JRcUY4L1BneEl5TkRWVlYxeTVZdG5iNFJOemUzek16TXlNaEl4TTJ3WWNNNGI0TVFRbE9tVE5IUzBycHo1MDVKU2NuUW9VT2ZQbjNhM056czdlM056bkR5NUVtOFAxeDVlWGxaV1ptam95Tyt2YWFtWnVIQ2hleHMvdjcrN05kV1ZsYU9qbzdSMGRFelpzeVlNR0hDNTgrZjA5TFNSRVJFMXE1ZEd4Y1gxOXpjN09QanMzVHBVanh6YW1ycTh1WEw4Zlkzcm5VR2dCOGl1M2Z2RmxSWmt5Wk5VbEZSeWNuSlNVbEorZlRwazZXbFpVQkFnS0tpWWxGUlVXVmxKWXZGYXZzWDN2YUszM1hpM1hMbDVlWGw1T1RldjM4dktTbHBZR0NBRUJvNGNDQ1ZTc1V3ek4zZG5YMExXVkpTUXFWU3AwK2ZycTZ1UG1yVUtETXpzL0x5OG95TWpPTGk0aEVqUm16WXNHSDU4dVVrRWlrdkw2K2hvY0hlM2w1ZVh0N0V4R1RVcUZHZlBuMTYrZkpsU1VtSnZyNytybDI3SEJ3Y09HdE9vOUZldjM0dEtTblo4Uzh4TWJINTgrYzdPRGpnc1N3ek01UEJZRGc0T0J3K2ZCaHZWWkNRa0xDM3QyY3dHRGs1T1hpd3cxUGw1ZVdEZzRQSGpoMzd5eSsvc010WFVWRkpUMCtYa3BKU1YxZi8rUEdqaUlnSSswQkRodzdGKzJJamhPcnI2OSs5ZXljbUp0YlcxdGJlM2o1OCtQQ1ZLMWV1WHIyYVJDSjFkSFE4ZmZwMHdJQUJiUndzTEN6WW5YenI2dXF5czdORlJVVTVNemc0T0ZSVVZGUlZWZUVubjhGZ0dCc2IrL3I2NGhmZ0pCTEp5c3Fxb2FIaHpaczMyZG5aY25KeUsxZXU5UER3d08vNkxTMHRWVlZWaTRxSzNyeDVVMU5UTTM3OCtQMzc5MXRZV0lTRmhYMzU4dVgzMzMrWGtaSEJENjJxcXBxVmxWVmRYVDFuenB4WnMyWkpTRWprNWVWbFpXVTFOemRQbXpidHlKRWpPam82TEJZck9UbDUrUERoMDZkUGw1Q1FjSEJ3WURBWWI5Kyt6Y3JLb3RQcGpvNk9odzhmeGx1VzNyNTkyOXJhNnVMaUlpWW1odjlSNWVUa0RCNDhHTDl1eFJVVUZOVFUxRGc0T0F3Y09KRHpleFFWRlowK2ZYcE5UVTE2ZW5wT1RvNmlvcUszdC9jdnYveENJcEUrZmZwVVdscmEwZEZCbzlGb05KcTR1UGpzMmJNM2Jkb2tKaWFXa3BJaUtpcmF3Y0hHeHFhb3FJakpaTHE2dXBMSjVKOS8vbGxKU1FrL0ZYVjFkUk1tVERodzRNRDQ4ZU52Mzc3TllEQTJiOTdNYmxOU1YxZC8vZnAxWTJPanZiMDlkR1FHdlNiNDhYN29tdytMWXJGWUxCYUxuL0YrR0laeHRtbnk3OGNlNzRjUkR0SHMzYmZKWURCRVJFUzZqVTM4REF2c0JRekRtRXhtdDM4U1BRWGovY0MzOFZYaU1nQUFnRjZEWDM0QUFCQXVFSmNCQUVDNFFGd0dBQURoQW5FWkFBQ0VDOFJsQUFBUUxoQ1hBUUJBdUVCY0JnQUE0UUp4R1FBQWhBdkVaUUFBRUM0UWx3RUFRTGhBWEFZQUFPRWk0SWxkaEFHRHdTZ3NMQ3dzTEN3dkwyOXNiS1RUNldReVdVWkdadkRnd1VPSER0WFYxVlZTVWhMNFFabE1abkZ4Y1Y1ZUhyNStLejROa0x5OFBMN2dxYmEyOW5jOXNSRUE0RnNTY0Z4K1d4dEZiVTdubWpSTWJvSytnaDNYSklHZzBXaHhjWEVKQ1FtdlhyMGlXR09OUkNLTkdERml5cFFwdHJhMlk4YU02ZnR4TXpJeTd0eTU4L2p4WTRLVm1hU2twTXpNekt5dHJXMXNiRG90c3dRQUFKMEllRDY1aHlYN2N4cnZjazBhb3poM21zWW1ya2w5VkZGUmNlSENoZkR3Y0Y0TER2RmlZR0RnNGVFeFk4YU0zczNjbUoyZGZmRGd3VzdYbE9Na0xTMDlkKzVjRHc4UDl0SlFBQURReWZmZHZreW4wMCtkT21WcmEzdmp4bzJlQm1XRVVIWjI5b1lORzl6YzNMS3pzM3UwSTR2Rk9uMzZ0SXVMUzQrQ01rS29wYVhseXBVcnRyYTJJU0VoUFYxV0NnRFFUM3pIY2JtNHVOalYxZld2di83Q1Z3dnR0YmR2Mzg2ZlAvL3MyYk44QmtvR2crSGo0M1B5NU1sZTMycTB0TFFjUEhqUXc4T0RlRkZxQUVELzlMM0c1YlMwdFBuejUrZmw1UW1rTkJhTGRlellzWTBiTi9JVDRnTUNBbUppWXZwKzBOVFUxQVVMRnBTWGwvZTlLQURBaitTN2pNc3BLU2tyVjY3a3RVeHlyOFhGeFhsN2UzT3VjdC9WbzBlUHJsMjdKcWdqZnZyMHlkM2R2YmEyVmxBRkFnQitBTjlmWE03TnpWMnpaazBmMnk1NGVmcjA2WTRkTzNnMVVEQVlqSUNBQU1FZXNiUzBkTU9HRFF3R1E3REZBZ0MrWDk5Wi8yVWFqYloyN2RyVzFsWSs4MHRMUzh2SXlIUjBkRFEwTlBEWkhCd1RFMk5rWk1TNW1qWGI4K2ZQUzBwS0NQYVZrcEthTkdtU3JxNnVsSlFVblU3LytQSGpxMWV2S2lvcWlJLzQ2dFdyYTlldXVidTc4MU05QU1BUFQ4QnhlV0FkQ2ZWbXZXbCtIVHg0a0VxbEV1Y1JGeGUzc2JHeHRyWTJOalptRHlGaE1CajUrZmtwS1NrUkVSRkZSVVhFSlJ3K2ZQaW5uMzRhUG54NHArMUpTVWtFZTgyWk04Zkh4NmRyOStUMDlQU3paODgrZWZLRVlOKy8vdnJMMmRsNTRNQ0J4QlVEQVBRSEFtN0hNSGtvcmYzNmF3MXN5OHpNaklpSUlNNWpZMlB6NE1HRFE0Y09XVnRiYzQ3ckV4VVYxZGZYOS9Ed2lJbUpPWFRva0lLQ0FrRWhkRHI5NE1HRFhiZm41T1R3Mm1YU3BFbjc5dTNqT21aazNMaHhaOCtlUFhyMHFMUzBOSy9kNWVYbFAzejRRRkFsQUVEL0llRHJaVElMMlZ5VmlaU2xsZXQyQ0xaa2hOQ3BVNmNJMmlKSUpOTE9uVHNYTEZoQVhBaVpUSFp3Y0JnL2Z2eWFOV3Zldlh2SEsxdHljbko2ZXZxNGNlTTROOWJWMWZIS1AyWEtGQktKUkhEY21UTm5xcW1wTFZ1MmpOMElJeUlpWW14c1BIWHFWRXRMUzIxdGJlTGRBUUQ5aCtDZis0a3hTUGJuWlJXb0FtN095TS9QZi9ic0dVR0dQWHYyZEJ1VTJWUlVWQzVldktpdHJVMlFKemc0dU5NV2dsK0Z3c0xDYmc5cVpHUzBaODhlQlFVRlIwZkh3TURBbEpTVXExZXZybGl4UWtkSEI0SXlBSUR0cS9USGtHb2xPUVhKeWRRS3N2Q3dzRENDVkdkblp4Y1hseDRWS0NjbmQrTEVDUWtKQ1Y0WmtwS1NPbDBncTZpbzhNcDgrL2J0eU1qSWJoOHQydHZiUDNueUpDQWd3TTdPVGs1T3JrY1ZCZ0QwRTErcm41emNaN0pUa0p4a2k4QXVBeDgrZk1nclNVWkc1dmZmZis5Rm1WcGFXc3VXTGVPVnltUXlrNU9UT2JjWUdocnl5c3hpc2JadDJ6Wjc5dXlnb0tDQ2dnSmUyVWdra29qSTEzd3dDZ0Q0L24zRi9zdEtWU0wyWjJSRjJ3VVFtajkrL0VqUTI4elYxWFhRb0VHOUszbnAwcVVFbDh3cEtTbWNiMjF0YllsTHk4L1BQM0hpaElPRHc4eVpNd01EQTdPeXNtQVNEQUJBVDMzZGNTVkRpc1ZzTHN1UW1YMHRKeXNyaXlEVnljbXAxeVhMeTh0UG5UcVZ6K01hR3h0UG1EQ0JuMkpMU2tvdVhMamc2dXI2ODg4Lzc5MjdOelUxRlVhT0FBRDQ5TlhIKyttOEZiZThLWTM2TnBrb3dWTTFaV1ZsSFIyZHZoUnVZV0hCSzRsS3BYSk9VMGNpa1hidDJrWFEzYTJycXFxcUd6ZHVMRisrZlBMa3lUNCtQa2xKU2IyWTl3NEEwSzk4aTNIWVkxSWt4OStUNmtzSkJJMFlvMGFONm1ObmhsR2pSdkZLd2pDczArUVZXbHBhZ1lHQnZWaDhwTEd4TVNvcWF2WHExWmFXbG52MzdpVm9nd1lBOUhQZmFINE04d2NES0M5NmY4MU1vOUY0SlJIMGtlQVRjUWtORFEyZHRsaGFXcDQvZjU1NFpBcUJwcWFtR3pkdU9EbzZybCsvL3RPblQ3MHJCQUR3QS90Mjh4WU5mcFBBcEQzdDNiNU1KczhtNnI2dm15Y3BLVW1RMnRIQlpZRE0rUEhqbzZPalo4MmExZXVEWWhnV0Z4Zm42T2g0N2RvMXdTNFpBd0Q0M24yN3VFd2lzVHJLOXJDK0VEM0I0NFdnYjFuZko1WWpidkRsMVZ0RFVWSHh5SkVqRVJFUnMyZlBKbzdzQk9oMHVyKy92NStmSDRSbUFBRGJONTNuazRUUk96NXRZOUdMZTdvandZUStWVlZWZmF0VU55VVFMNU5Lb1ZBT0hEancvUG56RXlkT09EazV5Y3ZMOTZJQ29hR2g1ODZkNjhXT0FJQWYwamVmZnhscjZpajVuZFZSM2FPZDFOVFVlQ1hsNXViMjhXS1RZTkVUTXBuTXp3S3BBd1lNc0xhMlBuanc0Tk9uVDRPRGd4Y3ZYcXlob2RHak9wdzhlWktma2R3QWdQN2d2NWdYbjFuVjhXa3p4dVQ1S0s4cmdva3M2dXJxOHZQeisxSWRnbWszTkRRMHBLUjYwSk5FVkZSMHdvUUoyN2R2ajQrUER3OFA5L2IyMXRQVDQ2ZTdDSlBKdkhUcEV2OEhBZ0Q4d1A2ajlVcmFpenRLdHlFV3YwM0RZOGFNSVVpTmpvN3VkVVhxNitzN0RiYm1aR1JrMUx0aVNTU1NucDdlcWxXcndzUERIejU4dUdYTGxtSERoaEh2OHZEaFF4aDdBZ0JBLytFNlVsaHJaa2Y1WG9UeE5VeDU2TkNoQkMwRHQyN2Q2dlhDMGxldVhDRlkwTytubjM3aWxWUmRYWDNyMWkwdkw2L3M3R3ppUXd3Wk1tVFpzbVYzNzk3ZHZuMDd3UU5NR28wRzNlWUFBT2kvWGQrUFJVdnVxRGpHWjJZYkd4dGVTYzNOelljT0hlcEZCUW9MQzd0TzVza21MaTV1YVduSnVRWERzSUtDZ3JObno3cTZ1azZkT3RYWDEvZnAwNmQvL3ZrblB3M2NvcUtpaXhjdjl2SHhJY2pUOTJlWUFJQWZ3SCs4N2lycmN3U2o5Z28vT1oyZG5Ra2FhcU9pb203Y3VOR2pRemMyTnE1YnQ0NmdtNTJWbFJXN2YwVk9UczZoUTRkbXpwenA0T0J3N05peHJLd3NkaXhPU1VrSkRRM2w4NkJPVGs0RW40SnJYMmtBUUgvejM2K0gzVkYxbnRsNHI5dHMydHJhVTZaTUljaXdiOSsra0pBUVB2dG1WRlJVdUx1N0UzZUI0RndJTlMwdDdmTGx5N3phR2Z6OS9STVNFdmc1Ymt0TEMwRU5pZnZrQVFENmlmOCtMcFBKcUwzaU1KT1cwbTFPYjI5dk1wbG5oVEVNTzNqdzRPclZxNGxiYVJrTXhwMDdkK2JNbVVQUVBRNGhOSDM2ZE02SGpTNHVMZ1JCazhsa3JsMjc5dno1ODhRUDdqQU1PM0hpQks5VUVvazBZc1FJZ3QwQkFQMEVTYkFqemJEejE3RkgzQ1BzZXlQNUYxWTgrd0tUU0FNWUltNGRYenF2Tnpoc2tJaWQzdjhmY2JkMzc5NXUyeXZJWkxLVmxkV01HVFBHamgycnFxb3FLaXFLRUtMUmFCOCtmSGorL0hsMGRIUzNLMnBMU2twR1IwZHJhbXB5Ymd3T0RnNElDQ0RlVVZkWDE5UFRjL3IwNlYxSEFINzY5T25Ja1NNRXMvdnI2ZW1GaDRjVGx3OEE2QThFSFpmREhwQmV2K1dhZEdlb3dWRUt6KzROQ0NGV082dm1MWlBSOWovTnIxTzFSWUxkL3Y4Z3VwYVdGaGNYbCtKaWZrY01pb21KU1VsSmRYUjAwT2wwL3FlbzM3dDM3N3g1OHpwdFpEQVlDeGN1ZlB1Vys2ZmpKQ2twT1diTUdCMGRIUVVGQlh4R3V1enM3SnljSE9JSytQajRMRjI2bE04YUFnQitZQUplRDdzdnlPSmtSWDFVKzQ3RjVObHZEVWxMU3g4L2Zuemh3b1hOemMzOGxOblIwZEhUaDJrdUxpNWRnekpDU0ZSVTlQRGh3eTR1TGdTVDIrSGEydHBldm56NTh1VkwvZytxcUtnNGQrN2NIdFVUQVBDait1L2Jsem1KU3BFVktTUVM0UUo0STBlT1BIMzZkSStHNGZGdit2VHB1M2J0NHBVNmJOaXdVNmRPRWF3NzFXczdkKzZVa1pFUmVMRUFnTytSY01WbGhKQ1lySWhpZHpQZG01bVpYYnAwcWRjeklQUGk3T3g4OU9oUnZEMmFsL0hqeHdjRkJmVm95Wkp1ZVhwNkV2VE9CZ0QwTjBJWGx4RkNFb05FNUx0YkdXcnMyTEczYnQzcTlUanBUc1RGeGJkdDIrYnY3MDhjbEhIbTV1YlhyMS92ZGx3MW4xQTVKL1FBQUNBQVNVUkJWRHc4UERaczJDQ1FvZ0FBUHdaaGpNc0lvUUhLb2dPN2kzdERoZ3k1ZHUzYTVzMmIrM2oxYW1wcWV1Zk9uU1ZMbHZDL0h0V29VYVBDdzhNWExWclVseVdzNU9YbEF3TUROMjNhMU1kMXNBQUFQeGdoamNzSUlSa05VUm1lczN2K0gxRlIwUlVyVmp4NDhNRER3Nk1YZ3pKTVRFek9uRGx6NWNxVmtTTkg5blRmQVFNRy9QSEhIL2lxSlFTelhuQWxLU201Wk1tUzJOaFlPenU3bmg0WEFQRERFM1EvdWJ0SldDYjNlWHp1cWxQTzZJN3ZZWEZvTkZQa2tDVmZEOFRhMnRxU2twTGk0K05mdm56WmRWRStObnltTjB0TFN6czd1ejR1cE0xV1UxTVRHeHVibUppWW1abEpNQXVTaElTRW1abVp0YlcxalkwTndVei9BSUIrVHNCeFdSaGdHRlphV2xwWVdGaFJVZEhZMk5qZTNrNGlrYVNscFFjUEhqeDA2RkJkWFYzQlByWGpSS2ZUQ3dzTFAzNzhXRjFkM2RUVXhHS3hSRVJFNU9Ua1ZGUlVSb3dZb2EydHpVLzdOUUNnbi9zQjR6SUFBSHpYaExkOUdRQUEraWVJeXdBQUlGd2dMZ01BZ0hDQnVBd0FBTUlGNGpJQUFBZ1hpTXNBQUNCY0lDNERBSUJ3Z2JnTUFBRENCZUl5QUFBSUY0akxBQUFnWENBdUF3Q0FjSUc0REFBQXdnV21OL3R4TkRZMkZoVVZsWmVYZi83OHViMjlYVXhNVEU1T1RsMWRYVXRMUytCcmJ2VVRHSVpWVmxZV0ZoWldWbGEydExSZ0dDWXBLYW1rcEtTaG9URnMyTEN2dE1na0FBS095eTRoRFFYMVBaNmdqc25BSk1XUW9veklDQVdSY1VORXAybUxhU3Yxdm1KVUt2WElrU1BkWnR1MWExZFBvMVZTVWxKMGRIUnY2NFhrNWVVMU5EUkdqeDQ5ZHV4WVNVbkpYcGZEaWNWaVpXUmt4TWZIUDN2MjdPUEhqeXdXcTJzZUVvbWtxYWxwWVdFeGMrWk1VMVBUbnM3aVgxUlVkT0xFQ1Y2cC92NysvTStiV2xaV2R2andZVjZwKy9idDY3VDQ3SzFidDFKU1V2Z3NuSDh6Wjg2Y09YTW1RUVlNdzE2OWVoVVRFL1BreVpPcXFpcXVlY1RGeFEwTURDWk5tbVJyYXp0aXhBaUJWeEwwWndLT3k0MXRxT0ZMYnlZT2JXcEgxUzNNM0NwbWJHNTd3S08ycmJZWGJMVHNOV1ZOZWxGVVpHUmtYRnhjdDlsTVRVMFhMVnJVbzVLTGk0djVLYmxic3JLeU5qWTI3dTd1MnRyYXZTNkV3V0JFUmtaZXZueTVxS2lJT0NlR1laOCtmZnIwNlZOb2FLaW1wcWE3dS92Y3VYUDVYOVc3c2JHUjRGUHYzcjJiL3pyVGFEU0NvbmJzMk5FcExtZG5ad3ZraEhlaXJhMU5FSmRUVWxLT0hqMzY3dDA3NGtMYTI5c3pNakl5TWpKT25UbzFZY0lFRHcrUG4zNzZTZEExQmYyVU1MWXZUOU0vMDRMaTdoUjR4NWZzYldkKzZkRytHSWJ4ZVVrYkVSSFJxOW9KQUkxR3UzUG5qb09EZzcrLy81Y3ZQZnVBdU9mUG56czZPdTdjdWJQYm9OeEphV25wM3IxNzdlM3RFeE1UZTNIY0gxdGJXOXYyN2R0WHJGalJiVkRtaEdGWVdscWFoNGZIaWhVclNrcEt2bDcxUVA4aGRIRjVqT1k5ZzJHSkNDRXlHZVUyM3IvNTRWZGFlelgvdTc5Ky9icTB0SlNmbkRrNU9SOCtmT2hsTFFVQnc3QnIxNjdObnorZlNxWHl2MWRiVzl1ZVBYczhQRHlLaTR0N2ZXZ3FsYnBtelJvZkg1L2UvU3I4a0JvYUdwWXNXZEtYWCt1VWxKVFpzMmRIUlVVSnNGYWdmeEt1dUt3Nk1IZXE0VVhPTGZYMHdyQUM3eThkUE5mcjZ5UXlNcEwvd3duRGY2SEN3c0pGaXhieEdacHJhMnZkM2QxRFEwTUZjdWlvcUtpRkN4ZFdWRlFJcExUdldsdGIyMisvL2ZiMjdkdStsK1BqNDNQaXhBbFlCZ2owaFJERjVRRmlEYk5NRG9tUU96cHQvOXhSZXUvakRneHhlYUxWU1Z0Ylc0K2FJMk5pWXJnK0tQdkdxcXFxVnE5ZTNkYldScHl0cHFabTZkS2xtWm1aQWp4MFhsN2U0c1dMeThyS0JGam05K2pvMGFNQ1BMRkJRVUVuVDU0VVZHbWdIeEtXdUV3bU1XMk5qOGdOcU9XYVd2NGxJNzI2KzR2RWhJU0U1dVptL2c5YVhWMzkvUGx6L3ZOL1BmbjUrVWVQSGlYSTBOemM3T1hsMWRQV1pINlVsWlY1ZW5vU3JDRCt3eXNxS3JwMjdacGd5d3dLQ3JwMzc1NWd5d1Q5aDdERVpRdmRrS0hLV1FRWlhsUmRibVUwRWhmU2k4YkJIclY3ZkZYWHJsM2oxV1NNWWRqT25UdmZ2My9QWjFIaTR1S3lzckw4OTdnb0xpN2VzbVdMTU53Ni9DZXVYcjFLL05tbHBLUXNMQ3pjM053V0xWbzBhOVlzSFIwZEVvblViYkc3ZCsrdXJ1N0JveEVBMkFUY1QyNG4vV1VMdllsclV2dFVDMHhaaVdzU21kU3VvcWhjK0hsa1RSdlBCM0VkckphczJvZ0pxc3Q0WmFpc3JFeE5UZTFwaFJNVEUyazBtcXlzYkU5MzdJUkNvVmhiVy9OS3hUQ3N0cmIyK2ZQbkJNOGtXU3pXbFN0WGZIMTl1eVpGUmtZK2VQQ0F1QUl5TWpLMnRyWlRwMDdWMTlkWFVsSWlrOGtzRnF1aG9TRW5KK2ZKa3lkMzc5NXRhdUwrdmVDZVBYdDI5ZXJWcFV1WEVoOUZlSmlhbXZhNjE3Q0JnUUg3TllaaFNVbEp2SEtTU0NSdmIrOGxTNVowNnFOZFVWRVJFUkVSSEJ4TW85RjQ3ZHZjM0h6cTFDay9QNy9lVlJMMFp3S095NU5ZWldSR0hkY2tiUGdFa2hhdkt6Z0poSlpPVUYzeXJqYm1FZlVJaThUZ21pbW4vdTRFVlhlRXVGK3EzTDE3bDlmREZpMHRyZWJtWnE0WEwzUTYvY0dEQnk0dUxqd3F4aThLaGJKcTFTcmlQQ3dXNjg2ZE8vdjI3ZXZvNk55R2pydDc5KzRmZi93aEt2by9YMHBqWStPaFE0Y0lpaVdUeWN1WEwvZnk4dXIwNjBJbWt3Y1BIbXhwYVdscGFibHg0OGFRa0pDelo4KzJ0N2Z6S3VmNDhlTXpaODVVVVZFaC9oUkN3dG5aZWM2Y09YMHZwN0t5a3VDcWR1UEdqUjRlSGwyM3E2bXByVnExeXRYVmRkZXVYUVJoUFMwdGpVNm44My9qQWdCT1dOb3hFRUlJa1VZck9WcHFiT0NWM05SUlVkdkt2WUVWd3pDQ0Zna25KeWQ3ZTN0ZXFkK3NLWU5NSnMrZlAvL2d3WU84TWpRM04yZGxkVzdNdVhEaFFtTWp6d2FjUVlNR2hZU0ViTnEwaWZpU1gxcGFldFdxVlRkdTNGQldWdWFWcDdXMTlmVHAwd1NGL0pDSW14b2NIUjBKVWhVVkZVK2VQTm5wUjUxRUloa1pHYTFidHk0OFBEd3VMZzZDTXVnRm9ZckxDQ0UwUm1tMm9nVFArOVB5RnU0UHpkKytmVnRZV01nMWlVd20yOXZiT3pnNDhDb3pJeVBqV3c0SHNMT3pNek16NDVXYW01dkwrWlpHb3hIMGlwT1dscjU0OGFLcHFTbWZoell3TUFnT0RoNDBhQkN2REJFUkVUVTFOWHlXOW1NZ2JsbXVyS3drM3AxTUp1L2F0Y3ZFeEVST1RzN096aTRnSU9EWnMyZWhvYUVyVjY3VTA5UGpweGthZ0s2RUxpNGpSTklkTklOWFdrTWI5L1paZ3A3SVptWm02dXJxRkFxRlFxRnd6WUJoMkRmdXlEeDkrblJlU1oxbVk3aDc5MjVMU3d1dnpIdjI3TkhUMCt2Um9VZU1HSEhnd0FGZXFSMGRIY0x6SVBUYlVGTGkvc3dEdDNmdjN0cGE3bjJFMkVSRlJZT0NncDQvZng0WUdPam82QWhUUklHK0U4SzRqQlFsdFhnbDBWbGN1c0hSNmZUNzkrL3oyb1Y5cFV4d3lmeU5PekxMeWNueFNxTFQ2Wnh2WTJOamVlVTBOemVmTld0V0w0NXVhV2xKOE1OQWNNUWYwcEFoUXdodUlONjllMmRyYTd0bno1N1UxRlFHZy90akQ0U1FyS3hzcDZjQ0FQU0ZNTVpsQm92ZWZTWU9UNTQ4NGRYOVZrSkNZc2FNLzd2NnRyT3o0M1ZmU2FWU1g3OSszYU9EOWdWQnN3bm54RDAwR2kwakk0TlhUazlQejE1WHdNdkxpMWRTWGw1ZXYrcmRSU2FUcmF5c0NESTBOemVIaG9ZdVg3NTg4dVRKMjdadFMweE1iRzF0L1diVkEvMlRNUDdJMTdmeG5QbGhnQ2lYU3h1Q1ZnZ3JLeXYyQXpGVlZWVnpjM05lODBaR1JFUVFOUHNLRUoxT3YzdjNMcS9VSVVPR3NGOW5aMmN6bVV5dTJaU1ZsU2RNbU5Eck9oZ2FHbXBwYVhFZHBZSmgySnMzYjlnL1prTHI4dVhMM2ZZZDdNVEl5R2oxNnRWZHR5OWR1alE4UEx6Ykc2Ykd4c2JJeU1qSXlFaEpTY25Ka3lkYlcxdFBuVHExN3owc0FlaEtDT015bHQvNGlGZmFJTW1obmJiVTF0WStmdnlZVi81T3o5TWRIUjE1eGVYNCtQZ2RPM1lNR0RDZ0J6WHRPUmFMNWVmblJ6QWJocUdoSWZ0MVhsNGVyMndUSjA0a2svdDByMk5oWWNGcjlHQitmcjd3eCtXQ2dvS0Nnb0llN2NLcnFVRkhSOGZUMC9QczJiTjhsdFBXMXZidzRjT0hEeCtLaUlpWW01dGJXMXYvL1BQUHhPM1VBUFNJMExWalpOVkdOYlovNUpXcU9tQjBweTJ4c2JHOExpb1ZGQlE2VFlsclpXWEZhNDJKbHBhV2hJU0VudFcxSjFnczFwczNienc4UE1MRHczbmxHVEpraUk2T0R2dHRlWGs1cjV5OG5tSHlqNkNFZmpoZHhwbzFhNlpObTliVHZaaE01ck5uejN4OWZTMHRMYjI4dk9MajR3bmFvQUhnbnhCZEw3TllyT3lHbUdUcW56d0dqaUI1Q1UwRnlXR2ROaExNdGp4cjFxeE9sMGd5TWpMVzF0YThkb21NakNUdXIwcmc4ZVBIYytmTzVaV0tMMGZVN1J3VWMrYk00V3dCSitpMnJLcXEyb3RLY2lMb3lFeHczQitWcUtqb3NXUEhkdS9lM2J0NVBsa3MxdE9uVDU4K2ZhcXBxYmxxMVNwSFI4YyszczJBZnU3YnhXVld5MnZzTS9jYmN5eVAxUGk1cXFEaGNXM2JoK0dJakpBNDEydzY1ck5KL3h1ejgvUHpzN096ZVIzUnljbXA2MFpIUjBkZWNmbkZpeGNWRlJWcWFtbzhQd052alkyTmZReG5jbkp5bmRaUElYaSsxUGVWNVFoYWJBakdCUDdBeE1YRjkrL2ZiMkZoY2ZEZ3dibzY3bU5XdTFWYVdycHQyN2JidDI4ZlBIaFFVMU5Uc0RVRS9jYzNqTXQxSVN4UjduL3VJbWRrQm44UUhZd1FRanlmb3JCa3Bjbk9uVHU2RVR6eDA5YlcxdGZYNzdwOXdvUUpLaW9xWEJkdFk3RllNVEV4QkgwVnZxcXRXN2QyNmo4bkxzNzk5d254Q0oxdGJXMjhtblFRUWhJU0VweDNENTA2NUhIcXoxMis3TzN0cDAyYmR2UG16Yi8vL3J0SDZ4VndTazlQZDNWMVBYUG16Smd4WXdSYlBkQlBmRGQzVzZTVjdrajJmeFovWTdGWUJISFowZEdSYTY4NFVWRlJPenM3WG52OVZ6UGxPenM3T3pzN2Q5bzRjT0JBWHZtNWpzcTdlL2V1R1c4TEZ5N2t2QUFuR0M1QjBMMjZQNUNXbGw2K2ZIbGNYTnoxNjlmZDNkMkhEdTM4cUprZkRRME52Lzc2YTY4ak8ram52bys0akUyYVFIS3c2YlR4MmJObnZPNDM4YkhYdkVvakdHQlNWRlFrMklubitURnIxaXcvUDcrdXZ5SUVVd2h4WFFGcjNyeDVLMWV1eEhoNCsvYnRuajE3MkZNNzVlZm44eXFjczYrZVlIMUhxM2lReWVSeDQ4WnQzYm8xTGk0dUppWm0vZnIxaG9hR1BScFgzZGpZdUhQbnpxOVhRL0FEK3c3dVdGbWpkRWc3TnFJdS95VUlSZ3dQSERnd0xDeU1vRXhKU1VsZTY0TkVSa1lhR1JuMW9wNjlJQ0lpc21iTkdpOHZMNjZQaVVhT0hNbHJ4My8rK1lmcmRtOXY3OHJLU2w0UHI2S2lva2FOR3JWczJUS0UwTXVYTDNrVnp0a25CQ0ZFL0FpTDE5eDRYSFc3Smd2L0ZpMWFOSEhpeEI3dDB1dXViRG82T2pvNk9yLysrbXRWVmRXalI0K1NrcEpldkhqQlR5dDhXbHJhNjlldlRVeDZzNnc3Nk0rRVBTNWo0OGFROTIxRDBwMGZVbjMrL0psZ1JlZUdob1plVDQwV0d4dnI0K1B6dGFjQkk1UEowNlpOVzc5K2ZhY2d5QW0vUU9ONmpWbFVWUFQrL2Z1dWZkMUlKSktmbjE5VlZSV3ZidHFIRHgvVzFkWFYxTlFrV1BKNTdOaXhuRzg3VFQzY1NYVjE5ZURCZ3dreWRNcE1rTnFqenVONmVuckU0L1MrQmhVVkZUYzNOemMzTnhxTjl1elpzK2pvNk9Ua1pPS2JnTmpZV0lqTG9LZUV0eDJESlNxR0xWOUlDdHpUcVZrWkZ4Y1g5NVc2RFRRMU5SRU1WQkVVZVhsNVB6OC9ncUNNRUZKU1VobzFhaFN2MU11WEwzUGRqbmY1SXBpa2FlUEdqVWVPSENHWXExcERRNk5UTlFncTJXa0NQR0lFbVdWa1pQcmV5YVR2YW10cmI5Kyt2Vy9mUHVKb0t5c3JhMnRyR3hRVUZCMGRQVzdjT0lLYzM3NVpEUHdBaFBGNm1UVkFpalRka3ZUTFhKSTZ6MTY2WDNYYXM4aklTQnVienMzWnhDWlBucnh5NWNwT0cyL2V2TW1yVDE1OWZiMmZuOSt4WThlSWk3V3hzZUcxZkZSTVRJeWJtNXV4c1hIWEpGbFoyVE5uenJpNXVYR2RwcktwcWVuaHc0ZThqamh6NXN4T1crVGw1V1ZsWlhrdHpKR1ltRGh2M2p5ZUg0QURobUdQSHZFY3lUbHMyTEQvY0ZiTTR1TGl4TVRFcEtTa04yL2U0QkY1L1BqeC9BeDYxTkhSdVhqeDRvSUZDM2g5VGYxd2tBN291MjhZbDBXVU1USHVkOFFrZFJtV3lBQ1NraUlhTVJRWjZwT01EVW1TUk0wSUh6OStmUFBtemRlcEpVSUlQWDM2dEthbWh2L2JjNFNRb3FKaTErc21iVzN0Rnk5ZWNPMlRoeENLaTR1N2YvKytyYTB0UWJGT1RrNG5UNTdrT25VRGhtRy8vLzU3YUdnbzErdFpGUldWOCtmUEwxeTRrR0NobzY1SUpGTFgwVEVrRXNuQXdDQXRMWTNyTHNuSnlZV0ZoZHJhMnQwV25wS1NRdkN3a1d1bnhxOEt3N0RNekV3OEhIY2RrdTd2NzI5aVlxS29xTmh0T1pLU2txNnVybnYyN09HYUtzQW1kZEIvZkx0MkRORWhPeVIxcm5QOUo3THZMUG44VWRLQkhTU3ZKU1J6VStLZ2pCQ0tpb3I2cWsvMm1Vd213Y1NoL0JzNGNDRHhFL205ZS9jU3owT3ZwcVpHMExHa3JLeHN4WW9WRlJVVlhGTjFkSFQrK3VzdmdrN1FYZG5iMjZ1cnEzZmRUakJIRW9aaHZyNiszYllwMFdnMDRwWHUraklOVTYvdDJMSGp3b1VMWE9jSnFhNnVYcjE2TlorL2FnUi9qWndUQkFMQUorRnRYK2FGeVdUR3hNUjg3YVAwYmp4dVYxWldWZ1JYeEEwTkRaeDkxN2hhdlhvMVFXek56OCtmTjIvZWd3Y1B1QlppWm1aMjRNQUJQdHNIeE1YRjE2eFp3eldKK0FuYjY5ZXZOMjNhUkRCL2YyMXQ3YSsvL3ZycDB5ZGVHU1FrSktaTW1jSlBKUVdJUkNMaFhWTjR5Y3pNWEx4NE1hL1puZGphMnRwdTNMakJLM1g0OE9HOXF4N296NFN4ZlpuWXExZXZ2a0diM2Z2Mzc3bDJlT2lGN2R1M3A2V2w4Wm9jSXpFeE1UbzZtdXVRY2R6UW9VTTlQVDMvK3VzdlhobnE2K3MzYk5oZ1lHQXdiOTQ4UzB0TFZWVlZ6a0E4ZnZ4NEN3dUw1OCtmZDF2UFgzLzlsZGNZaXBFalJ4b2JHeE5NQnAyUWtPRGs1T1RsNVRWanhneDVlWG4yOXFxcXFudjM3bDI4ZUxHK3ZwN2cwRFkyTmoyZE1QUEZpeGNFUXhhSkdSc2I0OStzazVQVDVjdVhlYTFBaGhES3k4dWJNMmZPb2tXTGZ2bmxGNjREOVBQejgzZnQya1V3czkyM21Ud1cvR0MrdjdoTU1DUlBVMU9USU1CeEZSb2F5bXZrVzFSVWxFRGlzcEtTa28rUHo5YXRXM2xsOFBmM256QmhBc0ZVUkY1ZVhzbkp5UVE5MnhCQzJkblorRlFoQ2dvSzZ1cnFrcEtTZERxOXFxcXFwcWFHbnpZZkl5TWo0Z0hvbnA2ZXhBdCtsNVdWK2ZyNjd0NjlXME5EUTFsWm1jVmlWVmRYbDVlWGQzdDBNcG5NZGMxcFl0SFIwUVJUVmhIYnNtVUwvczJLaW9ydTNyMTd5WklsQkpXazAra1hMMTY4ZE9uU21ERmpqSXlNaGc0ZEtpMHQzZDdlVHFWU1g3MTZ4WDVPeUV2djFwUUIvZHgzRnBkYldscmk0K041cGJxNXVTMWZ2cnhIQmJhM3Q1ODdkNDVyMHQyN2R6ZHQyaVNReVNJY0hCenUzYnYzNU1rVHJxazBHczNYMS9mTW1UTzhHaHpFeGNXUEh6L3U0dUpDZk5XSnE2K3Y1eWNiSnpLWmZQandZZUpQT25YcVZITno4OVRVVk9LaU1Bd3JMUzB0TGVXK0RDTlg4K2ZQSnhoQjg3V1ptcHF1V3JXSzRIWUVoejhrN0dtbk55c3JLMzZlaUFMUWlZRGJsLzhlTnVZdjNRbGMvNVZKQ1dEV2hZU0VCRjd0bUNRU2llQVJHUzhFRTN2VzF0YnljL3ZQRHhLSnRIdjNib0lCR2srZVBDRWVvS2l1cm43Ky9QbXZ0RG9HaThXNmRPa1NjUjU4eElyQUs2Q3BxYmx4NDBiQmx0bFRxMWF0K2hwWHRkTFMwajQrUGdJdkZ2UUhBbzdMc1VORzNSaHV4UFZmdFNUUnNERStFWFJidHJDd0lKaFRtQmR0YlczT0pVSTZFZFRUUDRTUW1wcmFwazJiQ0RJRUJBUVFUSVNQRU5MWDE3OXk1Y3BYV2hjak5EUTBORFNVT0krR2hzYXhZOGZFeE1RRWRWQTVPYm5UcDAvLzUwc3hrY25rZ3djUENqWTBrMGlrZ3djUGRocWhBd0NmdnFmK0dPWGw1Uzlldk9DVk9udjI3TjRWUzNESi9Qang0NmFtcHQ0VjI1V3JxNnVwcVNtdjFPYm01aDA3ZGhBM1ZsSW9sTnUzYnhNUE1PdTFmZnYyOFpwMmc4M0N3dUxreVpPU2twSjlQNXlpb3VMbHk1ZUpSengrTTZLaW9vY09IZnJ0dDk4RU1yWkZURXdzSUNDQVlORnhBSWg5VDNFNUppYUdWOWlTa1pINStlZWZlMWVzcmEwdHIydEFPcDBlR3h2YnUySzdJcFBKZm41K0JETnZwS2FtZG52UnFxcXFHaElTc25IalJvRUVSMDVNSm5QOSt2WGQ5bld4dExUOCsrKy8rOWhzYW1wcWV2djI3VzgvbG9RQW1VeGV1M2J0eFlzWCt6aWZ2YWFtWm5Cd01NR2NoUUIwNjd1Snl4aUdFZlRFc0xhMjd2V1NxWXFLaXBNblQrYVZLdGdCM3lOR2pPQzZKRFBib1VPSENQcjU0a1JGUlQwOVBlL2Z2Ky9tNXRiVCtaVmtaV1ZYckZoeDh1UkpyajlGOWZYMWE5YXMrZkxsQzNFaEZBb2xMQ3hzMDZaTm5GM2krS1NtcHVidjd4OFNFdEs3ZFdHK05uTno4K2pvYUI4Zkg0SkpWbm1Sa1pGWnZYcDFaR1RrVjdxaEFmMkhnUHRqV0NxSjZyZHp2NlJWRk8vVEhXSmhZV0ZIUndldkJydXVrOHIzeU55NWMza05FYTZ2cjYrc3JNUTdzY25KeWZHcWdJS0NBcC9IV3Jac1dWcGFHa0h3UFhmdTNMNTkrN290UjFWVjFkZlhkKzNhdFhmdjNvMkxpM3Z6NWczQllpWGk0dUltSmlhMnRyWXpaODdFMjNQMzc5OS8vUGp4cmptYm01dlBuRG5UN2JNNENRa0pEdytQQlFzVzNMOS9QelkyOXZYcjE4UkQvcVNrcEN3c0xCd2NIS3lzclBqdjRxS2dvUEExbW1pSkovNlhsSlJjdW5UcGdnVUxIajkrSEJzYisvejU4K2JtWm9MODR1TGlZOGVPblRWcmxwMmRIWXp1QXdMQmZScEo4TjJoMFdqWjJka0ZCUVhsNWVXTmpZM3Q3ZTNpNHVMeTh2SkRoZ3pSMWRVMU1ERG85ZjBFUDc1OCtaS1RrNE1mdmFHaEFSL3hJU1VsaFFkV1hWM2RVYU5HOVdoRXVQQmdNQmdmUG56SXo4OHZMUzJ0cmExdGJXM0ZNRXhDUW1MUW9FSHE2dW82T2pyNit2cGY5ZHlDZmdqaU1nQUFDSmZ2cG4wWkFBRDZDWWpMQUFBZ1hDQXVBd0NBY0lHNERBQUF3Z1hpTWdBQUNCZUl5d0FBSUZ3Z0xnTUFnSENCdUF3QUFNSUY0aklBQUFnWGlNc0FBQ0JjSUM0REFJQndnYmdNQUFEQ0JlSXlBQUFJbC84K0x2L0FFOXFGaFlWdDJiS2xycTd1djY0SUFPQjdJdUI1OGR2YTJ1TGk0ckt5c2tna2tyR3hzYlcxTmZHc3UzdjI3SW1Qano5MzdweUJnWUZBS3ZENDhlTzZ1am83T3pzcEtTbUVVRlZWMWRPblR4VVVGSHE5eWhULy92ampqNnFxcWtPSERySG55SC83OW0xTVRJeTN0N2Vpb2lLKzVmMzc5K25wNmV4ZEZCUVVMQ3dzaUtkcEJ3RDBONEtNeThYRnhTdFhybVN2eEhIOStuVmRYZDJnb0NCMWRYVmV1N3gvLzc2K3ZyNjh2SnhYWE03THkxdXdZTUhvMGFPdlhMbkNUeDNPbnorZm5wNmVucDd1NysrUEVDb3NMTnk1YzZlaG9lRTNpTXYvL1BOUGFXa3BQaVU4TDJscGFRRUJBWnhiRkJRVUxseTRvS2VuOTVWckJ3RDRiZ2lzSGFPOXZkM2IyL3ZUcDA4VEprdzRldlJvWUdDZ3NiRnhmbjcrdW5YckNOWTNDZ29LdW5YcmxyVzFOWHRMYTJ0cmRuWjJiVzB0L3BiRllyVzJ0cmExdGJFenNGaXNnb0tDNHVKaUZvdlYzdDdPWURDNkZoc2VIbjc3OW0ydVI2UlNxZG5aMlYxWEJtSXdHUFgxOWV5M0RRME4yZG5aK0VwM1ZDbzFKeWVITStBeUdJejM3OStYbFpVUjFJR0FzYkh4MXExYnQyN2RPbVhLbFByNit2Mzc5K1BiNlhUNisvZnZpNHFLV0N4V3AxM0t5c3B5YzNNNUQ4UmdNUEx6OHo5OCtNQ1p1YjI5UFRjM3Q3eThISzlZMTNJQUFNSlBZTmZMeWNuSmhZV0YydHJhRnk1Y3dCZHdtelp0bW9PRHc3dDM3MTYrZkZsUVVIRGd3QUVQRDQrTkd6ZCsvdnpaM054ODhPREJ5Y25KSzFldXpNcktDZzhQRnhVVmRYUjBWRlpXWmpLWnRiVzFaRExaMTlkMzNMaHhjK2ZPUlFpOWZmdFdYMTkvL2ZyMWRuWjJhOWFzeWN2TFF3aHBhMnNYRlJXWm1wcHl2WlQyOS9mdnROeHlmWDM5NXMyYlUxTlRFVUlTRWhJYk4yNWNzbVRKUC8vOHMzVHBVbDFkM2VibTVsR2pSams1T2ExZnYxNURRNk82dXBwT3B5c29LQmdiR3ljbUppS0VWRlZWZzRPRGh3MGI5dmJ0MjdWcjExWldWaUtFdExTMGlvdUw1ODJiNStmbngvKzVHalZxbEx1N08wTEkzdDUrOHVUSitNZEpTRWpZdFd0WFEwTURYdXp4NDhkMWRIUzJiZHNXRlJWRm9WQnljM1B4N1ZldlhsVlFVSGo5K3ZYbXpadnhPZ3daTWlRZ0lNREV4T1RObXpmcjE2K3ZxcXBpVjJ6QmdnVTdkKzdzeGJjSkFQZ1BDZXg2T1NjbkJ5SEV1YXFtbEpTVXBhVWxuc1Jpc1RBTVkxKytZUmlHWC9waC82dXFxa3BOVGMzUTBKREZZaDA3ZGt4Y1hIejA2TkVJSVJrWkdUTXpNelUxdGUzYnQrZmw1ZW5wNmJtNnVsWlZWZUY3ZGEyTXRyWTJuVTVmdDI1ZFkyTWplK1B1M2J0VFUxTjFkWFh4UlZvUEhEaVFrcEtDbDVDWGw4ZGtNclcxdGZHM3BhV2w1dWJteXNySzlmWDFpWW1KVTZaTVVWVlZyYXlzdkhEaEFvUEIyTGh4WTJWbHBhbXBxYk96TTVWSzVmeGNmQ29xS29xSWlBZ0xDOE9qdVphV1ZubDUrZWJObTF0Yld6MDlQV2ZQbmwxVVZMUnAweVlXaThWa01qRU1LeW9xc3JHeGtaR1JLU29xQ2dzTG85Rm8zdDdlbFpXVk5qWTIxdGJXWldWbGE5ZXViVzV1eG9QeXhJa1RaOCtlWFZKUzBvdUtBUUNFZ2NDdWwvRnczTkhSZ1JBNmRPaFFlbnE2dGJVMXZrYXltSmdZbjUwdUZCUVVybDI3eG1ReXpjM05HeG9hNU9YbDkrelpNMmZPbkJFalJvU0VoRFEyTm03ZHVsVkdSdWJxMWF2UzB0SVdGaGJyMXEzaldzNzY5ZXZQbnorZmxaWEZic3h0YTJ0TFRFeVVscGErZnYyNmpJeU1vYUdobjUvZi9mdjNIUndjOE9QR3hNVEl5TWpFeGNVaGhNek16SUtDZ21KaVlyWnMyVEo2OU9pelo4OG1KaWF1V2JPR1NxWG01dVpTcVZSdGJlMlFrQkF5bWF5bHBSVVlHTmpUYy9YeTVjdVhMMS9pcitYazVMWnYzNTZjbkV5bjA0Mk5qYVdscGFXbHBRY05HcFNmbjE5ZVhvN25XYlZxbFplWDE0VUxGd0lEQTB0TFMxKzhlTkhRMERCMTZ0Ump4NDRoaEJJVEUvWDA5UEx5OHFxcXFpZ1V5cVZMbDBna2txYW01c21USjN0YU1RQ0FNQkRZOWJLeHNURkM2UDc5KzgzTnpTdFdyS2l2ci8venp6L3YzYnVIRURJMU5jWHo0TTNFbno5LzVsV0lpb3FLdUxpNGxKU1V0TFIwMTlTT2pnNE13eVFsSmZHK0Z2THk4cnpLRVJjWFAzcjBxSUtDUW5WMU5iNkZ5V1N5V0N3SkNRbDg2ZUpCZ3dheDY0TVFHamx5Sk9jSzg4ckt5dXp5T1Y4amhQQmZtb0VEQjVMSlpQd0ZQeWVuRTFOVDB6MTc5Z3dkT2hRaHRHVEprakZqeHVERjF0YldabVJrWkdSa2pCa3p4dExTVWtSRUJNK3ZvYUdCRUZKU1VzTGY0aTNkN0VPYm1KaW9xNnZqSmNqTHk1TklwRjVYREFBZ0RBUjJ2VHh4NGtSVFU5TlhyMTdObXpmUDJkblp4TVNrdExTMHRiWFZ5c3BLWDEvL3c0Y1BDS0hZMk5nUkkwWWtKU1h4S2dRUGRwd2tKQ1FRUWlVbEpYLy8vZmUwYWRNME5UVkxTMHY5L1B6R2p4OS8vdng1Z3Zxb3E2c2ZPblRJMDlNVHYxU1hscGJXMTlmUHljblp1WFBuK1BIamc0S0NFRUxqeDQvSE03TWpZTGQwZFhXbHBhWFQwOU5QbkRneGJOaXcwNmRQODdrakp4MGRuZm56NTJ0cGFTMVpzdVQ4K2ZNMk5qYmp4bzFEQ0dFWXRtalJJZ3pEZ29PRFRVeE04SjhFMU9XMEdCc2JrOG5rQnc4ZWpCMDdGc093Z0lDQUVTTkduRDE3VmtKQzRzV0xGNmRQbjFaVFV6dDM3bHd2S2dZQUVBWUN1MTRtazhuSGp4ODNOemN2S1NrNWR1eFlaR1FrUW9oRUl1WGw1ZFhYMTArYk5rMUpTYW1ob1dIZnZuMVpXVm44Rnp0OCtIQWpJNk9tcGlZL1A3L0V4TVRkZHoyUFZ3QUFBdFJKUkVGVXUzZExTRWpjdkhsejA2Wk54Y1hGeFB2KzlOTlBhOWV1WmIvMTgvTlRVRkFJRHcvMzhmRXBLU21aTm0wYTN0RGNJN0t5c3R1MmJTT1JTRUZCUVQ0K1B2aGp1dDR4TlRWMWRYV2wwK2wvL1BHSG5wNmVoNGNIbFVyMTlQVDA4dkxDSDA3eStyVlFWMWZmdG0xYlIwZkhuajE3L1B6OE9qbzZacytlcmF5czdPUGpReUtSVHA0OHVYMzdkb0tiRWdDQWtDTUpkcmdkaG1HWm1abFpXVmxrTXRuRXhFUlNVckt1cms1RFEwTlZWYldtcHViaHc0Y1lodjM4ODg5bFpXVmlZbUpHUmthNXVia3RMUzM2K3Zwa012bmR1M2NEQmd6QU8xRmtabVoyZEhTTUhUdFdWRlMwdGJVMUpTV2xvNlBEMU5SVVNVbXByS3pzOGVQSFltSmk1dWJtcGFXbEF3Y081T3o3L1A3OSsrYm1abDFkWFh5d0JvdkZ5c2pJa0pLU3dvdHRhbXBLU0VqNC9Qa3poVUtaT0hFaWlVU2kwV2g1ZVhseWNuSzZ1cm9Jb2ZyNitxS2lJZ1VGQlMwdHJhYW1wdno4ZkhsNWVSMGRIVHlickt6c3FGR2pFRUlmUG54SVNVbVJrNU16TXpQNzlPbVRpb3FLdHJiMjI3ZHY2WFM2b2FFaGZvMlBFTnE5ZS9mTm16Zmo0K00xTlRYeExaV1ZsVlFxZGZEZ3djT0dEVU1JZmZueUJYOWVTcUZRWkdSa2NuTnovL25uSHhLSk5ISGl4SkVqUnlLRWlvcUs2dXZydGJTMEZCUVU2dXJxaW91TDJmc1dGaGJpNFh2aXhJazZPanA0K1hsNWVXbHBhZkx5OHNiR3hsUXFGYStZQUw5ZkFNQTNJT0M0RERoZHZIZ3hLU25wNk5HajdCWUpBQURvRnNSbEFBQVFMdi85dkVVQUFBQTRRVndHQUFEaEFuRVpBQUNFQzhSbEFBQVFMaENYQVFCQXVFQmNCZ0FBNFFKeEdRQUFoQXZFWlFBQUVDNFFsd0VBUUxoQVhBWUFBT0VDY1JrQUFJUUx4R1VBQUJBdUVKY0JBRUM0UUZ3R0FBRGhBbkVaQUFDRUM4UmxBQUFRTGhDWEFRQkF1RUJjQmdBQTRRSnhHUUFBaEF2RVpRQUFFQzRRbHdFQVFMaEFYQVlBQU9FQ2NSa0FBSVFMeEdVQUFCQXVFSmNCQUVDNFFGd0dBQURoQW5FWkFBQ0VDOFJsQUFBUUxoQ1hBUUJBdVB3L1hCM1NoWW9CanM4QUFBQUFTVVZPUks1Q1lJST0iLz4KICAgICAgICA8L2c+CiAgICAgICA8L2c+CiAgICAgIDwvZz4KICAgICA8L2c+CiAgICA8L2c+CiAgIDwvZz4KICA8L2c+CiA8L2c+Cjwvc3ZnPg==';
@@ -17762,7 +18018,7 @@ function omrSave(it){const d=it.d,g=omrGrade(it),nm=omrSplitName(it.name),ck=cou
   if(ck&&it.name){const lists=omrLists();if(!lists[ck])lists[ck]={label:it.course,names:[]};const x=lists[ck];
     if(!x.names.some(n=>omrNorm(n)===omrNorm(it.name))){x.names.push(it.name);note=` · agregado/a a la lista de ${esc(x.label)} (así se reconocerá la próxima vez)`;saveCFG();}}
   const ts=it.date?new Date(it.date+'T12:00:00').getTime():Date.now(),sid='scan-'+(ck||'X')+'-'+courseKey(it.name)+'-'+d.R.id+'-'+d.version+((d.gen||1)>=2?'-s2':'');
-  if(it.sid&&it.sid!==sid)lsSet(RKEY,loadRes().filter(x=>x.id!==it.sid));
+  if(it.sid&&it.sid!==sid)resSet(loadRes().filter(x=>x.id!==it.sid));
   const sess={id:sid,first:nm.first,last:nm.last,course:it.course,start:ts,end:ts,status:'done',gradeBase:'all',finishedEarly:false,
     settings:{mode:'reading',groups:[],types:[],timer:0,p1:0,p2:0,chosenBy:'paper',paper:true,atitle:'Hoja escaneada',rid:d.R.id,version:d.version,gen:d.gen||1},
     total:g.total,qn:g.det.length,pts:g.pts,grade:g.grade,drawPts:it.drawPts,
@@ -18013,7 +18269,7 @@ async function stuRecheck(course){try{await stuLoad();}catch(e){}
       if(it.testSrc!=='code'&&it.testSrc!=='title'&&!vOK){row.st='rev';row.why='parece otra lectura ('+(OMR_TSRC[it.testSrc]||'')+'), confírmalo';rows.push(row);return;}
       // se vuelve a corregir: se conservan el dibujo, los puntos extra, el nombre, el curso y la fecha
       it.drawPts=r0.drawPts;it.bonus=r0.bonus||null;it.name=r0.name||it.name;it.course=r0.course||it.course;it.date=r0.date||it.date;omrLinkStu(it,w.sid,'saved');it.name=r0.name||it.name;it.course=r0.course||it.course;
-      lsSet(RKEY,loadRes().filter(x=>x.id!==stuOldSid(w)));
+      resSet(loadRes().filter(x=>x.id!==stuOldSid(w)));
       if(w.bid){w.status='asignada';delete w.result;delete w.corrected;w.hasScan=false;try{await idbDel('files','scan:'+w.wid);await idbDel('files','rect:'+w.wid);}catch(e){}}
       else{STU.works=STU.works.filter(x=>x!==w);try{await idbDel('files','scan:'+w.wid);await idbDel('files','rect:'+w.wid);}catch(e){}}
       omrSave(it);row.g1=omrGrade(it).grade;row.st='fixed';}
@@ -18036,7 +18292,7 @@ function stuCBonForm(b){const ws=stuCBonWorks(b),rows=stuSorted(b.course).filter
   <div class="actions"><button type="button" class="btn" data-sa="cbonapply" data-b="${b.bid}">💾 Aplicar a los marcados</button> <button type="button" class="btn ghost" data-sa="cbonx">✖ Cerrar</button></div><div id="cbMsg"></div></div>`;}
 function stuPurgeWorks(ws){const ids=new Set(ws.map(w=>w.wid)),sids=new Set(ws.filter(w=>w.rid).map(stuOldSid));
   STU.works=STU.works.filter(w=>!ids.has(w.wid));ids.forEach(id=>['scan:','rect:','work:'].forEach(p=>idbDel('files',p+id).catch(()=>{})));
-  try{const L=loadRes(),K=L.filter(x=>!sids.has(x.id));if(K.length!==L.length)lsSet(RKEY,K);}catch(e){}return ids.size;}
+  try{const L=loadRes(),K=L.filter(x=>!sids.has(x.id));if(K.length!==L.length)resSet(K);}catch(e){}return ids.size;}
 // ---------- hoja escaneada YA CORREGIDA (foto enderezada + marcas de corrección) ----------
 async function stuRect(w){let r=null;try{r=await idbGet('files','rect:'+w.wid);}catch(e){}if(r)return r;
   const sc=w.hasScan?await idbGet('files','scan:'+w.wid):null;if(!sc)return null;
@@ -18092,7 +18348,7 @@ async function stuClick(e){const b=e.target.closest('[data-sa]');if(!b)return;co
     if(!ws.length&&!bs.length){alert('Este curso no tiene asignaciones ni resultados.');return;}
     if(!confirm(`¿Borrar TODAS las asignaciones, resultados, notas y promedios de ${c}?\n\n${bs.length} asignación(es) y ${ws.length} trabajo(s) (${dn} con nota). Los estudiantes de la nómina NO se borran.\n\nEsto no se puede deshacer.`))return;
     if(!confirm(`Confirma otra vez: se dejará ${c} sin ningún resultado.`))return;
-    stuPurgeWorks(ws);try{const L=loadRes(),K=L.filter(x=>!String(x.id||'').startsWith('scan-'+ck+'-'));if(K.length!==L.length)lsSet(RKEY,K);}catch(e){}
+    stuPurgeWorks(ws);try{const L=loadRes(),K=L.filter(x=>!String(x.id||'').startsWith('scan-'+ck+'-'));if(K.length!==L.length)resSet(K);}catch(e){}
     STU.batches=STU.batches.filter(x=>!bs.includes(x));stuSave();stuRender();stuMsg(`🧹 ${c}: se borraron ${bs.length} asignación(es) y ${ws.length} trabajo(s) con sus notas.`);return;}
   if(a==='delbatch'){const bt=STU.batches.find(x=>x.bid===b.dataset.b),ws=STU.works.filter(w=>w.bid===b.dataset.b),dn=ws.filter(w=>w.result).length;
     if(!confirm(`¿Quitar la asignación «${bt.title}»${bt.version?` v${bt.version}`:''}?${dn?`\n${dn} trabajo(s) ya corregido(s) se conservan en el historial.`:''}`))return;
@@ -18338,7 +18594,9 @@ async function stuAttach(wid,files){const w=STU.works.find(x=>x.wid===wid);if(!w
     catch(e){alert(`«${f.name}»: ${e.message||e}`);}}
   if(!pages.length)return;const old=(await idbGet('files','work:'+wid))||[];await idbPut('files','work:'+wid,old.concat(pages));w.files=old.length+pages.length;if(w.status==='asignada')w.status='entregada';stuSave();stuRenderDetail();stuMsg(`📎 ${pages.length} página(s) guardada(s) en la carpeta.`);}
 
-})();
+try{$('#studentLoginLogo').src=LOGO;}catch(e){}
+if(STUDENT_SESSION){try{renderStudentDashboard();}catch(e){}}
+});
 
 </script>
 <script type="text/plain" id="pdfjsSrc">/**
