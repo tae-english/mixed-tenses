@@ -525,6 +525,12 @@ mark{background:#FFE58A;color:inherit;border-radius:5px;padding:0 3px;box-shadow
 .asg-box h3{margin:0 0 8px}
 .asg-card{border:1px solid var(--line,#cfe7e3);border-left:6px solid #f59e0b;border-radius:12px;padding:10px 14px;margin:8px 0;background:#fffbeb}
 .asg-card.done{border-left-color:#16a34a;background:#f0fdf4}.asg-card.closed{opacity:.6}
+.asg-card.pend{border-left-color:#dc2626;background:#fef2f2;box-shadow:0 0 0 2px #fecaca}
+.asg-modal{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
+.asg-modal-box{background:#fff;color:#111;border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:18px 20px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.asg-modal-box h2{margin:0 0 4px;color:#b91c1c}
+.ac-slips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media print{.asg-modal{display:none!important}}
 .asg-card .actions{margin-top:6px}
 #studentAssign h2{margin-top:6px}
 @media print{#abAssign,#shAssign{display:none!important}}
@@ -4802,13 +4808,37 @@ function fatal(msg){ $L.innerHTML = '⚠️ ' + msg; $L.style.color = '#7f1d1d';
 const RES = new Map();          // id -> sesión (cache local de resultados)
 const PENDING = new Map();      // id -> {sess, timer}
 let unsub = null, cfgTimer = null, auth, db;
+// app secundaria: crea cuentas de estudiantes SIN cerrar la sesión del profesor
+let SEC = null;
+function secApp(){ if(!SEC){ const app = initializeApp(firebaseConfig, 'teacherSecondary'); SEC = { auth: getAuth(app), db: getFirestore(app) }; } return SEC; }
+async function createStudentAccount({ first, last, course, username, password }){
+  if(FBX.role !== 'teacher') throw new Error('Solo el profesor puede crear cuentas.');
+  const u = normUser(username);
+  if(!/^[a-z0-9._-]{3,30}$/.test(u)) throw new Error('Usuario «' + u + '» no válido (3 a 30 letras, números o punto).');
+  if(String(password || '').length < 6) throw new Error('La clave debe tener al menos 6 caracteres.');
+  const S = secApp(); let user, existed = false;
+  try{ user = (await createUserWithEmailAndPassword(S.auth, emailOf(u), password)).user; }
+  catch(e){
+    if(e.code !== 'auth/email-already-in-use') throw friendly(e);
+    try{ user = (await signInWithEmailAndPassword(S.auth, emailOf(u), password)).user; existed = true; }
+    catch(e2){ const er = new Error('El usuario «' + u + '» ya existe con otra clave: cámbiale el usuario o usa «Vincular».'); er.code = 'exists'; throw er; }
+  }
+  let profile = { first, last, course, username: u, created: Date.now(), byTeacher: true };
+  try{
+    const old = existed ? await getDoc(doc(S.db, 'students', user.uid)).catch(() => null) : null;
+    if(old && old.exists()) profile = Object.assign({}, old.data());
+    else await setDoc(doc(S.db, 'students', user.uid), profile);
+  }catch(e){ await fbSignOut(S.auth).catch(() => {}); throw friendly(e); }
+  await fbSignOut(S.auth).catch(() => {});
+  return { uid: user.uid, username: u, existed, profile };
+}
 
 const FBX = window.FBX = {
   role: 'none', uid: null, profile: null, cfg: null, bank: null,
   teacherEmail: TEACHER_EMAIL, onResultsChange: null, toast,
   results: () => [...RES.values()],
   saveResult, replaceResults, flush, saveConfig, saveBank,
-  studentLogin, studentRegister, teacherLogin, signOut, resetTeacherPassword, refreshConfig, listStudents
+  studentLogin, studentRegister, teacherLogin, signOut, resetTeacherPassword, refreshConfig, listStudents, createStudentAccount
 };
 
 function friendly(e){
@@ -6526,7 +6556,7 @@ $('#bakFile').onchange = e => { const f = e.target.files[0]; if(!f) return; cons
     resSet(all); renderResults(); alert(`${n} new sessions added (${d.length - n} were already here).`); }catch(err){ alert('This file is not a results backup.'); } };
   rd.readAsText(f); e.target.value = ''; };
 $('#clrStudentBtn').onclick = () => { const visible=filtered(); const people=[...new Map(visible.map(x=>[`${x.first.toLowerCase()}|${x.last.toLowerCase()}|${x.course||''}`,{first:x.first,last:x.last,course:x.course||''}])).values()]; if(people.length!==1){alert('Search for one student by name, and select the class if needed. · Busca a un estudiante por su nombre y selecciona el curso si hace falta.');return;} const person=people[0], all=loadRes(), matches=all.filter(x=>x.first.toLowerCase()===person.first.toLowerCase()&&x.last.toLowerCase()===person.last.toLowerCase()&&(x.course||'')===person.course); if(!matches.length)return; const label=`${person.first} ${person.last}${person.course?' · '+person.course:''}`; if(confirm(`Delete all ${matches.length} recorded activities for ${label}? This also removes them from the student profile and cannot be undone.\n\n¿Borrar las ${matches.length} actividades registradas de ${label}? También desaparecerán del perfil del estudiante y no se puede deshacer.`)){resSet(all.filter(x=>!matches.includes(x)));$('#rDetail').classList.add('hidden');renderResults();} };
-if(window.FBX) FBX.onResultsChange = () => { try{ if(!$('#v-teacher').classList.contains('hidden') && !$('#sub-res').classList.contains('hidden')) renderResults(); else if(CURRENT_VIEW === 'student') renderStudentDashboard(); }catch(e){ console.error(e); } };
+if(window.FBX) FBX.onResultsChange = () => { try{ if(!$('#v-teacher').classList.contains('hidden') && !$('#sub-res').classList.contains('hidden')) renderResults(); else if(CURRENT_VIEW === 'student') renderStudentDashboard(); }catch(e){ console.error(e); } try{ window.__stuSync && window.__stuSync(); }catch(e){} };
 $('#clrBtn').onclick = () => { if(confirm('Delete ALL results? Export them to Excel first if you need them.') && confirm('Are you sure? This cannot be undone.')){ resSet([]); $('#rDetail').classList.add('hidden'); renderResults(); } };
 
 // ---------- settings ----------
@@ -17288,6 +17318,7 @@ function asgRoster(){ // curso -> {label, students: Map(key -> nombre)}
   (ASG_STUDENTS||[]).forEach(s=>add(s.course,s.uid,`${s.last}, ${s.first}`));
   loadRes().forEach(s=>add(s.course,sessStudentKey(s),`${s.last}, ${s.first}`));
   asgList().forEach(a=>add(a.course,null));
+  try{if(STU.ready)stuCourses().forEach(c=>{if(![...m.values()].some(x=>sameCourse(x.label,c)))add(c,null);});}catch(e){}
   return m;
 }
 function asgBoxHTML(p,what){return `<div class="asg-box"><h3>📤 Asignar en línea a un curso · Assign online</h3><p class="note" style="margin-top:0">${what}</p>
@@ -17305,10 +17336,10 @@ function renderAsgBoxes(){
   const ab=$('#abAssign'),sh=$('#shAssign');
   if(ab&&!ab.dataset.ready){ab.dataset.ready='1';ab.innerHTML=asgBoxHTML('abA','Primero presiona «✨ Crear prueba» con la lectura que quieres. Cada estudiante recibirá la misma lectura con las alternativas y columnas en distinto orden (para que no copien) y se corrige sola; el dibujo lo revisas tú en Results.');
     $('#abACourse').onchange=()=>$('#abAOtherBox').classList.toggle('hidden',$('#abACourse').value!=='__other');
-    $('#abABtn').onclick=()=>{const msg=$('#abAMsg'),d=AB.data;if(!d){msg.textContent='⚠️ Primero presiona «✨ Crear prueba».';return;}const c=asgCourseFrom('abA');if(!c){msg.textContent='⚠️ Elige o escribe un curso.';return;}
-      const title=$('#abATitle').value.trim()||('Reading test · '+d.R.title);
-      asgSave({id:'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),kind:'reading',course:c.course,ck:c.ck,title,rid:d.R.id,once:$('#abAOnce').checked,open:true,created:Date.now()});
-      msg.innerHTML=`✅ Asignada a <b>${esc(c.course)}</b>: «${esc(title)}». Los estudiantes de ese curso la verán en «Mi espacio». Revisa las entregas en <b>📋 Asignaciones</b>.`;$('#abATitle').value='';};}
+    abAddReadSel();$('#abABtn').onclick=async()=>{const msg=$('#abAMsg'),rs=$('#abARead').value,R=rs?RT_BANK.find(r=>r.id===rs):(AB.data&&AB.data.R);
+      if(!R){msg.textContent='⚠️ Elige una lectura en la lista «Lectura» (o presiona «✨ Crear prueba» arriba).';return;}const c=asgCourseFrom('abA');if(!c){msg.textContent='⚠️ Elige o escribe un curso.';return;}
+      try{await stuLoad();}catch(e){}const r=asgCreateOnline({course:c.course,rid:R.id,title:$('#abATitle').value.trim(),once:$('#abAOnce').checked});if(!r){msg.textContent='⚠️ No se encontró la lectura.';return;}
+      msg.innerHTML=`✅ Asignada EN LÍNEA a <b>${esc(r.a.course)}</b>: «${esc(r.a.title)}». Cada estudiante la verá como <b>prueba pendiente</b> apenas entre con su usuario y clave; se corrige sola (el dibujo lo revisas tú).`+(r.b?` También quedó en <b>👥 Estudiantes → ${esc(r.b.course)}</b> y la nota llega sola al <b>📒 Libro de clases</b>.`:` Este curso no está en tu nómina de 👥 Estudiantes: las notas se verán en <b>📋 Asignaciones</b> y <b>📊 Results</b>.`)+asgWarnLocal();$('#abATitle').value='';};}
   if(sh&&!sh.dataset.ready){sh.dataset.ready='1';sh.innerHTML=asgBoxHTML('shA','Se asignan las secciones marcadas arriba que tienen versión interactiva: Which tense, Choose the right form, Write the verb, Verb forms y Dialogue (cada una es una parte con nota). La sopa de letras, el crucigrama, el puzzle, la guía y la lista de verbos son solo para imprimir. Cada estudiante recibe preguntas en distinto orden.');
     $('#shACourse').onchange=()=>$('#shAOtherBox').classList.toggle('hidden',$('#shACourse').value!=='__other');
     $('#shABtn').onclick=()=>{const msg=$('#shAMsg'),c=asgCourseFrom('shA');if(!c){msg.textContent='⚠️ Elige o escribe un curso.';return;}
@@ -17318,7 +17349,7 @@ function renderAsgBoxes(){
       const title=$('#shATitle').value.trim()||('Worksheet · '+groups.map(g=>GN[g]||g).join(', '));
       asgSave({id:'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),kind:'activity',course:c.course,ck:c.ck,title,parts:ok,groups,types,n,once:$('#shAOnce').checked,open:true,created:Date.now()});
       msg.innerHTML=`✅ Asignado a <b>${esc(c.course)}</b>: «${esc(title)}» (${ok.length} parte${ok.length===1?'':'s'}: ${ok.map(m=>ASG_PARTS[m]).join(' · ')}).${ok.length<parts.length?' Algunas secciones no tenían preguntas para esos tiempos y se omitieron.':''}`;$('#shATitle').value='';};}
-  asgFillCourses('abA');asgFillCourses('shA');asgLoadStudents(()=>{asgFillCourses('abA');asgFillCourses('shA');});
+  try{stuLoad().then(()=>{asgFillCourses('abA');asgFillCourses('shA');}).catch(()=>{});}catch(e){}asgFillCourses('abA');asgFillCourses('shA');asgLoadStudents(()=>{asgFillCourses('abA');asgFillCourses('shA');});
 }
 function asgTestCfg(o){const n=Math.max(1,parseInt(o.n,10)||8);return Object.assign({},CFG.test,{mode:o.mode,groups:o.groups.slice(),types:o.types.slice(),n,isPractice:false,timer:false,p1:0,p2:n,fb:true,showClue:false,allowFinish:true});}
 // entregas de una asignación: clave estudiante -> {name, parts:Set, best}
@@ -17347,14 +17378,14 @@ $('#asgFilter').onchange=renderAsgPanel;$('#asgRefresh').onclick=()=>{ASG_FETCH=
 var ASG_READY,ASG_REFRESHED=0;
 function renderStudentAssign(){const box=$('#studentAssign');if(!ASG_READY)return;if(!box||!STUDENT_SESSION){if(box)box.innerHTML='';return;}
   if(window.FBX&&FBX.refreshConfig&&Date.now()-ASG_REFRESHED>20000){ASG_REFRESHED=Date.now();FBX.refreshConfig().then(c=>{if(!c)return;CFG.assign=Array.isArray(c.assign)?c.assign:[];['test','exig','min'].forEach(k=>{if(c[k]!==undefined)CFG[k]=c[k];});if(CURRENT_VIEW==='student')renderStudentAssign();}).catch(()=>{});}
-  const ck=courseKey(STUDENT_SESSION.course),mine=asgList().filter(a=>a.ck===ck).sort((a,b)=>b.created-a.created);
-  if(!mine.length){box.innerHTML='';return;}
+  const ck=courseKey(STUDENT_SESSION.course),mine=asgList().filter(a=>(a.ck===ck||sameCourse(a.course,STUDENT_SESSION.course))&&asgForMe(a)).sort((a,b)=>b.created-a.created);
+  if(!mine.length){box.innerHTML='';asgPendingModal([]);return;}
   box.innerHTML=`<h2>📋 Evaluaciones asignadas · Assigned work</h2>`+mine.map(a=>{const x=asgSubmissions(a).get(asgStudentKey()),parts=a.kind==='reading'?['reading']:(a.parts||[]);
-    const doneAll=x&&x.complete,cls=doneAll?'done':!a.open?'closed':'';
+    const doneAll=x&&x.complete,cls=doneAll?'done':!a.open?'closed':'pend';
     const btns=parts.map((m,i)=>{const done=x&&x.parts.has(m),lock=!a.open||(done&&a.once);const label=a.kind==='reading'?'🧾 Rendir prueba de lectura':`Parte ${i+1}: ${ASG_PARTS[m]} (${a.n})`;return `<button class="btn${done?' ghost':''}" type="button" data-asgs="${a.id}" data-part="${m}"${lock?' disabled':''}>${done?'✅ ':'▶ '}${label}${done&&!a.once?' · otra vez':''}</button>`;}).join('');
     return `<div class="asg-card ${cls}"><b>${esc(a.title)}</b> <small class="muted">· asignada el ${new Date(a.created).toLocaleDateString('es-CL')}${a.once?' · 1 intento':''}</small><div>${doneAll?`✅ Entregada${x.grades.length?' · Nota '+fmtG(x.grades.reduce((p,q)=>p+q,0)/x.grades.length):''}`:!a.open?'⛔ Cerrada por el profesor':'⏳ Pendiente'}</div><div class="actions">${btns}</div></div>`;}).join('');
-  $$('[data-asgs]').forEach(b=>b.onclick=()=>startAssignment(b.dataset.asgs,b.dataset.part));}
-function startAssignment(id,part){const a=asgList().find(x=>x.id===id);if(!a||!STUDENT_SESSION)return;if(!a.open){alert('Esta evaluación está cerrada.');return;}
+  $$('[data-asgs]').forEach(b=>b.onclick=()=>startAssignment(b.dataset.asgs,b.dataset.part));asgPendingModal(mine);}
+function startAssignment(id,part){const a=asgList().find(x=>x.id===id);if(!a||!STUDENT_SESSION)return;{const m=document.getElementById('asgPendModal');if(m)m.remove();}if(!a.open){alert('Esta evaluación está cerrada.');return;}
   const x=asgSubmissions(a).get(asgStudentKey());if(a.once&&x&&x.parts.has(part)){alert('Ya entregaste esta evaluación.');return;}
   const seed=(asgHash(a.id+'|'+asgStudentKey()+'|'+part)%233279)+1;
   if(a.kind==='reading'){const R=RT_BANK.find(r=>r.id===a.rid);if(!R){alert('No se encontró la lectura.');return;}const d=rtBuild(R,100+seed%900,false,2);show('asg');renderOnlineAssessment({data:d,assign:a});return;}
@@ -18167,7 +18198,7 @@ async function renderStu(){const box=$('#sub-stu');if(!box)return;
     box.addEventListener('click',stuClick);box.addEventListener('change',stuChange);box.addEventListener('keydown',lbKey);
     $('#stuRecheckBtn').onclick=()=>stuRecheck('');$('#stuSheetUp').onchange=e=>{const f=[...e.target.files];e.target.value='';if(f.length)stuUploadSheets(f,'');};
     box.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.stuup!=null){const f=[...t.files],c=t.dataset.stuup;t.value='';if(f.length)stuUploadSheets(f,c);}});}
-  await stuLoad();stuPersist();stuRender();stuSaved('ok');}
+  await stuLoad();stuPersist();try{stuSyncOnline();}catch(e){console.warn(e);}stuRender();stuSaved('ok');asgLoadStudents(()=>{try{if(stuSyncOnline())stuRender();}catch(e){}});}
 function stuRender(){const host=$('#stuCourses');if(!host)return;if(STU.err){host.innerHTML=`<p class="sc-bad">${esc(STU.err)}</p>`;return;}
   $('#stuUndo').classList.toggle('hidden',!STU.undo);const cs=stuCourses(),q=omrNorm(STU.q),qr=STU.q.replace(/[^0-9kK]/g,'');
   const tot=STU.list.filter(s=>s.estado==='activo').length;$('#stuCount').textContent=STU.list.length?`${tot} estudiantes activos en ${cs.length} cursos`:'';
@@ -18176,9 +18207,9 @@ function stuRender(){const host=$('#stuCourses');if(!host)return;if(STU.err){hos
   cs.forEach(c=>{let ss=stuSorted(c).filter(s=>STU.showRet||s.estado!=='retirado');if(q||qr)ss=ss.filter(s=>(q&&omrNorm(s.ap+' '+s.nom).includes(q))||(qr.length>=3&&rutClean(s.run).replace('-','').includes(qr)));if((q||qr)&&!ss.length)return;
     const all=stuSorted(c),act=all.filter(s=>s.estado==='activo').length,ret=all.length-act,open=STU.open[c]||!!(q||qr),bs=STU.batches.filter(b=>b.course===c).sort((a,b)=>b.created-a.created),nsel=all.filter(s=>STU.sel.has(s.id)).length;
     h+=`<details class="stu-course" data-course="${esc(c)}"${open?' open':''}><summary><b>${esc(c)}</b> · ${act} activos${ret?` · ${ret} retirados`:''}${(STU.courses[c]||{}).jefe?` · <span class="muted">Prof. jefe: ${esc(stuTitle(STU.courses[c].jefe))}</span>`:''}${bs.length?` · ${bs.length} lectura(s) asignada(s)`:''}</summary>
-    <div class="stu-bar"><button type="button" class="btn sm" data-sa="assign" data-c="${esc(c)}">📝 Asignar lectura${nsel?` (${nsel} seleccionados)`:' al curso'}</button><label class="btn sm" title="Word, PDF o fotos: reconoce solo la lectura, la versión y a cada estudiante">📤 Subir hojas respondidas<input type="file" data-stuup="${esc(c)}" accept="${STU_UP_ACCEPT}" multiple hidden></label><button type="button" class="btn sm" data-sa="gprint" data-c="${esc(c)}" title="Imprime de una vez las hojas de respuestas corregidas de todo el curso">🖨 Hojas corregidas del curso</button><button type="button" class="btn ghost sm" data-sa="recheck" data-c="${esc(c)}" title="Vuelve a revisar las hojas ya corregidas de este curso">🔎 Revisar corregidas</button><button type="button" class="btn ghost sm sc-bad" data-sa="purgecourse" data-c="${esc(c)}" title="Borra todas las asignaciones, resultados y promedios del curso (no borra a los estudiantes)">🧹 Borrar resultados del curso</button><button type="button" class="btn sm" data-sa="book" data-c="${esc(c)}" title="Hoja de notas del curso como en el libro de clases">📒 Libro de clases</button><button type="button" class="btn ghost sm" data-sa="hist" data-c="${esc(c)}">📚 Historial del curso</button><button type="button" class="btn ghost sm" data-sa="printhist" data-c="${esc(c)}">🖨 Imprimir historial</button><button type="button" class="btn ghost sm" data-sa="promote" data-c="${esc(c)}">⬆ Promover a ${esc(stuNextCourse(c)==='EGRESADO'?'egresados':stuNextCourse(c))}</button><button type="button" class="btn ghost sm" data-sa="add" data-c="${esc(c)}">➕ Estudiante</button></div>
-    ${STU.assign&&STU.assign.course===c?stuAssignForm(c,nsel):''}${STU.gprint&&STU.gprint.course===c?stuGPrintForm(c):''}
-    ${bs.length?`<div class="stu-batches">${bs.map(b=>{const ws=STU.works.filter(w=>w.bid===b.bid),dn=ws.filter(w=>w.status!=='asignada').length,rd=stuKind(b)==='reading';return `<div class="stu-batch"><span>${(STU_KINDS[stuKind(b)]||STU_KINDS.reading)[0]} <b>${esc(b.title)}</b>${rd?` · versión ${b.version}${(b.gen||1)>=2?' · serie 2':''}`:''} · ${esc(omrFmtDate(b.date))} · ${ws.length} estudiantes · ${dn} ${rd?'corregidas':'entregadas'}</span><span>${rd?`<button type="button" class="btn sm" data-sa="print" data-b="${b.bid}">🖨 Imprimir prueba + hojas con nombre</button> <button type="button" class="btn ghost sm" data-sa="printsheets" data-b="${b.bid}">🖨 Solo hojas</button>${ws.some(w=>w.result)?` <button type="button" class="btn ghost sm" data-sa="gprint" data-c="${esc(c)}" data-b="${b.bid}">🖨 Corregidas (${ws.filter(w=>w.result).length})</button>`:''} <button type="button" class="btn sm" data-sa="cbon" data-b="${b.bid}" title="Puntos extra (participación / trabajos en clase) para todo el curso de una vez">⭐ Puntos extra al curso</button>`:stuKind(b)==="manual"?`<button type="button" class="btn sm" data-sa="book" data-c="${esc(c)}">📒 Ver en el libro</button>`:`<button type="button" class="btn sm" data-sa="reprint" data-b="${b.bid}">🖨 Imprimir</button>`} <button type="button" class="btn ghost sm" data-sa="delbatch" data-b="${b.bid}" title="Quitar la asignación (los trabajos ya corregidos se conservan)">🗑</button> <button type="button" class="btn ghost sm sc-bad" data-sa="delbatchall" data-b="${b.bid}" title="Borrar la asignación y TODOS sus resultados y notas (para pruebas de ensayo)">🗑 Borrar con resultados</button></span></div>${STU.cbon&&STU.cbon.bid===b.bid?stuCBonForm(b):''}`;}).join('')}</div>`:''}
+    <div class="stu-bar"><button type="button" class="btn sm" data-sa="assign" data-c="${esc(c)}">📝 Asignar lectura${nsel?` (${nsel} seleccionados)`:' al curso'}</button><label class="btn sm" title="Word, PDF o fotos: reconoce solo la lectura, la versión y a cada estudiante">📤 Subir hojas respondidas<input type="file" data-stuup="${esc(c)}" accept="${STU_UP_ACCEPT}" multiple hidden></label><button type="button" class="btn sm" data-sa="gprint" data-c="${esc(c)}" title="Imprime de una vez las hojas de respuestas corregidas de todo el curso">🖨 Hojas corregidas del curso</button><button type="button" class="btn ghost sm" data-sa="recheck" data-c="${esc(c)}" title="Vuelve a revisar las hojas ya corregidas de este curso">🔎 Revisar corregidas</button><button type="button" class="btn ghost sm sc-bad" data-sa="purgecourse" data-c="${esc(c)}" title="Borra todas las asignaciones, resultados y promedios del curso (no borra a los estudiantes)">🧹 Borrar resultados del curso</button><button type="button" class="btn sm" data-sa="acct" data-c="${esc(c)}" title="Usuario y clave de cada estudiante para rendir pruebas en línea">🔑 Cuentas en línea</button><button type="button" class="btn sm" data-sa="book" data-c="${esc(c)}" title="Hoja de notas del curso como en el libro de clases">📒 Libro de clases</button><button type="button" class="btn ghost sm" data-sa="hist" data-c="${esc(c)}">📚 Historial del curso</button><button type="button" class="btn ghost sm" data-sa="printhist" data-c="${esc(c)}">🖨 Imprimir historial</button><button type="button" class="btn ghost sm" data-sa="promote" data-c="${esc(c)}">⬆ Promover a ${esc(stuNextCourse(c)==='EGRESADO'?'egresados':stuNextCourse(c))}</button><button type="button" class="btn ghost sm" data-sa="add" data-c="${esc(c)}">➕ Estudiante</button></div>
+    ${STU.assign&&STU.assign.course===c?stuAssignForm(c,nsel):''}${STU.acct===c?stuAcctForm(c):''}${STU.gprint&&STU.gprint.course===c?stuGPrintForm(c):''}
+    ${bs.length?`<div class="stu-batches">${bs.map(b=>{const ws=STU.works.filter(w=>w.bid===b.bid),dn=ws.filter(w=>w.status!=='asignada').length,rd=stuKind(b)==='reading';return `<div class="stu-batch"><span>${(STU_KINDS[stuKind(b)]||STU_KINDS.reading)[0]} <b>${esc(b.title)}</b>${b.online?` · 💻 <b>en línea</b>${asgOpenOf(b)?' · 🟢 abierta':' · ⛔ cerrada'}`:rd?` · versión ${b.version}${(b.gen||1)>=2?' · serie 2':''}`:''} · ${esc(omrFmtDate(b.date))} · ${ws.length} estudiantes · ${dn} ${b.online?'rendidas':rd?'corregidas':'entregadas'}${b.unmatched?`<br><small class="sc-bad">⚠️ ${b.unmatched} entrega(s) sin reconocer en la nómina (${esc((b.unNames||[]).join(', '))}): vincula sus cuentas en 🔑 Cuentas en línea.</small>`:''}</span><span>${b.online?`<button type="button" class="btn sm" data-sa="asgopen" data-b="${b.bid}">${asgOpenOf(b)?'⛔ Cerrar prueba':'🟢 Reabrir prueba'}</button> <button type="button" class="btn ghost sm" data-sa="book" data-c="${esc(c)}">📒 Ver notas en el libro</button> <button type="button" class="btn sm" data-sa="cbon" data-b="${b.bid}">⭐ Puntos extra al curso</button>`:rd?`<button type="button" class="btn sm" data-sa="print" data-b="${b.bid}">🖨 Imprimir prueba + hojas con nombre</button> <button type="button" class="btn ghost sm" data-sa="printsheets" data-b="${b.bid}">🖨 Solo hojas</button>${ws.some(w=>w.result)?` <button type="button" class="btn ghost sm" data-sa="gprint" data-c="${esc(c)}" data-b="${b.bid}">🖨 Corregidas (${ws.filter(w=>w.result).length})</button>`:''} <button type="button" class="btn sm" data-sa="cbon" data-b="${b.bid}" title="Puntos extra (participación / trabajos en clase) para todo el curso de una vez">⭐ Puntos extra al curso</button>`:stuKind(b)==="manual"?`<button type="button" class="btn sm" data-sa="book" data-c="${esc(c)}">📒 Ver en el libro</button>`:`<button type="button" class="btn sm" data-sa="reprint" data-b="${b.bid}">🖨 Imprimir</button>`} <button type="button" class="btn ghost sm" data-sa="delbatch" data-b="${b.bid}" title="Quitar la asignación (los trabajos ya corregidos se conservan)">🗑</button> <button type="button" class="btn ghost sm sc-bad" data-sa="delbatchall" data-b="${b.bid}" title="Borrar la asignación y TODOS sus resultados y notas (para pruebas de ensayo)">🗑 Borrar con resultados</button></span></div>${STU.cbon&&STU.cbon.bid===b.bid?stuCBonForm(b):''}`;}).join('')}</div>`:''}
     ${STU.edit&&!STU.edit.s&&STU.edit.course===c?stuEditForm(null,c):''}
     <table class="tt stu-tab"><thead><tr><th><input type="checkbox" data-sa="selall" data-c="${esc(c)}"${nsel&&nsel===all.filter(s=>s.estado==='activo').length?' checked':''} title="Seleccionar todos"></th><th>N°</th><th>RUT</th><th>Apellidos</th><th>Nombres</th><th>Estado</th><th>Trabajos</th><th>Promedio</th><th></th></tr></thead><tbody>
     ${ss.map(s=>{const st=stuStats(s.id);return `<tr class="${s.estado==='retirado'?'stu-ret':''}"><td><input type="checkbox" data-sa="sel" data-id="${s.id}"${STU.sel.has(s.id)?' checked':''}${s.estado!=='activo'?' disabled':''}></td><td>${s.nl||''}</td><td>${esc(rutFmt(s.run))}${rutOk(s.run)?'':' <span class="sc-bad" title="RUT con dígito verificador incorrecto">⚠</span>'}</td><td>${esc(stuTitle(s.ap))}</td><td>${esc(stuTitle(s.nom))}</td><td>${s.estado==='retirado'?`<span class="sc-bad">Retirado/a</span>${s.obs?`<br><small>${esc(s.obs)}</small>`:''}`:'Activo/a'}</td><td>${st.done}/${st.n}</td><td>${st.avg!=null?`<b class="${st.avg<4?'g-bad':'g-ok'}">${fmtG(st.avg)}</b>`:'—'}</td>
@@ -18186,12 +18217,93 @@ function stuRender(){const host=$('#stuCourses');if(!host)return;if(STU.err){hos
       ${STU.edit&&STU.edit.s&&STU.edit.s.id===s.id?`<tr class="stu-editrow"><td colspan="9">${stuEditForm(s,c)}</td></tr>`:''}`;}).join('')}</tbody></table></details>`;});
   host.innerHTML=h||'<p class="muted">Nada coincide con la búsqueda.</p>';stuRenderDetail();if(!STU.lbSkip)lbRender();
   if(STU.focusEdit){STU.focusEdit=false;const f=document.getElementById('stuEAp');if(f){f.closest('.stu-form').scrollIntoView({block:'center',behavior:'smooth'});setTimeout(()=>f.focus({preventScroll:true}),250);}}}
+
+// ================= 💻 pruebas en línea → libro de clases · 🔑 cuentas de estudiantes =================
+function onTok(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z\s]/g,' ').trim().split(/\s+/)[0]||'';}
+function ckLoose(c){const k=courseKey(c),m=/^(\d+)/.exec(k);if(!m)return k;const L=/([A-Z])$/.exec(k.slice(m[1].length));return m[1]+(/MEDIO|^\d+M[A-Z]?$/.test(k)?'M':'')+(L?L[1]:'');}
+function sameCourse(a,b){const x=courseKey(a),y=courseKey(b);return !!x&&!!y&&(x===y||ckLoose(a)===ckLoose(b));}
+function stuNK(first,last){return onTok(first)+'|'+onTok(last);}
+function acTitle(x){return String(x||'').toLowerCase().replace(/(^|[\s-])(\S)/g,(m,a,b)=>a+b.toUpperCase());}
+function acNorm(x){return String(x||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'.').replace(/[^a-z0-9._-]/g,'');}
+function asgForMe(a){if(!a.only||!a.only.length)return true;const S=STUDENT_SESSION||{},u=S.uid||(window.FBX&&FBX.uid);return (u&&a.only.includes(u))||a.only.includes('n:'+stuNK(S.first,S.last));}
+function asgOpenOf(b){const A=asgList().find(x=>x.id===b.asg);return !!(A&&A.open);}
+function asgWarnLocal(){return window.FBX&&FBX.role==='teacher'?'':'<br>⚠️ Estás usando el archivo <b>sin conexión</b>: la prueba en línea solo la verán los estudiantes que usen <b>este mismo computador</b>. Para que la rindan desde sus casas o celulares, asígnala desde la <b>página web</b> del programa entrando como profesor.';}
+function asgDropFor(bt,withRes){if(!bt||!bt.asg)return;const L=asgList(),n=L.length;CFG.assign=L.filter(x=>x.id!==bt.asg);if(CFG.assign.length!==n){saveCFG();try{renderAsgPanel();}catch(e){}}
+  if(withRes){try{const R=loadRes(),K=R.filter(x=>!(x.settings&&x.settings.assign===bt.asg));if(K.length!==R.length)resSet(K);}catch(e){}}}
+function abAddReadSel(){const t=$('#abATitle');if(!t||$('#abARead'))return;const groups={};RT_BANK.forEach(r=>{const g=(r.tenses||[]).map(x=>AB_LABEL[x]||x).join(' + ')||'Otras';(groups[g]=groups[g]||[]).push(r);});
+  const d=document.createElement('div');d.style.cssText='flex:1;min-width:220px';d.innerHTML=`<label class="lbl" for="abARead">Lectura · Reading</label><select id="abARead"><option value="">— la prueba creada arriba con «✨ Crear prueba» —</option>${Object.entries(groups).map(([g,rs])=>`<optgroup label="${esc(g)}">${rs.map(r=>`<option value="${r.id}">${abEsc(r.title)}</option>`).join('')}</optgroup>`).join('')}</select>`;
+  t.closest('div').before(d);}
+// crea la prueba en línea (la ven los estudiantes) y, si el curso está en la nómina, su columna en el libro de clases
+function asgCreateOnline(o){const R=RT_BANK.find(r=>r.id===o.rid);if(!R)return null;
+  const id='a'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  const a={id,kind:'reading',course:o.course,ck:courseKey(o.course),title:o.title||('Reading test · '+R.title),rid:R.id,once:o.once!==false,open:true,created:Date.now()};
+  let b=null;const rc=STU.ready?stuCourses().find(x=>x===o.course)||stuCourses().find(x=>sameCourse(x,o.course)):null;
+  if(rc){const ids=o.sids&&o.sids.length?o.sids:STU.list.filter(s=>s.course===rc&&s.estado==='activo').map(s=>s.id);
+    b={bid:'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),course:rc,rid:R.id,version:null,gen:2,date:o.date||stuToday(),title:R.title,created:Date.now(),online:true,asg:id};STU.batches.push(b);
+    ids.forEach(sid=>STU.works.push({wid:'w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),bid:b.bid,sid,kind:'reading',rid:R.id,version:null,gen:2,title:R.title,course:rc,date:b.date,status:'asignada',assigned:Date.now()}));
+    a.bid=b.bid;if(o.sids&&o.sids.length)a.only=o.sids.map(sid=>{const s=STU.list.find(x=>x.id===sid);return s?[s.uid,'n:'+stuNK(s.nom,s.ap)]:[];}).flat().filter(Boolean);
+    stuSave();}
+  asgSave(a);return {a,b};}
+// la entrega de un estudiante → su fila de la nómina (por cuenta vinculada o por nombre + curso)
+function stuMatchSess(c,x){const ss=STU.list.filter(s=>s.course===c);if(x.uid){const u=ss.find(s=>s.uid===x.uid);if(u)return u;}
+  const k=stuNK(x.first,x.last),m=ss.filter(s=>stuNK(s.nom,s.ap)===k&&!(s.uid&&x.uid&&s.uid!==x.uid));return m.length===1?m[0]:null;}
+function stuSyncOnline(){if(!STU.ready)return false;let ch=false;const res=loadRes();
+  STU.batches.filter(b=>b.asg).forEach(b=>{const A=asgList().find(x=>x.id===b.asg),once=!A||A.once;
+    const subs=res.filter(x=>x.settings&&x.settings.assign===b.asg&&x.status==='done').sort((p,q)=>(p.end||p.updated||p.start||0)-(q.end||q.updated||q.start||0));
+    const per=new Map(),un=[];subs.forEach(x=>{const st=stuMatchSess(b.course,x);if(!st){un.push(x);return;}if(!(once&&per.has(st.id)))per.set(st.id,{st,x});});
+    per.forEach(({st,x})=>{if(x.uid&&!st.uid&&!STU.list.some(o=>o.uid===x.uid)){st.uid=x.uid;ch=true;}
+      let w=STU.works.find(y=>y.bid===b.bid&&y.sid===st.id);
+      if(!w){w={wid:'w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),bid:b.bid,sid:st.id,kind:'reading',rid:b.rid,version:null,gen:2,title:b.title,course:b.course,date:b.date,status:'asignada',assigned:Date.now()};STU.works.push(w);ch=true;}
+      const g=Number.isFinite(x.grade)?Math.round(x.grade*10)/10:null,on={id:x.id,pts:x.pts,total:x.total,at:x.end||x.updated||x.start||0};
+      if(w.grade!==g||!w.online||w.online.id!==on.id||w.online.pts!==on.pts){w.grade=g;w.online=on;w.corrected=on.at;if(w.status==='asignada')w.status='revisada';ch=true;}});
+    const nu=un.length,nn=un.map(x=>`${x.first||''} ${x.last||''}`.trim()).slice(0,10);if((b.unmatched||0)!==nu||String(b.unNames||'')!==String(nn)){b.unmatched=nu;b.unNames=nn;ch=true;}});
+  if(ch)stuSave();return ch;}
+window.__stuSync=()=>{try{if(STU.ready&&stuSyncOnline()){const p=$('#sub-stu');if(p&&!p.classList.contains('hidden'))stuRender();}}catch(e){console.warn(e);}};
+// ---------- 🔑 cuentas ----------
+function acMsg(h){const m=document.getElementById('acMsg');if(m)m.innerHTML=h;else stuMsg(h);}
+function acPw(){const L='abcdefghjkmnpqrstuvwxyz',D='23456789',r=new Uint32Array(6);try{crypto.getRandomValues(r);}catch(e){for(let i=0;i<6;i++)r[i]=Math.floor(Math.random()*1e9);}return [0,1,2].map(i=>L[r[i]%L.length]).join('')+[3,4,5].map(i=>D[r[i]%D.length]).join('');}
+function acGenerate(c){const used=new Set();STU.list.forEach(s=>{if(s.user)used.add(s.user);});(ASG_STUDENTS||[]).forEach(p=>{if(p.username)used.add(p.username);});let n=0;
+  stuSorted(c).filter(s=>s.estado==='activo'&&!s.uid).forEach(s=>{let ch=false;if(!s.user){const base=(onTok(s.nom)+'.'+onTok(s.ap)).replace(/^\.|\.$/g,'')||('est'+s.sn);let u=base.length>=3?base:base+'.'+s.sn,k=2;while(used.has(u))u=base+(k++);s.user=u;used.add(u);ch=true;}if(!s.pw){s.pw=acPw();ch=true;}if(ch)n++;});return n;}
+async function acCreate(c){if(!(window.FBX&&FBX.role==='teacher'&&FBX.createStudentAccount)){alert('Las cuentas se crean en la nube: abre la página web del programa y entra como profesor con tu correo y clave.');return;}
+  acGenerate(c);stuSave();const L=stuSorted(c).filter(s=>s.estado==='activo'&&!s.uid&&s.user&&s.pw);if(!L.length){acMsg('✅ Todos los estudiantes activos de este curso ya tienen su cuenta.');return;}
+  if(!confirm(`¿Crear ${L.length} cuenta(s) en la nube para ${c}?\n\nCada estudiante entrará con el usuario y la clave que ves en la tabla.`))return;
+  let ok=0;const bad=[];for(let i=0;i<L.length;i++){const s=L[i];acMsg(`☁️ Creando cuentas… ${i+1} de ${L.length} (${esc(stuNameFwd(s))})`);
+    try{const r=await FBX.createStudentAccount({first:acTitle(s.nom),last:acTitle(s.ap),course:c,username:s.user,password:s.pw});s.uid=r.uid;s.user=r.username;ok++;stuSave();}
+    catch(e){bad.push(`${stuNameFwd(s)}: ${e.message||e}`);if(/Demasiados intentos|too-many/i.test(String(e.message)))break;}}
+  try{ASG_FETCH=0;}catch(e){}stuRender();acMsg(`✅ ${ok} cuenta(s) creada(s).`+(bad.length?`<br><span class="sc-bad">⚠️ ${bad.length} con problema:</span><br>${bad.map(esc).join('<br>')}`:'')+(ok?' Ahora usa <b>🖨 Imprimir credenciales</b> y entrega a cada estudiante su papelito.':''));}
+function acLink(c){if(!(window.FBX&&FBX.role==='teacher')){alert('Para vincular cuentas abre la página web del programa y entra como profesor.');return;}acMsg('🔗 Buscando cuentas registradas…');
+  try{ASG_FETCH=0;}catch(e){}asgLoadStudents(()=>{const cloud=(ASG_STUDENTS||[]).filter(p=>sameCourse(p.course,c)),usedU=new Set(STU.list.map(s=>s.uid).filter(Boolean));let n=0;
+    stuSorted(c).filter(s=>!s.uid).forEach(s=>{const m=cloud.filter(p=>!usedU.has(p.uid)&&stuNK(p.first,p.last)===stuNK(s.nom,s.ap));if(m.length===1){s.uid=m[0].uid;if(s.user!==m[0].username){s.user=m[0].username;s.pw=undefined;}usedU.add(m[0].uid);n++;}});
+    STU.acctCloud=cloud.filter(p=>!usedU.has(p.uid));stuSave();stuSyncOnline();stuRender();
+    acMsg(`🔗 ${n} cuenta(s) vinculada(s) por nombre y curso.`+(STU.acctCloud.length?` Quedan ${STU.acctCloud.length} cuenta(s) de ${esc(c)} sin reconocer (${STU.acctCloud.map(p=>esc(p.first+' '+p.last+' · '+p.username)).join(', ')}): elígelas en la columna «Estado» del estudiante que corresponda.`:''));});}
+function acPrint(c){const L=stuSorted(c).filter(s=>s.estado==='activo'&&s.user);if(!L.length){alert('Primero genera o crea las cuentas.');return;}
+  const url=/^https?:/.test(location.href)?location.href.split('#')[0].split('?')[0]:'(la página web del programa)';
+  const w=window.open('','_blank');if(!w){alert('El navegador bloqueó la ventana: permite las ventanas emergentes para imprimir.');return;}
+  w.document.write(`<!doctype html><meta charset="utf-8"><title>Credenciales ${esc(c)}</title><style>body{font-family:Arial,sans-serif;margin:12mm}.g{display:grid;grid-template-columns:1fr 1fr;gap:6mm}.c{border:1.5px dashed #555;border-radius:6px;padding:4mm 5mm;break-inside:avoid;font-size:12pt}.c b{font-size:13pt}.c code{font-size:15pt;font-weight:bold;letter-spacing:1px}.s{font-size:9pt;color:#444}</style><div class="g">${L.map(s=>`<div class="c"><div class="s">Liceo Thomas Alva Edison · English · ${esc(c)}</div><b>${esc(stuNameFwd(s))}</b><div>Página: <span class="s">${esc(url)}</span></div><div>Usuario: <code>${esc(s.user)}</code></div><div>Clave: <code>${esc(s.pw||'(la que tú elegiste)')}</code></div><div class="s">Entra en «Estudiante», escribe tu usuario y clave. No compartas tu clave.</div></div>`).join('')}</div><script>setTimeout(()=>print(),300)<\/script>`);w.document.close();}
+function stuAcctForm(c){const ss=stuSorted(c).filter(s=>s.estado==='activo'),fb=!!(window.FBX&&FBX.role==='teacher'),nAcc=ss.filter(s=>s.uid).length,cl=STU.acctCloud||[];
+  return `<div class="stu-form" id="stuAcct"><b>🔑 Cuentas en línea · ${esc(c)}</b> <small class="muted">· ${nAcc} de ${ss.length} con cuenta activa</small>
+  ${fb?'':`<p class="sc-bad">⚠️ Las cuentas se crean en la nube: abre la <b>página web</b> del programa (no el archivo descargado) y entra como profesor con tu correo y clave. Aquí puedes generar y anotar usuarios y claves, pero no crearlas.</p>`}
+  <p class="note">1) <b>✨ Generar</b> propone usuario (nombre.apellido) y una clave de 6 caracteres; puedes cambiarlos escribiendo en la tabla. 2) <b>☁️ Crear cuentas</b> las deja listas en la nube. 3) <b>🖨 Imprimir credenciales</b> y entrega a cada uno su papelito. Si un estudiante <b>ya se había registrado solo</b>, usa <b>🔗 Vincular</b>: se reconoce por nombre, apellido y curso. Las claves quedan guardadas solo en este computador (en tu respaldo de 👥 Estudiantes).</p>
+  <div class="actions"><button type="button" class="btn sm" data-sa="acgen" data-c="${esc(c)}">✨ Generar usuarios y claves que faltan</button><button type="button" class="btn sm" data-sa="accreate" data-c="${esc(c)}"${fb?'':' disabled'}>☁️ Crear cuentas en la nube</button><button type="button" class="btn ghost sm" data-sa="aclink" data-c="${esc(c)}"${fb?'':' disabled'}>🔗 Vincular cuentas ya registradas</button><button type="button" class="btn ghost sm" data-sa="acprint" data-c="${esc(c)}">🖨 Imprimir credenciales</button><button type="button" class="btn ghost sm" data-sa="acclose">✖ Cerrar</button></div>
+  <div id="acMsg" class="note"></div>
+  <div style="overflow:auto"><table class="tt"><thead><tr><th>N°</th><th>Estudiante</th><th>Usuario</th><th>Clave</th><th>Estado</th></tr></thead><tbody>
+  ${ss.map(s=>`<tr><td>${s.nl||''}</td><td>${esc(stuNameFwd(s))}</td><td>${s.uid?`<b>${esc(s.user||'')}</b>`:`<input data-sa="acuser" data-id="${s.id}" value="${esc(s.user||'')}" placeholder="usuario" style="width:160px">`}</td><td>${s.uid?(s.pw?`<code>${esc(s.pw)}</code>`:'<small class="muted">la eligió el estudiante</small>'):`<input data-sa="acpw" data-id="${s.id}" value="${esc(s.pw||'')}" placeholder="clave" style="width:100px">`}</td><td>${s.uid?`✅ Cuenta activa <button type="button" class="btn ghost sm" data-sa="acunlink" data-id="${s.id}" title="Desvincular">✖</button>`:`${s.user&&s.pw?'⏳ Falta crearla en la nube':'— sin cuenta'}${cl.length?` <select data-sa="acpick" data-id="${s.id}"><option value="">🔗 es esta cuenta…</option>${cl.map(p=>`<option value="${esc(p.uid)}">${esc(p.first+' '+p.last+' · '+p.username)}</option>`).join('')}</select>`:''}`}</td></tr>`).join('')}</tbody></table></div></div>`;}
+// ---------- aviso grande de prueba pendiente al entrar ----------
+function asgPendingModal(mine){const old=document.getElementById('asgPendModal');const pend=(mine||[]).map(a=>{if(!a.open)return null;const x=asgSubmissions(a).get(asgStudentKey());if(x&&x.complete)return null;
+    const part=a.kind==='reading'?'reading':(a.parts||[]).find(p=>!(x&&x.parts.has(p)));return part?{a,part}:null;}).filter(Boolean);
+  if(!pend.length||CURRENT_VIEW!=='student'){if(old)old.remove();return;}if(old)return;
+  const k='asgPend.'+asgStudentKey()+'.'+pend.map(p=>p.a.id).join(',');try{if(sessionStorage.getItem(k)==='1')return;}catch(e){}
+  const m=document.createElement('div');m.id='asgPendModal';m.className='asg-modal';
+  m.innerHTML=`<div class="asg-modal-box" role="dialog" aria-modal="true"><h2>⏳ ${pend.length===1?'Tienes una prueba pendiente':'Tienes '+pend.length+' pruebas pendientes'}</h2><p class="muted" style="margin-top:0">You have ${pend.length===1?'a pending test':pend.length+' pending tests'} to take.</p>
+  ${pend.map(p=>`<div class="asg-card pend"><b>${esc(p.a.title)}</b><br><small class="muted">asignada el ${new Date(p.a.created).toLocaleDateString('es-CL')}${p.a.once?' · 1 solo intento: hazla con calma':''}</small><div class="actions"><button class="btn" type="button" data-pend="${p.a.id}" data-part="${p.part}">▶ Rendir ahora · Start now</button></div></div>`).join('')}
+  <div class="actions"><button class="btn ghost" type="button" data-pend="">Más tarde · Later</button></div></div>`;
+  document.body.appendChild(m);m.onclick=e=>{const b=e.target.closest('[data-pend]');if(!b&&e.target!==m)return;try{sessionStorage.setItem(k,'1');}catch(_){}m.remove();if(b&&b.dataset.pend)startAssignment(b.dataset.pend,b.dataset.part);};}
 function stuAssignForm(c,nsel){const A=STU.assign,groups={};RT_BANK.forEach(r=>{const g=(r.tenses||[]).map(t=>AB_LABEL[t]||t).join(' + ')||'Otras';(groups[g]=groups[g]||[]).push(r);});
   return `<div class="stu-form"><b>📝 Asignar una lectura a ${nsel?`los ${nsel} estudiantes seleccionados`:`todo el curso (${STU.list.filter(s=>s.course===c&&s.estado==='activo').length} activos)`}</b>
-  <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:6px"><div style="flex:1;min-width:240px"><label class="lbl">Lectura</label><select id="stuAR">${Object.entries(groups).map(([g,rs])=>`<optgroup label="${esc(g)}">${rs.map(r=>`<option value="${r.id}"${A.rid===r.id?' selected':''}>${abEsc(r.title)}</option>`).join('')}</optgroup>`).join('')}</select></div>
-  <div><label class="lbl">Versión</label><input id="stuAV" type="number" min="100" max="999" value="${A.version}" style="width:90px"></div><div><label class="lbl">Fecha de aplicación</label><input id="stuAD" type="date" value="${A.date}"></div>
+  <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:6px"><div><label class="lbl">Modalidad</label><select id="stuAM" data-sa="amode"><option value="paper">📄 En papel (imprimir)</option><option value="online"${A.mode==='online'?' selected':''}>💻 En línea (se corrige sola)</option></select></div><div style="flex:1;min-width:240px"><label class="lbl">Lectura</label><select id="stuAR">${Object.entries(groups).map(([g,rs])=>`<optgroup label="${esc(g)}">${rs.map(r=>`<option value="${r.id}"${A.rid===r.id?' selected':''}>${abEsc(r.title)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+  ${A.mode==='online'?`<label class="switch"><input type="checkbox" id="stuAO" checked> Un solo intento</label>`:`<div><label class="lbl">Versión</label><input id="stuAV" type="number" min="100" max="999" value="${A.version}" style="width:90px"></div>`}<div><label class="lbl">Fecha de aplicación</label><input id="stuAD" type="date" value="${A.date}"></div>
   <button type="button" class="btn" data-sa="doassign" data-c="${esc(c)}">✅ Asignar</button><button type="button" class="btn ghost" data-sa="cancel">Cancelar</button></div>
-  <p class="note">Todos los estudiantes de la asignación reciben la <b>misma versión</b>, así imprimes la prueba una sola vez y la fotocopias. Cada uno recibe su <b>hoja de respuestas con su nombre, RUT y curso</b> impresos.</p></div>`;}
+  ${A.mode==='online'?`<p class="note">💻 <b>En línea:</b> cada estudiante entra a la página con <b>su usuario y clave</b> (créalos en <b>🔑 Cuentas en línea</b>), ve la prueba como <b>pendiente</b> y la rinde en el computador o celular. Cada uno recibe las alternativas en distinto orden; se corrige sola, el dibujo (ítem VI) lo revisas tú en 📊 Results, y la nota llega sola al <b>📒 Libro de clases</b>.</p>`:`<p class="note">Todos los estudiantes de la asignación reciben la <b>misma versión</b>, así imprimes la prueba una sola vez y la fotocopias. Cada uno recibe su <b>hoja de respuestas con su nombre, RUT y curso</b> impresos.</p>`}</div>`;}
 function stuEditForm(s,course){const v=s||{ap:'',nom:'',run:'',course:course||'',nl:'',estado:'activo'};
   return `<div class="stu-form"><b>${s?'✏️ Editar estudiante':'➕ Nuevo estudiante'}</b><div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:6px">
   <div><label class="lbl">Apellidos</label><input id="stuEAp" value="${esc(stuTitle(v.ap))}" style="width:190px"></div><div><label class="lbl">Nombres</label><input id="stuENom" value="${esc(stuTitle(v.nom))}" style="width:190px"></div>
@@ -18328,10 +18440,24 @@ async function stuScanFixPage(w){const rect=await stuRect(w);if(!rect||!w.result
 async function stuClick(e){const b=e.target.closest('[data-sa]');if(!b)return;const a=b.dataset.sa,c=b.dataset.c;
   if(a==='sel'||a==='selall')return; // los maneja «change»
   if(a==='book'||a==='bookall'||a.startsWith('lb')){lbClick(b,a,c);return;}
-  if(a==='assign'){STU.gprint=null;STU.assign={course:c,rid:(STU.assign&&STU.assign.rid)||RT_BANK[0].id,version:100+Math.floor(Math.random()*900),date:stuToday()};STU.open[c]=true;stuRender();return;}
+  if(a==='assign'){STU.gprint=null;STU.acct=null;STU.assign={mode:(STU.assign&&STU.assign.mode)||'paper',course:c,rid:(STU.assign&&STU.assign.rid)||RT_BANK[0].id,version:100+Math.floor(Math.random()*900),date:stuToday()};STU.open[c]=true;stuRender();return;}
   if(a==='cancel'){STU.assign=null;STU.edit=null;STU.gprint=null;stuRender();return;}
+  if(a==='acct'){STU.acct=STU.acct===c?null:c;STU.open[c]=true;stuRender();if(STU.acct){const f=document.getElementById('stuAcct');if(f)f.scrollIntoView({block:'start',behavior:'smooth'});}return;}
+  if(a==='acclose'){STU.acct=null;stuRender();return;}
+  if(a==='acgen'){const n=acGenerate(c);stuSave();stuRender();acMsg(n?`✨ Se generaron usuario y clave para ${n} estudiante(s). Revísalos y presiona «☁️ Crear cuentas en la nube».`:'Todos los estudiantes ya tienen usuario y clave.');return;}
+  if(a==='accreate'){acCreate(c);return;}
+  if(a==='aclink'){acLink(c);return;}
+  if(a==='acprint'){acPrint(c);return;}
+  if(a==='acunlink'){const st=STU.list.find(x=>x.id===b.dataset.id);if(st&&confirm(`¿Desvincular la cuenta «${st.user||''}» de ${stuNameFwd(st)}? (La cuenta sigue existiendo en la nube; solo deja de asociarse a este estudiante en tu nómina.)`)){st.uid=undefined;stuSave();stuRender();}return;}
+  if(a==='asgopen'){const bt=STU.batches.find(x=>x.bid===b.dataset.b),A=bt&&asgList().find(x=>x.id===bt.asg);if(!A){alert('Esta prueba en línea ya no existe en la configuración.');return;}A.open=!A.open;saveCFG();try{renderAsgPanel();}catch(e){}stuRender();stuMsg(A.open?`🟢 «${esc(A.title)}» reabierta: los estudiantes pueden rendirla.`:`⛔ «${esc(A.title)}» cerrada: ya nadie puede rendirla.`);return;}
   if(a==='gprint'){STU.assign=null;STU.gprint={course:c,key:b.dataset.b||'',kind:(STU.gprint&&STU.gprint.kind)||'scan'};STU.open[c]=true;stuRender();const f=document.getElementById('stuGPKey');if(f)f.closest('.stu-form').scrollIntoView({block:'center',behavior:'smooth'});return;}
   if(a==='dogprint'){const key=$('#stuGPKey').value,kind=$('#stuGPKind').value;STU.gprint.key=key;STU.gprint.kind=kind;stuPrintCourseGraded(c,key,kind);return;}
+  if(a==='acuser'||a==='acpw'||a==='amode'||a==='acpick')return;
+  if(a==='doassign'&&STU.assign&&STU.assign.mode==='online'){const rid=$('#stuAR').value,dt=$('#stuAD').value||stuToday();
+    const sel=STU.list.filter(s=>s.course===c&&s.estado==='activo'&&STU.sel.has(s.id)),ss=sel.length?sel:STU.list.filter(s=>s.course===c&&s.estado==='activo');
+    const r=asgCreateOnline({course:c,rid,once:$('#stuAO')?$('#stuAO').checked:true,sids:sel.length?ss.map(s=>s.id):null,date:dt});if(!r){alert('No se encontró la lectura.');return;}
+    const noAcc=ss.filter(s=>!s.uid).length;STU.assign=null;STU.sel.clear();stuRender();
+    stuMsg(`💻 «${esc(r.a.title)}» quedó asignada <b>EN LÍNEA</b> a ${ss.length} estudiante(s) de ${esc(c)}. Al entrar con su usuario y clave la verán como <b>prueba pendiente</b>; la nota llega sola al 📒 Libro de clases.`+(noAcc?` <br>⚠️ ${noAcc} estudiante(s) aún no tienen cuenta vinculada: usa <b>🔑 Cuentas en línea</b> (crear o vincular).`:'')+asgWarnLocal());return;}
   if(a==='doassign'){const rid=$('#stuAR').value,v=parseInt($('#stuAV').value,10),dt=$('#stuAD').value||stuToday();if(!(v>=100&&v<=999)){alert('La versión debe ser un número entre 100 y 999.');return;}
     const sel=STU.list.filter(s=>s.course===c&&s.estado==='activo'&&STU.sel.has(s.id)),ids=(sel.length?sel:STU.list.filter(s=>s.course===c&&s.estado==='activo')).map(s=>s.id);
     const bt=stuAssign(c,ids,rid,v,dt);STU.assign=null;STU.sel.clear();stuRender();stuMsg(`✅ «${esc(bt.title)}» (versión ${v}) asignada a ${ids.length} estudiante(s) de ${esc(c)}. Usa <b>🖨 Imprimir prueba + hojas con nombre</b>.`);return;}
@@ -18342,17 +18468,17 @@ async function stuClick(e){const b=e.target.closest('[data-sa]');if(!b)return;co
   if(a==='delbatchall'){const bt=STU.batches.find(x=>x.bid===b.dataset.b);if(!bt)return;const ck=courseKey(bt.course||'');
     const ws=STU.works.filter(w=>w.bid===bt.bid||(w.rid===bt.rid&&w.version===bt.version&&(w.gen||1)===(bt.gen||1)&&courseKey(w.course||((STU.list.find(x=>x.id===w.sid)||{}).course)||'')===ck)),dn=ws.filter(w=>w.result).length;
     if(!confirm(`¿Borrar la asignación «${bt.title}»${bt.version?` v${bt.version}`:''} de ${bt.course} y TODOS sus resultados?\n\nSe eliminan ${ws.length} trabajo(s) (${dn} con nota), sus hojas escaneadas y sus resultados en 📊 Results. Los promedios se recalculan sin ellos.\n\nEsto no se puede deshacer.`))return;
-    stuPurgeWorks(ws);STU.batches=STU.batches.filter(x=>x!==bt);stuSave();stuRender();stuMsg(`🗑 Asignación «${esc(bt.title)}» y ${dn} resultado(s) borrados.`);return;}
+    stuPurgeWorks(ws);STU.batches=STU.batches.filter(x=>x!==bt);asgDropFor(bt,true);stuSave();stuRender();stuMsg(`🗑 Asignación «${esc(bt.title)}» y ${dn} resultado(s) borrados.`);return;}
   if(a==='purgecourse'){const ck=courseKey(c),inC=w=>courseKey(w.course||((STU.list.find(x=>x.id===w.sid)||{}).course)||'')===ck;
     const ws=STU.works.filter(inC),bs=STU.batches.filter(x=>courseKey(x.course||'')===ck),dn=ws.filter(w=>w.result||Number.isFinite(w.grade)).length;
     if(!ws.length&&!bs.length){alert('Este curso no tiene asignaciones ni resultados.');return;}
     if(!confirm(`¿Borrar TODAS las asignaciones, resultados, notas y promedios de ${c}?\n\n${bs.length} asignación(es) y ${ws.length} trabajo(s) (${dn} con nota). Los estudiantes de la nómina NO se borran.\n\nEsto no se puede deshacer.`))return;
     if(!confirm(`Confirma otra vez: se dejará ${c} sin ningún resultado.`))return;
     stuPurgeWorks(ws);try{const L=loadRes(),K=L.filter(x=>!String(x.id||'').startsWith('scan-'+ck+'-'));if(K.length!==L.length)resSet(K);}catch(e){}
-    STU.batches=STU.batches.filter(x=>!bs.includes(x));stuSave();stuRender();stuMsg(`🧹 ${c}: se borraron ${bs.length} asignación(es) y ${ws.length} trabajo(s) con sus notas.`);return;}
+    bs.forEach(x=>asgDropFor(x,true));STU.batches=STU.batches.filter(x=>!bs.includes(x));stuSave();stuRender();stuMsg(`🧹 ${c}: se borraron ${bs.length} asignación(es) y ${ws.length} trabajo(s) con sus notas.`);return;}
   if(a==='delbatch'){const bt=STU.batches.find(x=>x.bid===b.dataset.b),ws=STU.works.filter(w=>w.bid===b.dataset.b),dn=ws.filter(w=>w.result).length;
     if(!confirm(`¿Quitar la asignación «${bt.title}»${bt.version?` v${bt.version}`:''}?${dn?`\n${dn} trabajo(s) ya corregido(s) se conservan en el historial.`:''}`))return;
-    STU.works=STU.works.filter(w=>w.bid!==bt.bid||(stuKind(bt)!=='manual'&&(w.result||Number.isFinite(w.grade)||w.files)));STU.works.forEach(w=>{if(w.bid===bt.bid)w.bid=null;});STU.batches=STU.batches.filter(x=>x!==bt);stuSave();stuRender();return;}
+    STU.works=STU.works.filter(w=>w.bid!==bt.bid||(stuKind(bt)!=='manual'&&(w.result||Number.isFinite(w.grade)||w.files)));STU.works.forEach(w=>{if(w.bid===bt.bid)w.bid=null;});STU.batches=STU.batches.filter(x=>x!==bt);asgDropFor(bt,false);stuSave();stuRender();return;}
   if(a==='hist'){const m=$('#stuDetail');STU.detail=null;m.classList.remove('hidden');m.innerHTML=`<div class="sc-edhead"><h2>📚 Historial · ${esc(c)}</h2><button type="button" class="btn ghost" data-sa="closedetail">✖ Cerrar</button></div><div class="stu-report">${stuCourseReport(c)}</div><div class="actions"><button type="button" class="btn" data-sa="printhist" data-c="${esc(c)}">🖨 Imprimir</button></div>`;m.scrollIntoView({behavior:'smooth'});return;}
   if(a==='recheck'){stuRecheck(c);return;}
   if(a==='printhist'){stuPrintPages(`<div class="rt-doc stu-report">${stuCourseReport(c)}</div>`);return;}
@@ -18400,6 +18526,9 @@ async function stuClick(e){const b=e.target.closest('[data-sa]');if(!b)return;co
   if(a==='printfile'){stuPrintStudentFile(b.dataset.id);return;}}
 function stuChange(e){const b=e.target.closest('[data-sa]');if(!b)return;if(b.dataset.sa==='cbonall'){document.querySelectorAll('#stuCBon .cb-chk').forEach(x=>x.checked=b.checked);return;}if(b.dataset.sa.startsWith('lb')){lbChange(b);return;}
   if(b.dataset.sa==='wstatus'||b.dataset.sa==='wgrade'){const w=STU.works.find(x=>x.wid===b.dataset.w);if(!w)return;if(b.dataset.sa==='wstatus')w.status=b.value;else{const g=parseFloat(String(b.value).replace(',','.'));if(b.value===''){w.grade=null;}else if(!(g>=1&&g<=7)){alert('La nota debe estar entre 1,0 y 7,0.');b.value=w.grade!=null?w.grade:'';return;}else{w.grade=Math.round(g*10)/10;if(w.status==='asignada')w.status='revisada';}}stuSave();stuRender();return;}
+  if(b.dataset.sa==='amode'&&STU.assign){STU.assign.mode=b.value;try{STU.assign.rid=$('#stuAR').value;STU.assign.date=$('#stuAD').value||STU.assign.date;}catch(e){}stuRender();return;}
+  if(b.dataset.sa==='acuser'||b.dataset.sa==='acpw'){const st=STU.list.find(x=>x.id===b.dataset.id);if(!st)return;if(b.dataset.sa==='acuser')st.user=acNorm(b.value)||undefined;else st.pw=String(b.value||'').trim()||undefined;b.value=(b.dataset.sa==='acuser'?st.user:st.pw)||'';stuSave();return;}
+  if(b.dataset.sa==='acpick'){const st=STU.list.find(x=>x.id===b.dataset.id),p=(STU.acctCloud||[]).find(x=>x.uid===b.value);if(!st||!p)return;st.uid=p.uid;st.user=p.username;st.pw=undefined;stuSave();stuSyncOnline();stuRender();return;}
   if(b.dataset.sa==='attach'){const f=[...b.files];b.value='';if(f.length)stuAttach(b.dataset.w,f);return;}
   if(b.dataset.sa==='sel'){b.checked?STU.sel.add(b.dataset.id):STU.sel.delete(b.dataset.id);stuRender();}
   else if(b.dataset.sa==='selall'){const ids=STU.list.filter(s=>s.course===b.dataset.c&&s.estado==='activo').map(s=>s.id);ids.forEach(id=>b.checked?STU.sel.add(id):STU.sel.delete(id));stuRender();}}
